@@ -18,3 +18,5 @@ CC[Mg]Br.CC1CO1>>CC[Mg][O+]1CC1C.[Br-]
 [BH4-].[Li+].CC(C)=O>>B.CC(C)=O.[LiH]
 [BH4-].[Li+].CC(C)=O>>B.CC(C)[O-].[Li+]
 [BH4-].[Li+].CC(C)=O>>[BH4-].[Li][O+]=C(C)C
+CC[OH2+].[Br-]>>CCBr.O
+CC=C.OOC(=O)C1=CC=CC=C1>>C[CH+]CO.O=C([O-])c1ccccc1
