@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Molecule Web App</title>
+    <link rel="stylesheet" href="styles/style.css">
+    <script src="https://www.marvinjs.com/marvinjs/marvin.js"></script>
+    <script src="scripts/app.js" defer></script>
+</head>
+<body>
+    <div id="app">
+        <h1>Molecule Drawing Application</h1>
+        <div id="marvin-container"></div>
+        <button id="convert-button">Convert to SMILES</button>
+        <div id="results-container"></div>
+    </div>
+    <script>
+        // Initialize Marvin JS
+        const marvinContainer = document.getElementById('marvin-container');
+        const marvinJS = new MarvinJS(marvinContainer, {
+            width: 600,
+            height: 400
+        });
+
+        document.getElementById('convert-button').addEventListener('click', () => {
+            const smiles = marvinJS.getSMILES();
+            fetch('/process_smiles', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ smiles })
+            })
+            .then(response => response.json())
+            .then(data => {
+                const resultsContainer = document.getElementById('results-container');
+                resultsContainer.innerHTML = '';
+                data.molecules.forEach(molecule => {
+                    const img = document.createElement('img');
+                    img.src = molecule.image;
+                    img.alt = molecule.smiles;
+                    img.classList.add('molecule-image');
+                    img.addEventListener('click', () => {
+                        marvinJS.setSMILES(molecule.smiles);
+                    });
+                    resultsContainer.appendChild(img);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
