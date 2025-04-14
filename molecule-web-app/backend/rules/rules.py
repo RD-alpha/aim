@@ -445,7 +445,7 @@ def execute_step(mol_inp_smiles):
                 for a in a2_list:
                     j = a.GetIdx()
                     l = b2.GetOtherAtom(a).GetIdx()
-                    for counter in range(2):
+                    for counter in range(len(new_mol)):
                         i = order[counter]
                         if i == j:
                             continue
