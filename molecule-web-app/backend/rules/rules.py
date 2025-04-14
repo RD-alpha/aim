@@ -417,7 +417,6 @@ def execute_step(mol_inp_smiles):
         b1 = mol_inp.GetBondWithIdx(source_idx)
         a1_list = [b1.GetBeginAtom(), b1.GetEndAtom()]
         new_mol = [Chem.Mol(mol_inp)]
-        Chem.Draw.MolToFile(new_mol[0], 'debug_init_'+'.png')
         order = []
         if b1.GetProp('source_bond_atom')=='both':
             new_mol.append(Chem.Mol(mol_inp))
