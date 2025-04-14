@@ -1,1 +1,1 @@
-CCCOC(C)=O.[OH3+]
+C=C.CBC
