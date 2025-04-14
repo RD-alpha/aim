@@ -1,9 +1,25 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory
 from rdkit import Chem
-import subprocess
 import os
+import shutil
+from rules.rules import execute_step, save_files_for_display
 
-app = Flask(__name__)
+
+app = Flask(
+    __name__,
+    static_folder='../frontend',           # Path to your static files
+    template_folder='../frontend'          # Path to your HTML files
+)
+
+@app.route('/')
+def serve_index():
+    return send_from_directory(app.template_folder, 'index.html')  # Serve the HTML
+
+# Optional: Serve static files like JS/CSS
+@app.route('/<path:path>')
+def serve_static(path):
+    return send_from_directory(app.static_folder, path)
+
 
 @app.route('/process_molecule', methods=['POST'])
 def process_molecule():
@@ -16,20 +32,31 @@ def process_molecule():
     # Save the SMILES string to a temporary file
     with open('temp_smiles.txt', 'w') as f:
         f.write(smiles)
+    print(smiles)
+    mols = execute_step(smiles)
+   
+    save_files_for_display(mols)
 
-    # Execute the Jupyter notebook using nbconvert
-    try:
-        subprocess.run(['jupyter', 'nbconvert', '--to', 'python', 'rules/rules.ipynb'], check=True)
-        subprocess.run(['python', 'rules/rules.py', 'temp_smiles.txt'], check=True)
-    except subprocess.CalledProcessError as e:
-        return jsonify({'error': str(e)}), 500
+    backend_dir = os.path.dirname(os.path.abspath(__file__))
+    source_folder = os.path.join(backend_dir, 'results')
+    target_folder = os.path.join(backend_dir, '../frontend/results')
+
+    # Remove target folder if it exists
+    if os.path.exists(target_folder):
+        shutil.rmtree(target_folder)
+        print(f"[INFO] Removed existing folder: {target_folder}")
+
+    # Copy folder from source to target
+    shutil.copytree(source_folder, target_folder)
+    print(f"[INFO] Copied {source_folder} → {target_folder}")
+
 
     # Load the resulting molecules (assuming they are saved as images)
     result_images = []
     for filename in os.listdir('results'):
         if filename.endswith('.png'):
-            result_images.append(filename)
-
+            result_images.append('results/'+filename)
+    print(result_images)
     return jsonify({'images': result_images})
 
 if __name__ == '__main__':

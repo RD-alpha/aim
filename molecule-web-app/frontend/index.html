@@ -5,32 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Molecule Web App</title>
     <link rel="stylesheet" href="styles/style.css">
-    <script src="https://www.marvinjs.com/marvinjs/marvin.js"></script>
     <script src="scripts/app.js" defer></script>
 </head>
 <body>
     <div id="app">
         <h1>Molecule Drawing Application</h1>
-        <div id="marvin-container"></div>
-        <button id="convert-button">Convert to SMILES</button>
+        <label for="smiles-input">Enter SMILES:</label>
+        <input type="text" id="smiles-input" placeholder="Enter SMILES string here">
+        <button id="convert-button">Apply rules</button>
         <div id="results-container"></div>
     </div>
     <script>
-        // Initialize Marvin JS
-        const marvinContainer = document.getElementById('marvin-container');
-        const marvinJS = new MarvinJS(marvinContainer, {
-            width: 600,
-            height: 400
-        });
-
         document.getElementById('convert-button').addEventListener('click', () => {
-            const smiles = marvinJS.getSMILES();
-            fetch('/process_smiles', {
+            const smilesInput = document.getElementById('smiles-input').value;
+            fetch('/process_molecule', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ smiles })
+                body: JSON.stringify({ smiles: smilesInput })
             })
             .then(response => response.json())
             .then(data => {
@@ -42,7 +35,7 @@
                     img.alt = molecule.smiles;
                     img.classList.add('molecule-image');
                     img.addEventListener('click', () => {
-                        marvinJS.setSMILES(molecule.smiles);
+                        document.getElementById('smiles-input').value = molecule.smiles;
                     });
                     resultsContainer.appendChild(img);
                 });
