@@ -34,15 +34,23 @@ def process_molecule():
         f.write(smiles)
     print(smiles)
     mols = execute_step(smiles)
-   
-    save_files_for_display(mols)
 
     backend_dir = os.path.dirname(os.path.abspath(__file__))
     source_folder = os.path.join(backend_dir, 'results')
-    target_folder = os.path.join(backend_dir, '../frontend/results')
+
+    for filename in os.listdir(source_folder):
+        file_path = os.path.join(source_folder, filename)
+        if os.path.isfile(file_path):
+            os.remove(file_path)
+
+    save_files_for_display(mols)
+
+   
+    target_folder = os.path.abspath(os.path.join(backend_dir, '../frontend/results'))
 
     # Remove target folder if it exists
     if os.path.exists(target_folder):
+        print('it exists')
         shutil.rmtree(target_folder)
         print(f"[INFO] Removed existing folder: {target_folder}")
 
@@ -52,12 +60,20 @@ def process_molecule():
 
 
     # Load the resulting molecules (assuming they are saved as images)
-    result_images = []
+    molecules = {}
     for filename in os.listdir('results'):
         if filename.endswith('.png'):
-            result_images.append('results/'+filename)
-    print(result_images)
-    return jsonify({'images': result_images})
+            idx = int(filename.split('_')[1].split('.')[0])
+            with open('results/products.txt', 'r') as f:
+                line_num = 0
+                for line in f:
+                    if line_num == idx:
+                        result_smiles = line.rstrip()
+                    line_num += 1
+            molecules[idx] = {'image': 'results/' + filename, 'smiles': result_smiles}
+    
+    print(molecules)
+    return jsonify(molecules)
 
 if __name__ == '__main__':
     app.run(debug=True)
