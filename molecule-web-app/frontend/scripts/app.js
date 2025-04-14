@@ -1,9 +1,9 @@
 document.addEventListener('DOMContentLoaded', function() {
-    const drawButton = document.getElementById('draw-button');
+    const convertButton = document.getElementById('convert-button');
     const smilesInput = document.getElementById('smiles-input');
     const resultsContainer = document.getElementById('results-container');
 
-    drawButton.addEventListener('click', function() {
+    convertButton.addEventListener('click', function() {
         const smiles = smilesInput.value;
         if (smiles) {
             fetch('/process_molecule', {
