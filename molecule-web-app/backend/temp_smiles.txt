@@ -1,1 +1,1 @@
-C=C.BrBr
+Br.C=CBr

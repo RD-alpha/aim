@@ -15,7 +15,8 @@ document.addEventListener('DOMContentLoaded', function() {
             })
             .then(response => response.json())
             .then(data => {
-                displayResults(data.molecules);
+                console.log(data)
+                displayResults(data);
             })
             .catch(error => console.error('Error:', error));
         }
@@ -23,9 +24,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function displayResults(molecules) {
         resultsContainer.innerHTML = '';
-        molecules.forEach(molecule => {
+        Object.values(molecules).forEach(molecule => {
             const img = document.createElement('img');
-            img.src = `data:image/png;base64,${molecule.image}`;
+            img.src = molecule.image + "?v=" + new Date().getTime();
             img.alt = molecule.smiles;
             img.classList.add('molecule-image');
             img.addEventListener('click', function() {

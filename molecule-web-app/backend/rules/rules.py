@@ -116,9 +116,6 @@ def identify_sink(mol, rules = "all"):
    
     # Look for vacant orbitals
     for atom in mol.GetAtoms():
-         # Identify acidic hydrogens - defined as those connected to heteroatoms
-        if electronegativity_dict[atom.GetAtomicNum()] > 2.55 and atom.GetTotalNumHs() > 0:
-            atom.SetProp('sink', 'proton')
         valence_electrons = ptable.GetNOuterElecs(atom.GetAtomicNum())
         lone_electrons = valence_electrons - atom.GetTotalValence() - atom.GetFormalCharge()
         num_bond_electrons = atom.GetTotalValence()*2
@@ -199,9 +196,9 @@ def identify_acidic_CH(mol):
                     break
                 
 def prepare_molecule(mol):
+    identify_acidic_CH(mol)
     identify_sink(mol)
     identify_source(mol)
-    identify_acidic_CH(mol)
     return None
 
 def b_to_a(mol, i, j):
