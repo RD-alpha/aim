@@ -116,6 +116,8 @@ def identify_sink(mol, rules = "all"):
    
     # Look for vacant orbitals
     for atom in mol.GetAtoms():
+        if electronegativity_dict[atom.GetAtomicNum()] > 2.55 and atom.GetTotalNumHs() > 0:
+            atom.SetProp('sink', 'proton')
         valence_electrons = ptable.GetNOuterElecs(atom.GetAtomicNum())
         lone_electrons = valence_electrons - atom.GetTotalValence() - atom.GetFormalCharge()
         num_bond_electrons = atom.GetTotalValence()*2
