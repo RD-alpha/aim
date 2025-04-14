@@ -6,5 +6,5 @@
 /test5.png
 /testinloop.png
 /__pycache__
-/backend/results/.
-/frontend/results/.
+molecule-web-app/backend/results/.
+molecule-web-app/frontend/results/.
