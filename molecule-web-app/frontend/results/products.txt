@@ -1,8 +1,0 @@
-IC[CH-][IH+]
-I[CH-]C[IH+]
-I[CH-]C[IH+]
-IC[CH-][IH+]
-ICCI
-C1C[I+]1.[I-]
-C1C[I+]1.[I-]
-ICCI
