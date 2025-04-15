@@ -26,32 +26,6 @@
             <button id="clear-history-button">Clear History</button>
         </div>
     </div>
-    <!-- <script>
-        document.getElementById('convert-button').addEventListener('click', () => {
-            const smilesInput = document.getElementById('smiles-input').value;
-            fetch('/process_molecule', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ smiles: smilesInput })
-            })
-            .then(response => response.json())
-            .then(data => {
-                const resultsContainer = document.getElementById('results-container');
-                resultsContainer.innerHTML = '';
-                data.molecules.forEach(molecule => {
-                    const img = document.createElement('img');
-                    img.src = molecule.image;
-                    img.alt = molecule.smiles;
-                    img.classList.add('molecule-image');
-                    img.addEventListener('click', () => {
-                        document.getElementById('smiles-input').value = molecule.smiles;
-                    });
-                    resultsContainer.appendChild(img);
-                });
-            });
-        });
-    </script> -->
+   
 </body>
 </html>
