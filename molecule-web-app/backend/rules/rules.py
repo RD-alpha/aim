@@ -247,7 +247,7 @@ def clean_mol(list_mol, original_mol = None):
             clean_list.append(mol)
     return clean_list
 
-def execute_step(mol_inp_smiles):
+def execute_step(mol_inp_smiles, cleanup = False):
     mol_inp = Chem.MolFromSmiles(mol_inp_smiles)
     prepare_molecule(mol_inp)
     connected_mols = []
@@ -466,21 +466,8 @@ def execute_step(mol_inp_smiles):
                     n_mol = Chem.Mol(new_mol[counter])
                     n_mol = b_to_a(n_mol,j, l)
                     connected_mols.append(a_to_b(n_mol, i, j))
-    #connected_mols = clean_mol(connected_mols)
+    if cleanup:
+        connected_mols = clean_mol(connected_mols)
     print(len(connected_mols))
     return connected_mols
 
-
-def save_files_for_display(mols):
-    file_num = 0
-    print(os.getcwd())
-    for mol in mols:
-        mol_smiles = Chem.MolToSmiles(mol)
-        print(mol_smiles)
-        with open ("results/products.txt", 'a', encoding='utf-8') as file:
-            line = mol_smiles
-            file.write(line +"\n")
-        file_name = "mol_" + str(file_num) +".png"
-        Chem.Draw.MolToFile(Chem.MolFromSmiles(mol_smiles), "results/" + file_name)
-        file_num += 1
-    return None
