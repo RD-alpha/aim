@@ -38,6 +38,7 @@ document.addEventListener('DOMContentLoaded', function() {
         Object.values(molecules).forEach(molecule => {
             console.log('molecule_here');
             const img = document.createElement('img');
+            console.log(molecule.image);
             img.src = molecule.image + "?v=" + new Date().getTime();
             img.alt = molecule.smiles;
             img.classList.add('molecule-image');
@@ -50,7 +51,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function addHistory(history_idx) {
         const historyImg = document.createElement('img');
-        historyImg.src = "history/" + history_idx.toString() +".png";
+        historyImg.src = "history/" + history_idx.toString() + ".png" + "?v=" + new Date().getTime();
         historyImg.alt = smilesInput.value;
         historyImg.classList.add('history-image');
         historyList.appendChild(historyImg);
