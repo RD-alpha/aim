@@ -242,9 +242,10 @@ def clean_mol(list_mol, original_mol = None):
         og_inchi = Chem.MolToInchi(original_mol)
     for mol in list_mol:
         inchi = Chem.MolToInchi(mol)
-        if inchi not in existing_inchi and (original_mol != None and inchi != og_inchi):
-            existing_inchi.add(inchi)
-            clean_list.append(mol)
+        if inchi not in existing_inchi:
+            if original_mol == None or inchi != og_inchi:
+                existing_inchi.add(inchi)
+                clean_list.append(mol)
     return clean_list
 
 def execute_step(mol_inp_smiles, cleanup = False):
@@ -468,6 +469,6 @@ def execute_step(mol_inp_smiles, cleanup = False):
                     connected_mols.append(a_to_b(n_mol, i, j))
     if cleanup:
         connected_mols = clean_mol(connected_mols)
-    print(len(connected_mols))
+    
     return connected_mols
 

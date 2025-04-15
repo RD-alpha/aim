@@ -22,9 +22,10 @@ def save_files_for_display(mols):
     for mol in mols:
         mol_smiles = Chem.MolToSmiles(mol)
         print(mol_smiles)
+        Chem.SanitizeMol(mol)
         file_name = "mol_" + str(file_num) +".png"
         try:
-            Chem.Draw.MolToFile(Chem.MolFromSmiles(mol_smiles), "results/" + file_name)
+            Chem.Draw.MolToFile(mol, "results/" + file_name)
             with open ("results/products.txt", 'a', encoding='utf-8') as file:
                 line = mol_smiles
                 file.write(line +"\n")
