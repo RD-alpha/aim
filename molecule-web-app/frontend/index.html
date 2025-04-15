@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Molecule Web App</title>
+    <link rel="stylesheet" href="styles/style.css">
+    <script src="scripts/app.js" defer></script>
+</head>
+<body>
+    <div id="app">
+        <div id="main-container">
+        <h1>Rules-Based Chemistry</h1>
+        <label for="smiles-input">Enter SMILES:</label>
+        <input type="text" id="smiles-input" placeholder="Enter SMILES string here">
+        <div>
+            <input type="checkbox" id="cleanup-checkbox">
+            <label for="cleanup-checkbox">Clean up molecules</label>
+        </div>
+        <button id="convert-button">Apply rules</button>
+        <div id="results-container"></div>
+        </div>
+        <div id="history-container">
+            <h2>History</h2>
+            <div id="history-list"></div>
+            <button id="clear-history-button">Clear History</button>
+        </div>
+    </div>
+    <!-- <script>
+        document.getElementById('convert-button').addEventListener('click', () => {
+            const smilesInput = document.getElementById('smiles-input').value;
+            fetch('/process_molecule', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ smiles: smilesInput })
+            })
+            .then(response => response.json())
+            .then(data => {
+                const resultsContainer = document.getElementById('results-container');
+                resultsContainer.innerHTML = '';
+                data.molecules.forEach(molecule => {
+                    const img = document.createElement('img');
+                    img.src = molecule.image;
+                    img.alt = molecule.smiles;
+                    img.classList.add('molecule-image');
+                    img.addEventListener('click', () => {
+                        document.getElementById('smiles-input').value = molecule.smiles;
+                    });
+                    resultsContainer.appendChild(img);
+                });
+            });
+        });
+    </script> -->
+</body>
+</html>
