@@ -18,6 +18,24 @@ header {
     overflow: hidden;
 }
 
+#app{
+    display: flex;
+}
+
+#main-container{
+    flex: 3;
+}
+#history-container{
+    flex: 1;
+    margin-left: 20px;
+    border-left: 1px solid #ccc;
+    padding-left: 10px;
+}
+.history-image {
+    max-width: 100%;
+    margin-bottom: 10px;
+}
+
 #drawing-area {
     border: 2px dashed #35424a;
     height: 400px;

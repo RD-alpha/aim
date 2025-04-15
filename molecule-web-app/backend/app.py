@@ -2,8 +2,8 @@ from flask import Flask, request, jsonify, send_from_directory
 from rdkit import Chem
 import os
 import shutil
-from rules.rules import execute_step, save_files_for_display
-
+from rules.rules import execute_step
+from helper import make_image, save_files_for_display, clear_results
 
 app = Flask(
     __name__,
@@ -25,39 +25,21 @@ def serve_static(path):
 def process_molecule():
     data = request.json
     smiles = data.get('smiles')
-    
+    cleanup = data.get('cleanup')
     if not smiles:
         return jsonify({'error': 'No SMILES string provided'}), 400
+
+    #save file for history
+    history_count = make_image(smiles)
 
     # Save the SMILES string to a temporary file
     with open('temp_smiles.txt', 'w') as f:
         f.write(smiles)
     print(smiles)
-    mols = execute_step(smiles)
 
-    backend_dir = os.path.dirname(os.path.abspath(__file__))
-    source_folder = os.path.join(backend_dir, 'results')
-
-    for filename in os.listdir(source_folder):
-        file_path = os.path.join(source_folder, filename)
-        if os.path.isfile(file_path):
-            os.remove(file_path)
+    mols = execute_step(smiles, cleanup)
 
     save_files_for_display(mols)
-
-   
-    target_folder = os.path.abspath(os.path.join(backend_dir, '../frontend/results'))
-
-    # Remove target folder if it exists
-    if os.path.exists(target_folder):
-        print('it exists')
-        shutil.rmtree(target_folder)
-        print(f"[INFO] Removed existing folder: {target_folder}")
-
-    # Copy folder from source to target
-    shutil.copytree(source_folder, target_folder)
-    print(f"[INFO] Copied {source_folder} → {target_folder}")
-
 
     # Load the resulting molecules (assuming they are saved as images)
     molecules = {}
@@ -72,8 +54,24 @@ def process_molecule():
                     line_num += 1
             molecules[idx] = {'image': 'results/' + filename, 'smiles': result_smiles}
     
+    clear_results()
+
     print(molecules)
-    return jsonify(molecules)
+    return jsonify({'molecules': molecules, 'history_idx': history_count})
+
+@app.route('/clear_history', methods=['POST'])
+def clear_history():
+    print('in clear history part')
+    backend_dir = os.path.dirname(os.path.abspath(__file__))
+    history_folder = os.path.join(backend_dir, 'history')
+    target_folder = os.path.abspath(os.path.join(backend_dir, '../frontend/history'))
+    if os.path.exists(history_folder):
+        shutil.rmtree(history_folder)
+        os.makedirs(history_folder)
+    if os.path.exists(target_folder):
+        shutil.rmtree(target_folder)
+        os.makedirs(target_folder)
+    return jsonify({'message': 'History cleared'})
 
 if __name__ == '__main__':
     app.run(debug=True)
