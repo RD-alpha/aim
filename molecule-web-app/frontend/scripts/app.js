@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log(molecule.image);
             img.src = molecule.image + "?v=" + new Date().getTime();
             img.alt = molecule.smiles;
-            img.classList.add('molecule-image');
+            img.classList.add('result-image');
             img.addEventListener('click', function() {
                 smilesInput.value = molecule.smiles;
             });

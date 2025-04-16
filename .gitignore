@@ -6,8 +6,10 @@
 /test5.png
 /testinloop.png
 /__pycache__
-molecule-web-app/backend/results/
-molecule-web-app/frontend/results/
-molecule-web-app/backend/history/
-molecule-web-app/frontend/history/
-molecule-web-app/backend/temp_smiles.txt
+/molecule-web-app/backend/results/
+/molecule-web-app/frontend/results/
+/molecule-web-app/backend/history/
+/molecule-web-app/frontend/history/
+/molecule-web-app/backend/temp_smiles.txt
+/molecule-web-app/backend/__pycache__
+/molecule-web-app/backend/rules/__pycache__/
