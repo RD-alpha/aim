@@ -26,6 +26,7 @@ def process_molecule():
     data = request.json
     smiles = data.get('smiles')
     cleanup = data.get('cleanup')
+    kekulise = data.get('kekulise')
     if not smiles:
         return jsonify({'error': 'No SMILES string provided'}), 400
 
@@ -37,7 +38,7 @@ def process_molecule():
         f.write(smiles)
     print(smiles)
 
-    mols = execute_step(smiles, cleanup)
+    mols = execute_step(smiles, cleanup, kekulise)
 
     save_files_for_display(mols)
 
