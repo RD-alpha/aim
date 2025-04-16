@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', function() {
     convertButton.addEventListener('click', function() {
         const smiles = smilesInput.value;
         const cleanup = document.getElementById('cleanup-checkbox').checked;
+        const kekulise = document.getElementById('kekulise-checkbox').checked;
         if (smiles) {
             fetch('/process_molecule', {
                 method: 'POST',
@@ -15,7 +16,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({ smiles: smiles,
-                    cleanup: cleanup
+                    cleanup: cleanup,
+                    kekulise: kekulise
                  })
             })
             .then(response => response.json())

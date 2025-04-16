@@ -248,8 +248,16 @@ def clean_mol(list_mol, original_mol = None):
                 clean_list.append(mol)
     return clean_list
 
-def execute_step(mol_inp_smiles, cleanup = False):
+def execute_step(mol_inp_smiles, cleanup = False, kekulise = False):
+
     mol_inp = Chem.MolFromSmiles(mol_inp_smiles)
+
+    if kekulise:
+        try:
+            Chem.Kekulize(mol_inp, clearAromaticFlags=True)
+        except:
+            print('there was a Kekulisation error')
+
     prepare_molecule(mol_inp)
     connected_mols = []
 
@@ -472,6 +480,8 @@ def execute_step(mol_inp_smiles, cleanup = False):
 
     for mol in connected_mols:
         Chem.SanitizeMol(mol)
+        if kekulise:
+            Chem.Kekulize(mol, clearAromaticFlags=True)
     
     return connected_mols
 
