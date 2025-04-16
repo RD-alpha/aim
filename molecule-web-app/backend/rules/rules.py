@@ -116,7 +116,7 @@ def identify_sink(mol, rules = "all"):
    
     # Look for vacant orbitals
     for atom in mol.GetAtoms():
-        if electronegativity_dict[atom.GetAtomicNum()] > 2.55 and atom.GetTotalNumHs() > 0:
+        if electronegativity_dict[atom.GetAtomicNum()] > 2.55 and atom.GetTotalNumHs() > 0 and atom.GetNumExplicitHs() > 0:
             atom.SetProp('sink', 'proton')
         valence_electrons = ptable.GetNOuterElecs(atom.GetAtomicNum())
         lone_electrons = valence_electrons - atom.GetTotalValence() - atom.GetFormalCharge()
@@ -295,7 +295,7 @@ def execute_step(mol_inp_smiles, cleanup = False):
                     a.SetNumExplicitHs(a.GetNumExplicitHs() - 1)
                 a2 = p_mol.GetAtomWithIdx(i)
                 a2.SetFormalCharge(a2.GetFormalCharge() + 1)
-                if a2.GetNumExplicitHs() > 0:
+                if a2.GetNumExplicitHs() > 0 or a2.GetFormalCharge() == 0:
                     a2.SetNumExplicitHs(a2.GetNumExplicitHs() + 1)
                 connected_mols.append(p_mol)
                 continue
@@ -469,6 +469,9 @@ def execute_step(mol_inp_smiles, cleanup = False):
                     connected_mols.append(a_to_b(n_mol, i, j))
     if cleanup:
         connected_mols = clean_mol(connected_mols)
+
+    for mol in connected_mols:
+        Chem.SanitizeMol(mol)
     
     return connected_mols
 
