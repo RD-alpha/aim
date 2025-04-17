@@ -94,7 +94,13 @@ def save_history():
     if os.path.exists(pickles_folder):
         shutil.rmtree(pickles_folder)
         os.makedirs(pickles_folder) """
-    
+    data = request.get_json()
+    mechanism = data.get('mechanism')
+    with open('mechanism.txt','a') as f:
+        for step in mechanism:
+            for num in step:
+                f.write(str(num) + " ")
+            f.write("\n")
     return jsonify({'message': 'History saved'})
 
 

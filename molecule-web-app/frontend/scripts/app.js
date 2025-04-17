@@ -5,7 +5,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const historyList = document.getElementById('history-list');
     const clearHistoryButton = document.getElementById('clear-history-button');
     const saveHistoryButton = document.getElementById('save-history-button');
-    var mech_step = [];
+    var mechStep = [];
+    var saveMech = false;
 
     convertButton.addEventListener('click', function() {
         const smiles = smilesInput.value;
@@ -39,6 +40,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function displayResults(molecules) {
         resultsContainer.innerHTML = '';
+        saveMech = false;
         Object.values(molecules).forEach(molecule => {
             const img = document.createElement('img');
             console.log(molecule.image);
@@ -47,7 +49,8 @@ document.addEventListener('DOMContentLoaded', function() {
             img.classList.add('result-image');
             img.addEventListener('click', function() {
                 smilesInput.value = molecule.smiles;
-                mech_step = molecule.mechanism;
+                mechStep.push(molecule.mechanism);
+                saveMech = true;
             });
             resultsContainer.appendChild(img);
         });
@@ -68,7 +71,7 @@ document.addEventListener('DOMContentLoaded', function() {
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
-            mechanism: mech_step
+            mechanism: mechStep
           })
         });
     })
