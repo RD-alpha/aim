@@ -52,6 +52,8 @@ electronegativity_dict = {1: 2.2,
  51: 2.05,
  52: 2.1,
  53: 2.66}
+import pickle
+
 def identify_source(mol, rules = "all"):
     for atom in mol.GetAtoms():
         # Look for hydrides - M-H bond
@@ -235,18 +237,21 @@ def a_to_b(mol, i, j):
         e_mol.AddBond(i,j, order=Chem.BondType.values[bond_order+1])
     return e_mol.GetMol()
 
-def clean_mol(list_mol, original_mol = None):
+def clean_mol(list_mol, mechanisms, original_mol = None):
     existing_inchi = set([])
     clean_list = []
+    updated_mech = []
     if original_mol is not None:
         og_inchi = Chem.MolToInchi(original_mol)
-    for mol in list_mol:
+    for idx in range(len(list_mol)):
+        mol = list_mol[idx]
         inchi = Chem.MolToInchi(mol)
         if inchi not in existing_inchi:
             if original_mol == None or inchi != og_inchi:
                 existing_inchi.add(inchi)
                 clean_list.append(mol)
-    return clean_list
+                updated_mech.append(mechanisms[idx])
+    return (clean_list, updated_mech)
 
 def execute_step(mol_inp_smiles, cleanup = False, kekulise = False):
 
@@ -259,7 +264,13 @@ def execute_step(mol_inp_smiles, cleanup = False, kekulise = False):
             print('there was a Kekulisation error')
 
     prepare_molecule(mol_inp)
+
+    #with open('pickles/mol.pkl', 'wb') as f:
+        #pickle.dump(mol_inp, f)
+
     connected_mols = []
+
+    mechanisms = []
 
     sources_atoms = {}
     sinks_atoms = {}
@@ -296,6 +307,9 @@ def execute_step(mol_inp_smiles, cleanup = False, kekulise = False):
             if i == j:
                 continue
             if sink_type == 'proton':
+                if source_type == 'hydride':
+                    print('There will be hydrogen but we will skip for now')
+                    continue
                 p_mol = Chem.Mol(mol_inp)
                 a = p_mol.GetAtomWithIdx(j)
                 a.SetFormalCharge(a.GetFormalCharge() - 1)
@@ -306,6 +320,7 @@ def execute_step(mol_inp_smiles, cleanup = False, kekulise = False):
                 if a2.GetNumExplicitHs() > 0 or a2.GetFormalCharge() == 0:
                     a2.SetNumExplicitHs(a2.GetNumExplicitHs() + 1)
                 connected_mols.append(p_mol)
+                mechanisms.append([4, i, j])
                 continue
             if hydride_flag:
                 m_mol = Chem.Mol(h_mol)
@@ -313,9 +328,11 @@ def execute_step(mol_inp_smiles, cleanup = False, kekulise = False):
                     m_mol.GetAtomWithIdx(j).SetNumExplicitHs(m_mol.GetAtomWithIdx(j).GetNumExplicitHs() + 1)
                 m_mol.GetAtomWithIdx(j).SetFormalCharge(m_mol.GetAtomWithIdx(j).GetFormalCharge() - 1)
                 connected_mols.append(m_mol)
+                mechanisms.append([6, i, j])
                 continue
             new_mol = Chem.Mol(mol_inp)
             connected_mols.append(a_to_b(new_mol, i, j))
+            mechanisms.append([0, i, j])
 
     # atoms to bonds
 
@@ -344,6 +361,7 @@ def execute_step(mol_inp_smiles, cleanup = False, kekulise = False):
                         m_mol.GetAtomWithIdx(j).SetNumExplicitHs(m_mol.GetAtomWithIdx(j).GetNumImplicitHs() + 1)
                         m_mol.GetAtomWithIdx(j).SetFormalCharge(m_mol.GetAtomWithIdx(j).GetFormalCharge() - 1)
                         connected_mols.append(m_mol)
+                        mechanisms.append([7, i, j])
                         continue
                     new_mol = Chem.Mol(mol_inp)
                     new_mol = b_to_a(new_mol, j, l)
@@ -352,7 +370,9 @@ def execute_step(mol_inp_smiles, cleanup = False, kekulise = False):
                     if i == j:
                         continue
                     new_mol = a_to_b(new_mol, i, j)
+
                     connected_mols.append(new_mol)
+                    mechanisms.append([1, i, j])
             else:
                 j = b.GetIntProp('sink_bond_atom')
                 l = b.GetIntProp('sink_other_atom')
@@ -363,6 +383,7 @@ def execute_step(mol_inp_smiles, cleanup = False, kekulise = False):
                         m_mol.GetAtomWithIdx(j).SetNumExplicitHs(m_mol.GetAtomWithIdx(j).GetNumImplicitHs() + 1)
                         m_mol.GetAtomWithIdx(j).SetFormalCharge(m_mol.GetAtomWithIdx(j).GetFormalCharge() - 1)
                         connected_mols.append(m_mol)
+                        mechanisms.append([7, i, j])
                         continue
                 if mol_inp.GetAtomWithIdx(l).GetFormalCharge() < 0:
                     continue
@@ -371,6 +392,7 @@ def execute_step(mol_inp_smiles, cleanup = False, kekulise = False):
                 if i == j:
                     continue
                 connected_mols.append(a_to_b(new_mol, i, j))
+                mechanisms.append([1, i, j])
 
 
     #bonds to atoms
@@ -416,8 +438,10 @@ def execute_step(mol_inp_smiles, cleanup = False, kekulise = False):
                     if a2.GetNumExplicitHs() > 0:
                         a2.SetNumExplicitHs(a2.GetNumExplicitHs() + 1)
                     connected_mols.append(p_mol)
+                    mechanisms.append([5, i, j])
                     continue
                 connected_mols.append(a_to_b(n_mol, i, j))
+                mechanisms.append([1, i, j])
 
 
 
@@ -461,6 +485,7 @@ def execute_step(mol_inp_smiles, cleanup = False, kekulise = False):
                         n_mol = Chem.Mol(new_mol[counter])
                         n_mol = b_to_a(n_mol, j, l)
                         connected_mols.append(a_to_b(n_mol, i, j))
+                        mechanisms.append([3, i, j])
                         counter += 1
             else:
                 j = b2.GetIntProp('sink_bond_atom')
@@ -475,13 +500,14 @@ def execute_step(mol_inp_smiles, cleanup = False, kekulise = False):
                     n_mol = Chem.Mol(new_mol[counter])
                     n_mol = b_to_a(n_mol,j, l)
                     connected_mols.append(a_to_b(n_mol, i, j))
+                    mechanisms.append([3, i, j])
     if cleanup:
-        connected_mols = clean_mol(connected_mols)
+        connected_mols, mechanisms = clean_mol(connected_mols, mechanisms)
 
     for mol in connected_mols:
         Chem.SanitizeMol(mol)
         if kekulise:
             Chem.Kekulize(mol, clearAromaticFlags=True)
     
-    return connected_mols
+    return (connected_mols, mechanisms)
 

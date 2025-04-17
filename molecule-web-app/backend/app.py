@@ -2,6 +2,8 @@ from flask import Flask, request, jsonify, send_from_directory
 from rdkit import Chem
 import os
 import shutil
+import paramiko
+from scp import SCPClient
 from rules.rules import execute_step
 from helper import make_image, save_files_for_display, clear_results
 
@@ -27,6 +29,7 @@ def process_molecule():
     smiles = data.get('smiles')
     cleanup = data.get('cleanup')
     kekulise = data.get('kekulise')
+
     if not smiles:
         return jsonify({'error': 'No SMILES string provided'}), 400
 
@@ -38,9 +41,9 @@ def process_molecule():
         f.write(smiles)
     print(smiles)
 
-    mols = execute_step(smiles, cleanup, kekulise)
+    mols, mechs = execute_step(smiles, cleanup, kekulise)
 
-    save_files_for_display(mols)
+    save_files_for_display(mols, mechs)
 
     # Load the resulting molecules (assuming they are saved as images)
     molecules = {}
@@ -53,7 +56,7 @@ def process_molecule():
                     if line_num == idx:
                         result_smiles = line.rstrip()
                     line_num += 1
-            molecules[idx] = {'image': 'results/' + filename, 'smiles': result_smiles}
+            molecules[idx] = {'image': 'results/' + filename, 'smiles': result_smiles, 'mechanism': mechs[idx]}
     
     clear_results()
 
@@ -62,7 +65,6 @@ def process_molecule():
 
 @app.route('/clear_history', methods=['POST'])
 def clear_history():
-    print('in clear history part')
     backend_dir = os.path.dirname(os.path.abspath(__file__))
     history_folder = os.path.join(backend_dir, 'history')
     target_folder = os.path.abspath(os.path.join(backend_dir, '../frontend/history'))
@@ -73,6 +75,28 @@ def clear_history():
         shutil.rmtree(target_folder)
         os.makedirs(target_folder)
     return jsonify({'message': 'History cleared'})
+
+@app.route('/save_history', methods=['POST'])
+def save_history():
+    """ backend_dir = os.path.dirname(os.path.abspath(__file__))
+    pickles_folder = os.path.join(backend_dir, 'pickles')
+    host = 'vinson.ch.private.cam.ac.uk'
+    username = 'rd611'
+    key_path = os.path.expanduser('~/.ssh/id_rsa')
+    ssh = paramiko.SSHClient()
+    ssh.load_system_host_keys()
+    ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+    ssh.connect(hostname=host, username=username, key_filename=key_path)
+    with SCPClient(ssh.get_transport()) as scp:
+        scp.put('local_file.txt', remote_path='/rd611/home/Documents/reaction_history/')
+    ssh.close()
+
+    if os.path.exists(pickles_folder):
+        shutil.rmtree(pickles_folder)
+        os.makedirs(pickles_folder) """
+    
+    return jsonify({'message': 'History saved'})
+
 
 if __name__ == '__main__':
     app.run(debug=True)
