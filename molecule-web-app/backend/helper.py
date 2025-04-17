@@ -16,9 +16,8 @@ def make_image(smiles):
     Chem.Draw.MolToFile(mol, target_folder + "/"+ str(count) + '.png')
     return count
 
-def save_files_for_display(mols):
+def save_files_for_display(mols, mechs):
     file_num = 0
-    
     for mol in mols:
         mol_smiles = Chem.MolToSmiles(mol)
         print(mol_smiles)
@@ -32,6 +31,7 @@ def save_files_for_display(mols):
             file_num += 1
         except:
             print('There was an invalid molecule')
+
 
     target_folder = os.path.abspath(os.path.join(backend_dir, '../frontend/results'))
     source_folder = os.path.join(backend_dir, 'results')

@@ -4,6 +4,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const resultsContainer = document.getElementById('results-container');
     const historyList = document.getElementById('history-list');
     const clearHistoryButton = document.getElementById('clear-history-button');
+    const saveHistoryButton = document.getElementById('save-history-button');
+    var mech_step = [];
 
     convertButton.addEventListener('click', function() {
         const smiles = smilesInput.value;
@@ -38,7 +40,6 @@ document.addEventListener('DOMContentLoaded', function() {
     function displayResults(molecules) {
         resultsContainer.innerHTML = '';
         Object.values(molecules).forEach(molecule => {
-            console.log('molecule_here');
             const img = document.createElement('img');
             console.log(molecule.image);
             img.src = molecule.image + "?v=" + new Date().getTime();
@@ -46,6 +47,7 @@ document.addEventListener('DOMContentLoaded', function() {
             img.classList.add('result-image');
             img.addEventListener('click', function() {
                 smilesInput.value = molecule.smiles;
+                mech_step = molecule.mechanism;
             });
             resultsContainer.appendChild(img);
         });
@@ -59,5 +61,17 @@ document.addEventListener('DOMContentLoaded', function() {
         historyList.appendChild(historyImg);
     }
 
+    saveHistoryButton.addEventListener('click', () => {
+        fetch('/save_history', { 
+            method: 'POST',  
+            headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            mechanism: mech_step
+          })
+        });
+    })
+    /* TODO: add a then statement to catch errors */
 
 });
