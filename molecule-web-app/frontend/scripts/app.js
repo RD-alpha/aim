@@ -65,6 +65,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     saveHistoryButton.addEventListener('click', () => {
+        console.log(mechStep);
         fetch('/save_history', { 
             method: 'POST',  
             headers: {
@@ -74,6 +75,7 @@ document.addEventListener('DOMContentLoaded', function() {
             mechanism: mechStep
           })
         });
+        mechStep = [];
     })
     /* TODO: add a then statement to catch errors */
 

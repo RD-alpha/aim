@@ -43,7 +43,7 @@ def process_molecule():
 
     mols, mechs = execute_step(smiles, cleanup, kekulise)
 
-    save_files_for_display(mols, mechs)
+    save_files_for_display(mols)
 
     # Load the resulting molecules (assuming they are saved as images)
     molecules = {}
@@ -78,9 +78,10 @@ def clear_history():
 
 @app.route('/save_history', methods=['POST'])
 def save_history():
-    """ backend_dir = os.path.dirname(os.path.abspath(__file__))
+    backend_dir = os.path.dirname(os.path.abspath(__file__))
     pickles_folder = os.path.join(backend_dir, 'pickles')
-    host = 'vinson.ch.private.cam.ac.uk'
+    reactions_folder = os.path.abspath(os.path.join(backend_dir, '../../reactions'))
+    """host = 'vinson.ch.private.cam.ac.uk'
     username = 'rd611'
     key_path = os.path.expanduser('~/.ssh/id_rsa')
     ssh = paramiko.SSHClient()
@@ -96,11 +97,33 @@ def save_history():
         os.makedirs(pickles_folder) """
     data = request.get_json()
     mechanism = data.get('mechanism')
-    with open('mechanism.txt','a') as f:
+    print(mechanism)
+    with open('pickles/mechanism.txt','a') as f:
         for step in mechanism:
             for num in step:
                 f.write(str(num) + " ")
             f.write("\n")
+
+    # Find the highest numbered folder in the reactions directory
+    existing_folders = [int(folder) for folder in os.listdir(reactions_folder) if folder.isdigit()]
+    next_folder_number = max(existing_folders, default=0) + 1
+    new_folder = os.path.join(reactions_folder, str(next_folder_number))
+
+    # Create the new folder
+    os.makedirs(new_folder)
+
+    # Copy the contents of the pickles folder to the new folder
+    if os.path.exists(pickles_folder):
+        for filename in os.listdir(pickles_folder):
+            source_file = os.path.join(pickles_folder, filename)
+            if os.path.isfile(source_file):
+                shutil.copy(source_file, new_folder)
+
+    # Clear the pickles folder
+    if os.path.exists(pickles_folder):
+        shutil.rmtree(pickles_folder)
+        os.makedirs(pickles_folder)
+        
     return jsonify({'message': 'History saved'})
 
 

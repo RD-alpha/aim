@@ -1,6 +1,7 @@
 from rdkit import Chem
 import os
 import shutil
+import pickle
 
 backend_dir = os.path.dirname(os.path.abspath(__file__))
 
@@ -16,7 +17,7 @@ def make_image(smiles):
     Chem.Draw.MolToFile(mol, target_folder + "/"+ str(count) + '.png')
     return count
 
-def save_files_for_display(mols, mechs):
+def save_files_for_display(mols):
     file_num = 0
     for mol in mols:
         mol_smiles = Chem.MolToSmiles(mol)
@@ -53,4 +54,15 @@ def clear_results():
     if os.path.exists(source_folder):
         shutil.rmtree(source_folder)
         os.makedirs(source_folder)
+    return None
+
+def save_pickle(mol):
+    source_folder = os.path.join(backend_dir, 'pickles')
+    count = 0
+    for filename in os.listdir(source_folder):
+        if filename.lower().endswith('.pkl'):
+            count += 1
+    filename = "mol_" + str(count) +".pkl"        
+    with open('pickles/' + filename, 'wb') as f:
+        pickle.dump(mol, f)
     return None
