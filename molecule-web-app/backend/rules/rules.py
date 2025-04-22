@@ -53,6 +53,7 @@ electronegativity_dict = {1: 2.2,
  52: 2.1,
  53: 2.66}
 import pickle
+from helper import save_pickle
 
 def identify_source(mol, rules = "all"):
     for atom in mol.GetAtoms():
@@ -265,8 +266,7 @@ def execute_step(mol_inp_smiles, cleanup = False, kekulise = False):
 
     prepare_molecule(mol_inp)
 
-    #with open('pickles/mol.pkl', 'wb') as f:
-        #pickle.dump(mol_inp, f)
+    save_pickle(mol_inp)
 
     connected_mols = []
 
