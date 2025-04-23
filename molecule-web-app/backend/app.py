@@ -5,7 +5,8 @@ import shutil
 import paramiko
 from scp import SCPClient
 from rules.rules import execute_step
-from helper import make_image, save_files_for_display, clear_results
+from helper import make_image, save_files_for_display, clear_results, clear_chain
+import pickle
 
 app = Flask(
     __name__,
@@ -29,6 +30,7 @@ def process_molecule():
     smiles = data.get('smiles')
     cleanup = data.get('cleanup')
     kekulise = data.get('kekulise')
+    id = data.get('id')
 
     if not smiles:
         return jsonify({'error': 'No SMILES string provided'}), 400
@@ -41,8 +43,14 @@ def process_molecule():
         f.write(smiles)
     print(smiles)
 
-    mols, mechs = execute_step(smiles, cleanup, kekulise)
+    if id != -1:
+        with open('chain/mol_' + str(id) + '.pkl', 'rb') as f:
+            chain_mol = pickle.load(f)
+        mols, mechs = execute_step(smiles, cleanup, kekulise, chain_mol)
+    else:
+        mols, mechs = execute_step(smiles, cleanup, kekulise)
 
+    clear_chain()
     save_files_for_display(mols)
 
     # Load the resulting molecules (assuming they are saved as images)
@@ -59,9 +67,13 @@ def process_molecule():
             molecules[idx] = {'image': 'results/' + filename, 'smiles': result_smiles, 'mechanism': mechs[idx]}
     
     clear_results()
+    
 
     print(molecules)
     return jsonify({'molecules': molecules, 'history_idx': history_count})
+
+
+
 
 @app.route('/clear_history', methods=['POST'])
 def clear_history():
