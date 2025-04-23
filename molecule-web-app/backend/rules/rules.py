@@ -138,7 +138,7 @@ def identify_sink(mol, rules = "all"):
             # Identify possible sigma stars by considering leaving groups being any element that has a higher electronegativity than carbon
             if bond.GetBondTypeAsDouble() == 1:
                 # TBD if to keep this rule or not - not particularly profound either way
-                if electronegativity_dict[atoms[0].GetAtomicNum()] > 2.55 and electronegativity_dict[atoms[1].GetAtomicNum()] > 2.55 and False:
+                if electronegativity_dict[atoms[0].GetAtomicNum()] > 2.55 and electronegativity_dict[atoms[1].GetAtomicNum()] > 2.55:
                     bond.SetProp('sink', 'sigma star')
                     bond.SetProp('sink_bond_atom', 'both')
                     bond.SetProp('sink_other_atom', 'both')
@@ -186,7 +186,7 @@ def identify_acidic_CH(mol):
     """
     for atom in mol.GetAtoms():
         exit_loop = False
-        if atom.GetAtomicNum() == 6 and atom.GetTotalNumHs() > 0:
+        if atom.GetAtomicNum() == 6 and atom.GetTotalNumHs() > 0 and atom.GetFormalCharge() > -1:
             for atom2 in atom.GetNeighbors():
                 if atom2.GetFormalCharge() > 0:
                     atom.SetProp('sink', 'proton')
@@ -419,6 +419,8 @@ def execute_step(mol_inp_smiles, cleanup = False, kekulise = False, chain_mol = 
         else:
             i = b.GetIntProp('source_bond_atom')
             k = b.GetIntProp('source_other_atom')
+            if mol_inp.GetAtomWithIdx(k).GetFormalCharge() > 0:
+                    continue
             order.append(i)
             new_mol[0] = b_to_a(new_mol[0], k, i)
         for sink_idx, sink_type in sinks_atoms.items():

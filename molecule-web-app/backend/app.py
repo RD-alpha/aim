@@ -2,8 +2,6 @@ from flask import Flask, request, jsonify, send_from_directory
 from rdkit import Chem
 import os
 import shutil
-import paramiko
-from scp import SCPClient
 from rules.rules import execute_step
 from helper import make_image, save_files_for_display, clear_results, clear_chain
 import pickle
@@ -93,20 +91,7 @@ def save_history():
     backend_dir = os.path.dirname(os.path.abspath(__file__))
     pickles_folder = os.path.join(backend_dir, 'pickles')
     reactions_folder = os.path.abspath(os.path.join(backend_dir, '../../reactions'))
-    """host = 'vinson.ch.private.cam.ac.uk'
-    username = 'rd611'
-    key_path = os.path.expanduser('~/.ssh/id_rsa')
-    ssh = paramiko.SSHClient()
-    ssh.load_system_host_keys()
-    ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    ssh.connect(hostname=host, username=username, key_filename=key_path)
-    with SCPClient(ssh.get_transport()) as scp:
-        scp.put('local_file.txt', remote_path='/rd611/home/Documents/reaction_history/')
-    ssh.close()
-
-    if os.path.exists(pickles_folder):
-        shutil.rmtree(pickles_folder)
-        os.makedirs(pickles_folder) """
+    
     data = request.get_json()
     mechanism = data.get('mechanism')
     print(mechanism)
