@@ -23,12 +23,14 @@ def save_files_for_display(mols):
         mol_smiles = Chem.MolToSmiles(mol)
         print(mol_smiles)
         Chem.SanitizeMol(mol)
-        file_name = "mol_" + str(file_num) +".png"
+        file_name = "mol_" + str(file_num)
         try:
-            Chem.Draw.MolToFile(mol, "results/" + file_name)
+            Chem.Draw.MolToFile(mol, "results/" + file_name + ".png")
             with open ("results/products.txt", 'a', encoding='utf-8') as file:
                 line = mol_smiles
                 file.write(line +"\n")
+            with open("chain/" + file_name + ".pkl", 'wb') as f:
+                pickle.dump(mol, f)
             file_num += 1
         except:
             print('There was an invalid molecule')
@@ -51,6 +53,13 @@ def save_files_for_display(mols):
 
 def clear_results():
     source_folder = os.path.join(backend_dir, 'results')
+    if os.path.exists(source_folder):
+        shutil.rmtree(source_folder)
+        os.makedirs(source_folder)
+    return None
+
+def clear_chain():
+    source_folder = os.path.join(backend_dir, 'chain')
     if os.path.exists(source_folder):
         shutil.rmtree(source_folder)
         os.makedirs(source_folder)

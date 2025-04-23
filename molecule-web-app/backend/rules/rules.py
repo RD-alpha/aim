@@ -254,9 +254,12 @@ def clean_mol(list_mol, mechanisms, original_mol = None):
                 updated_mech.append(mechanisms[idx])
     return (clean_list, updated_mech)
 
-def execute_step(mol_inp_smiles, cleanup = False, kekulise = False):
+def execute_step(mol_inp_smiles, cleanup = False, kekulise = False, chain_mol = None):
 
-    mol_inp = Chem.MolFromSmiles(mol_inp_smiles)
+    if chain_mol is not None:
+        mol_inp = chain_mol
+    else:
+        mol_inp = Chem.MolFromSmiles(mol_inp_smiles)
 
     if kekulise:
         try:
