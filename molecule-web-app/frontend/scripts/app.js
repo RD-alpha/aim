@@ -60,9 +60,13 @@ document.addEventListener('DOMContentLoaded', function() {
     function displayResults(molecules) {
         resultsContainer.innerHTML = '';
         saveMech = false;
+        const imageChoices = {}; // Object to store user choices for each image
+
         Object.values(molecules).forEach(molecule => {
+            const imgContainer = document.createElement('div');
+            imgContainer.classList.add('image-container');
+
             const img = document.createElement('img');
-            console.log(molecule.image);
             img.src = molecule.image + "?v=" + new Date().getTime();
             img.alt = molecule.smiles;
             img.classList.add('result-image');
@@ -72,8 +76,48 @@ document.addEventListener('DOMContentLoaded', function() {
                 saveMech = true;
                 id = molecule.image.match(/mol_(\d+)\.png/)[1];
             });
-            resultsContainer.appendChild(img);
+
+            // Create button container
+            const buttonContainer = document.createElement('div');
+            buttonContainer.classList.add('button-container');
+
+
+            // Add red button
+            const redButton = document.createElement('button');
+            redButton.classList.add('red-button');
+            redButton.addEventListener('click', () => {
+                img.style.border = '3px solid red';
+                imageChoices[molecule.image] = 'red';
+            });
+
+            // Add green button
+            const greenButton = document.createElement('button');
+            greenButton.classList.add('green-button');
+            greenButton.addEventListener('click', () => {
+                img.style.border = '3px solid green';
+                imageChoices[molecule.image] = 'green';
+            });
+
+            // Append buttons to the button container
+            buttonContainer.appendChild(redButton);
+            buttonContainer.appendChild(greenButton);
+
+            // Append elements to the container
+            imgContainer.appendChild(img);
+            imgContainer.appendChild(buttonContainer);
+            resultsContainer.appendChild(imgContainer);
         });
+
+        // Add submit button
+        const submitButton = document.createElement('button');
+        submitButton.textContent = 'Submit Choices';
+        submitButton.classList.add('submit-button');
+        submitButton.addEventListener('click', () => {
+            console.log('User choices:', imageChoices);
+            // Placeholder for handling the choices
+            // You can send `imageChoices` to the backend or process it further
+        });
+        resultsContainer.appendChild(submitButton);
     }
 
     function addHistory(history_idx) {
