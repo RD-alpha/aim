@@ -126,3 +126,61 @@ footer {
     font-size: 0.9rem;
     box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
 }
+
+.button-container {
+    display: flex;
+    justify-content: center;
+    gap: 10px; /* Space between buttons */
+    margin-top: 10px;
+}
+
+.image-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.red-button, .green-button {
+    margin: 5px;
+    padding: 5px 10px;
+    font-size: 0.9rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.red-button {
+    background: #e74c3c;
+    color: white;
+}
+
+.red-button:hover {
+    background: #c0392b;
+}
+
+.green-button {
+    background: #2ecc71;
+    color: white;
+}
+
+.green-button:hover {
+    background: #27ae60;
+}
+
+.submit-button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    font-size: 1rem;
+    background: #3498db;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.submit-button:hover {
+    background: #2980b9;
+}
