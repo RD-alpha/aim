@@ -37,11 +37,6 @@ def process_molecule():
     #save file for history
     history_count = make_image(smiles)
 
-    # Save the SMILES string to a temporary file
-    with open('temp_smiles.txt', 'w') as f:
-        f.write(smiles)
-    print(smiles)
-
     if id != -1:
         with open('chain/mol_' + str(id) + '.pkl', 'rb') as f:
             chain_mol = pickle.load(f)
@@ -130,7 +125,16 @@ def save_training_data():
     backend_dir = os.path.dirname(os.path.abspath(__file__))
     chain_folder = os.path.join(backend_dir, 'chain')
     training_folder = os.path.abspath(os.path.join(backend_dir, '../../training'))
-    
+    pickles_folder = os.path.abspath(os.path.join(backend_dir, 'pickles'))
+    # Find the pickle file with the highest x in the pickles folder by sorting
+    highest_file = None
+    if os.path.exists(pickles_folder):
+        pickle_files = [filename for filename in os.listdir(pickles_folder)]
+        sorted_files = sorted(pickle_files, key=lambda f: int(f.split('_')[1].split('.')[0]), reverse=True)
+        if sorted_files:
+            highest_file = sorted_files[0]
+            highest_file_path = os.path.join(pickles_folder, highest_file)
+
     # Find the highest numbered folder in the training directory
     existing_folders = [int(folder) for folder in os.listdir(training_folder) if folder.isdigit()]
     next_folder_number = max(existing_folders, default=0) + 1
@@ -145,7 +149,7 @@ def save_training_data():
             source_file = os.path.join(chain_folder, filename)
             if os.path.isfile(source_file):
                 shutil.copy(source_file, new_folder)
-
+                shutil.copy(highest_file_path, os.path.join(new_folder, 'sm.pkl'))
     with open(os.path.join(new_folder, 'data.json'), 'w') as f:
         json.dump(data, f)
     return jsonify({'message': 'Training data saved'})
