@@ -5,6 +5,7 @@ import shutil
 from rules.rules import execute_step
 from helper import make_image, save_files_for_display, clear_results, clear_chain
 import pickle
+import json
 
 app = Flask(
     __name__,
@@ -122,6 +123,32 @@ def save_history():
         os.makedirs(pickles_folder)
         
     return jsonify({'message': 'History saved'})
+
+@app.route('/save_training_data', methods=['POST'])
+def save_training_data():
+    data = request.get_json()   
+    backend_dir = os.path.dirname(os.path.abspath(__file__))
+    chain_folder = os.path.join(backend_dir, 'chain')
+    training_folder = os.path.abspath(os.path.join(backend_dir, '../../training'))
+    
+    # Find the highest numbered folder in the training directory
+    existing_folders = [int(folder) for folder in os.listdir(training_folder) if folder.isdigit()]
+    next_folder_number = max(existing_folders, default=0) + 1
+    new_folder = os.path.join(training_folder, str(next_folder_number))
+
+    # Create the new folder
+    os.makedirs(new_folder)
+
+    # Copy the contents of the chain folder to the new folder
+    if os.path.exists(chain_folder):
+        for filename in os.listdir(chain_folder):
+            source_file = os.path.join(chain_folder, filename)
+            if os.path.isfile(source_file):
+                shutil.copy(source_file, new_folder)
+
+    with open(os.path.join(new_folder, 'data.json'), 'w') as f:
+        json.dump(data, f)
+    return jsonify({'message': 'Training data saved'})
 
 
 if __name__ == '__main__':

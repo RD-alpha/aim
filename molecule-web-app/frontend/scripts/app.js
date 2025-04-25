@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const clearHistoryButton = document.getElementById('clear-history-button');
     const saveHistoryButton = document.getElementById('save-history-button');
     var mechStep = [];
+    var nextStep = [];
     var saveMech = false;
     var id = -1;
 
@@ -25,6 +26,9 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(response => response.json())
             .then(data => {
                 console.log(data)
+                if (saveMech == true) {
+                mechStep.push(nextStep);
+                }
                 displayResults(data.molecules);
                 addHistory(data.history_idx);
             })
@@ -70,16 +74,19 @@ document.addEventListener('DOMContentLoaded', function() {
             img.src = molecule.image + "?v=" + new Date().getTime();
             img.alt = molecule.smiles;
             img.classList.add('result-image');
+            const molId =molecule.image.match(/mol_(\d+)\.png/)[1];
+            img.dataset.molID = molId;;
             img.addEventListener('click', function() {
                 smilesInput.value = molecule.smiles;
-                mechStep.push(molecule.mechanism);
+                nextStep = molecule.mechanism;
                 saveMech = true;
-                id = molecule.image.match(/mol_(\d+)\.png/)[1];
+                id = molId;
             });
 
             // Create button container
             const buttonContainer = document.createElement('div');
             buttonContainer.classList.add('button-container');
+            buttonContainer.dataset.molID = molId;
 
 
             // Add red button
@@ -87,7 +94,7 @@ document.addEventListener('DOMContentLoaded', function() {
             redButton.classList.add('red-button');
             redButton.addEventListener('click', () => {
                 img.style.border = '3px solid red';
-                imageChoices[molecule.image] = 'red';
+                imageChoices[molId] = 0;
             });
 
             // Add green button
@@ -95,7 +102,7 @@ document.addEventListener('DOMContentLoaded', function() {
             greenButton.classList.add('green-button');
             greenButton.addEventListener('click', () => {
                 img.style.border = '3px solid green';
-                imageChoices[molecule.image] = 'green';
+                imageChoices[molId] = 1;
             });
 
             // Append buttons to the button container
@@ -110,12 +117,25 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Add submit button
         const submitButton = document.createElement('button');
-        submitButton.textContent = 'Submit Choices';
+        submitButton.textContent = 'Save training data';
         submitButton.classList.add('submit-button');
         submitButton.addEventListener('click', () => {
             console.log('User choices:', imageChoices);
-            // Placeholder for handling the choices
-            // You can send `imageChoices` to the backend or process it further
+            fetch('/save_training_data', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ choices: imageChoices })
+            })
+            .then(response => {
+                if (response.ok) {
+                    console.log('Training data saved successfully');
+                } else {
+                    console.error('Error saving training data');
+                }
+            })
+            .catch(error => console.error('Error:', error));
         });
         resultsContainer.appendChild(submitButton);
     }
