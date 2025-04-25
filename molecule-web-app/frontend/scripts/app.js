@@ -74,7 +74,7 @@ document.addEventListener('DOMContentLoaded', function() {
             img.src = molecule.image + "?v=" + new Date().getTime();
             img.alt = molecule.smiles;
             img.classList.add('result-image');
-            const molId =molecule.image.match(/mol_(\d+)\.png/)[1];
+            const molId = molecule.image.match(/mol_(\d+)\.png/)[1];
             img.dataset.molID = molId;;
             img.addEventListener('click', function() {
                 smilesInput.value = molecule.smiles;
@@ -94,7 +94,7 @@ document.addEventListener('DOMContentLoaded', function() {
             redButton.classList.add('red-button');
             redButton.addEventListener('click', () => {
                 img.style.border = '3px solid red';
-                imageChoices[molId] = 0;
+                imageChoices[molId] = {mechanism: molecule.mechanism, probable: 0};
             });
 
             // Add green button
@@ -102,7 +102,7 @@ document.addEventListener('DOMContentLoaded', function() {
             greenButton.classList.add('green-button');
             greenButton.addEventListener('click', () => {
                 img.style.border = '3px solid green';
-                imageChoices[molId] = 1;
+                imageChoices[molId] = {mechanism: molecule.mechanism, probable: 1};
             });
 
             // Append buttons to the button container
