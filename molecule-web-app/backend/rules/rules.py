@@ -243,10 +243,10 @@ def clean_mol(list_mol, mechanisms, original_mol = None):
     clean_list = []
     updated_mech = []
     if original_mol is not None:
-        og_inchi = Chem.MolToInchi(original_mol)
+        og_inchi = Chem.MolToInchi(original_mol, options='-FixedH -RecMet')
     for idx in range(len(list_mol)):
         mol = list_mol[idx]
-        inchi = Chem.MolToInchi(mol)
+        inchi = Chem.MolToInchi(mol, options='-FixedH -RecMet')
         if inchi not in existing_inchi:
             if original_mol == None or inchi != og_inchi:
                 existing_inchi.add(inchi)
