@@ -58,7 +58,8 @@ from helper import save_pickle
 def identify_source(mol, rules = "all"):
     for atom in mol.GetAtoms():
         # Look for hydrides - M-H bond
-        if electronegativity_dict[atom.GetAtomicNum()] < 2.05 and atom.GetFormalCharge() < 0 and atom.GetNumExplicitHs() > 0:
+        if electronegativity_dict[atom.GetAtomicNum()] < 2.05 and atom.GetFormalCharge() < 0 and atom.GetTotalNumHs() > 0:
+            atom.SetNumExplicitHs(atom.GetTotalNumHs())
             atom.SetProp('source', 'hydride')
 
         # Look for lone pairs
@@ -243,10 +244,18 @@ def clean_mol(list_mol, mechanisms, original_mol = None):
     clean_list = []
     updated_mech = []
     if original_mol is not None:
-        og_inchi = Chem.MolToInchi(original_mol, options='-FixedH -RecMet')
+        original_mol_count = 0
+        for a in original_mol.GetAtoms():
+            if a.GetFormalCharge() != 0:
+                original_mol_count += 1
+        og_inchi = (Chem.MolToInchi(original_mol, options='-FixedH -RecMet'), original_mol_count)
     for idx in range(len(list_mol)):
         mol = list_mol[idx]
-        inchi = Chem.MolToInchi(mol, options='-FixedH -RecMet')
+        mol_count = 0
+        for a in mol.GetAtoms():
+            if a.GetFormalCharge() != 0:
+                mol_count += 1
+        inchi = (Chem.MolToInchi(mol, options='-FixedH -RecMet'), mol_count)
         if inchi not in existing_inchi:
             if original_mol == None or inchi != og_inchi:
                 existing_inchi.add(inchi)
@@ -280,6 +289,7 @@ def execute_step(mol_inp_smiles, cleanup = False, kekulise = False, chain_mol = 
     sources_bonds = {}
     sinks_bonds = {}
     for atom1 in mol_inp.GetAtoms():
+        atom1.SetNoImplicit(False)
         if atom1.HasProp('source'):
             sources_atoms[atom1.GetIdx()] = atom1.GetProp('source')
         if atom1.HasProp('sink'):
