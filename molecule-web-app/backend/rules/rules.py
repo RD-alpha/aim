@@ -531,5 +531,5 @@ def execute_step(mol_inp_smiles, cleanup = False, kekulise = False, chain_mol = 
         if kekulise:
             Chem.Kekulize(mol, clearAromaticFlags=True)
     
-    return (connected_mols, mechanisms)
+    return (connected_mols, mechanisms, mol_inp)
 
