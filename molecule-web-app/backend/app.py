@@ -6,6 +6,9 @@ from rules.rules import execute_step
 from helper import make_image, save_files_for_display, clear_results, clear_chain
 import pickle
 import json
+import joblib
+from ml_helper import make_atom_fingerprint
+import numpy as np
 
 app = Flask(
     __name__,
@@ -40,15 +43,16 @@ def process_molecule():
     if id != -1:
         with open('chain/mol_' + str(id) + '.pkl', 'rb') as f:
             chain_mol = pickle.load(f)
-        mols, mechs = execute_step(smiles, cleanup, kekulise, chain_mol)
+        mols, mechs, inp_mol = execute_step(smiles, cleanup, kekulise, chain_mol)
     else:
-        mols, mechs = execute_step(smiles, cleanup, kekulise)
+        mols, mechs, inp_mol = execute_step(smiles, cleanup, kekulise)
 
     clear_chain()
     save_files_for_display(mols)
 
     # Load the resulting molecules (assuming they are saved as images)
     molecules = {}
+    clf = joblib.load("../../model.pkl")
     for filename in os.listdir('results'):
         if filename.endswith('.png'):
             idx = int(filename.split('_')[1].split('.')[0])
@@ -58,7 +62,16 @@ def process_molecule():
                     if line_num == idx:
                         result_smiles = line.rstrip()
                     line_num += 1
-            molecules[idx] = {'image': 'results/' + filename, 'smiles': result_smiles, 'mechanism': mechs[idx]}
+            
+            if mechs[idx][0] < 4:
+                a1 = make_atom_fingerprint(inp_mol.GetAtomWithIdx(mechs[idx][1]))
+                a2 = make_atom_fingerprint(inp_mol.GetAtomWithIdx(mechs[idx][2]))
+                sum_finger_print = [mechs[idx][0]] + a1 + a2
+                y_pred = clf.predict(np.array(sum_finger_print).reshape(1, -1))
+                print(y_pred)
+            
+            molecules[idx] = {'image': 'results/' + filename, 'smiles': result_smiles, 'mechanism': mechs[idx], 'predicted': int(y_pred[0])}
+            
     
     clear_results()
     

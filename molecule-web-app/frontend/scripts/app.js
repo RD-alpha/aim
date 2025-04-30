@@ -88,6 +88,9 @@ document.addEventListener('DOMContentLoaded', function() {
             buttonContainer.classList.add('button-container');
             buttonContainer.dataset.molID = molId;
 
+            const text = document.createElement('p');
+            text.textContent = molecule.predicted;
+
 
             // Add red button
             const redButton = document.createElement('button');
@@ -108,6 +111,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // Append buttons to the button container
             buttonContainer.appendChild(redButton);
             buttonContainer.appendChild(greenButton);
+            buttonContainer.appendChild(text);
 
             // Append elements to the container
             imgContainer.appendChild(img);
