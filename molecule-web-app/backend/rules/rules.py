@@ -371,8 +371,8 @@ def execute_step(mol_inp_smiles, cleanup = False, kekulise = False, chain_mol = 
                     l = b.GetOtherAtom(a).GetIdx()
                     if hydride_flag:
                         m_mol = Chem.Mol(h_mol)
-                        m_mol = b_to_a(new_mol, j, l)
-                        m_mol = Chem.Mol(h_mol)
+                        m_mol = b_to_a(m_mol, j, l)
+                        m_mol = Chem.Mol(m_mol)
                         m_mol.GetAtomWithIdx(j).SetNumExplicitHs(m_mol.GetAtomWithIdx(j).GetNumImplicitHs() + 1)
                         m_mol.GetAtomWithIdx(j).SetFormalCharge(m_mol.GetAtomWithIdx(j).GetFormalCharge() - 1)
                         connected_mols.append(m_mol)
