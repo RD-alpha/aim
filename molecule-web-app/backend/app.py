@@ -9,12 +9,16 @@ import json
 import joblib
 from ml_helper import make_atom_fingerprint
 import numpy as np
+import random
 
 app = Flask(
     __name__,
     static_folder='../frontend',           # Path to your static files
     template_folder='../frontend'          # Path to your HTML files
 )
+
+
+root_folder = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../'))
 
 @app.route('/')
 def serve_index():
@@ -70,6 +74,9 @@ def process_molecule():
                 y_pred = clf.predict(np.array(sum_finger_print).reshape(1, -1))
                 print(y_pred)
             
+            else:
+                y_pred = [-1]
+            
             molecules[idx] = {'image': 'results/' + filename, 'smiles': result_smiles, 'mechanism': mechs[idx], 'predicted': int(y_pred[0])}
             
     
@@ -99,7 +106,7 @@ def clear_history():
 def save_history():
     backend_dir = os.path.dirname(os.path.abspath(__file__))
     pickles_folder = os.path.join(backend_dir, 'pickles')
-    reactions_folder = os.path.abspath(os.path.join(backend_dir, '../../reactions'))
+    reactions_folder = os.path.abspath(os.path.join(root_folder, 'reactions'))
     
     data = request.get_json()
     mechanism = data.get('mechanism')
@@ -137,7 +144,7 @@ def save_training_data():
     data = request.get_json()   
     backend_dir = os.path.dirname(os.path.abspath(__file__))
     chain_folder = os.path.join(backend_dir, 'chain')
-    training_folder = os.path.abspath(os.path.join(backend_dir, '../../training'))
+    training_folder = os.path.abspath(os.path.join(root_folder, 'training'))
     pickles_folder = os.path.abspath(os.path.join(backend_dir, 'pickles'))
     # Find the pickle file with the highest x in the pickles folder by sorting
     highest_file = None
@@ -166,6 +173,27 @@ def save_training_data():
     with open(os.path.join(new_folder, 'data.json'), 'w') as f:
         json.dump(data, f)
     return jsonify({'message': 'Training data saved'})
+
+@app.route('/get_random_suggestion', methods=['GET'])
+def get_random_suggestion():
+    suggestions_file = os.path.join(root_folder, 'training_suggestions.txt')
+    try:
+        with open(suggestions_file, 'r') as f:
+            lines = f.readlines()
+        if not lines:
+            return jsonify({'error': 'No suggestions available'}), 404
+
+        # Pick a random line
+        
+        random_line = random.choice(lines).strip()
+
+        # Remove the selected line from the file
+        with open(suggestions_file, 'w') as f:
+            f.writelines(line for line in lines if line.strip() != random_line)
+
+        return jsonify({'suggestion': random_line})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 
 if __name__ == '__main__':
