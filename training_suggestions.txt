@@ -35,7 +35,6 @@ CCCI.O
 CCCI.N
 CCCI.CCS
 CCCI.c1ccccc1
-CCCI.C[Mg]Br
 CCCI.C=C[Mg]Br
 CCCI.C[Li]
 CCCI.[BH4-]
@@ -406,7 +405,6 @@ C[Mg]Br.C#N-
 C[Mg]Br.CC[O-]
 C[Mg]Br.N
 C[Mg]Br.CCS
-C[Mg]Br.c1ccccc1
 C[Mg]Br.C[Mg]Br
 C[Mg]Br.C=C[Mg]Br
 C[Mg]Br.C[Li]

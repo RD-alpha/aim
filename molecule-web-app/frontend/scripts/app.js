@@ -66,8 +66,10 @@ document.addEventListener('DOMContentLoaded', function() {
         resultsContainer.innerHTML = '';
         saveMech = false;
         const imageChoices = {}; // Object to store user choices for each image
+         // Sort molecules so those with predicted == 1 appear first
+        const sortedMolecules = Object.values(molecules).sort((a, b) => b.predicted - a.predicted);
 
-        Object.values(molecules).forEach(molecule => {
+        sortedMolecules.forEach(molecule => {
             const imgContainer = document.createElement('div');
             imgContainer.classList.add('image-container');
 
