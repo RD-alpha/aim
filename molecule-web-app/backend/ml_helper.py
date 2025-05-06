@@ -1,5 +1,56 @@
 from rdkit import Chem
 
+electronegativity_dict = {1: 2.2,
+ 3: 0.98,
+ 4: 1.57,
+ 5: 2.04,
+ 6: 2.55,
+ 7: 3.04,
+ 8: 3.44,
+ 9: 3.98,
+ 11: 0.93,
+ 12: 1.31,
+ 13: 1.61,
+ 14: 1.9,
+ 15: 2.19,
+ 16: 2.58,
+ 17: 3.16,
+ 19: 0.82,
+ 20: 1.0,
+ 21: 1.36,
+ 22: 1.54,
+ 23: 1.63,
+ 24: 1.66,
+ 25: 1.55,
+ 26: 1.83,
+ 27: 1.88,
+ 28: 1.91,
+ 29: 1.9,
+ 30: 1.65,
+ 31: 1.81,
+ 32: 2.01,
+ 33: 2.18,
+ 34: 2.55,
+ 35: 2.96,
+ 36: 3.0,
+ 37: 0.82,
+ 38: 0.95,
+ 39: 1.22,
+ 40: 1.33,
+ 41: 1.6,
+ 42: 2.16,
+ 43: 1.9,
+ 44: 2.2,
+ 45: 2.28,
+ 46: 2.2,
+ 47: 1.93,
+ 48: 1.69,
+ 49: 1.78,
+ 50: 1.96,
+ 51: 2.05,
+ 52: 2.1,
+ 53: 2.66}
+
 def make_atom_fingerprint(atom):
 
     # Charge bitstring
@@ -61,5 +112,83 @@ def make_atom_fingerprint(atom):
     # adjacency bitstring
     # [C+, C-, CH0, CH, C-EN, C=EN, EN, EP]
 
-    total_bit_string = charge_bitstring + h_number_bitstring + hybridization_bitstring + element_bitstring
+    adjecency_bitstring = [0] * 8
+    for a in atom.GetNeighbors():
+        if a.GetAtomicNum() == 6:
+            if a.GetFormalCharge() > 0:
+                adjecency_bitstring[0] = 1
+            elif a.GetFormalCharge() < 0:
+                adjecency_bitstring[1] = 1
+            if a.GetTotalNumHs() > 0:
+                adjecency_bitstring[2] = 1
+            for a2 in a.GetNeighbors():
+                if electronegativity_dict[a2.GetAtomicNum()] > 2.55:
+                    for b in a.GetBonds():
+                        if b.GetOtherAtom(a).GetIdx() == a2.GetIdx():
+                            if b.GetBondTypeAsDouble() == 1:
+                                adjecency_bitstring[3] = 1
+                            elif b.GetBondTypeAsDouble() >= 2:
+                                adjecency_bitstring[4] = 1
+        elif electronegativity_dict[a.GetAtomicNum()] > 2.55:
+            adjecency_bitstring[5] = 1
+        elif electronegativity_dict[a.GetAtomicNum()] < 2.05:
+            adjecency_bitstring[6] = 1
+ 
+
+    total_bit_string = charge_bitstring + h_number_bitstring + hybridization_bitstring + element_bitstring + adjecency_bitstring
     return total_bit_string
+
+def make_bond_fingerprint(bond):
+    # bond type bitstring
+    # [single, double, triple, aromatic]
+    bond_type_bitstring = [0] * 4
+    if not bond:
+        return bond_type_bitstring
+    if bond.GetBondTypeAsDouble() == 1:
+        bond_type_bitstring[0] = 1
+    elif bond.GetBondTypeAsDouble() == 2:
+        bond_type_bitstring[1] = 1
+    elif bond.GetBondTypeAsDouble() == 3:
+        bond_type_bitstring[2] = 1
+    elif bond.GetBondTypeAsDouble() == 4:
+        bond_type_bitstring[3] = 1
+    return bond_type_bitstring
+
+
+def new_bond_fingerprint(mol, a1_idx, a2_idx):
+    a1 = mol.GetAtomWithIdx(a1_idx)
+    a2 = mol.GetAtomWithIdx(a2_idx)
+    # ring size bitstring
+    # [3, 4, 5, 6, 7+]
+    ring_size_bitstring = [0] * 5
+    fragments = Chem.GetMolFrags(mol)
+    for f in fragments:
+        if a1.GetIdx() in f and a2.GetIdx() in f:
+            len_path = len(Chem.GetShortestPath(mol, a1.GetIdx(), a2.GetIdx()))
+            if len_path == 3:
+                ring_size_bitstring[0] = 1
+            elif len_path == 4:
+                ring_size_bitstring[1] = 1
+            elif len_path == 5:
+                ring_size_bitstring[2] = 1
+            elif len_path == 6:
+                ring_size_bitstring[3] = 1
+            elif len_path >= 7:
+                ring_size_bitstring[4] = 1
+    return ring_size_bitstring
+
+
+def make_fingerprint(sm, mech):
+    a1 = make_atom_fingerprint(sm.GetAtomWithIdx(mech[1]))
+    a2 = make_atom_fingerprint(sm.GetAtomWithIdx(mech[2]))
+    if mech[3]:
+        b1 = make_bond_fingerprint(sm.GetBondBetweenAtoms(mech[1], mech[3]))
+    else:
+        b1 = [0] * 4
+    if mech[4]:
+        b2 = make_bond_fingerprint(sm.GetBondBetweenAtoms(mech[2], mech[4]))
+    else:
+        b2 = [0] * 4
+    r = new_bond_fingerprint(sm, mech[1], mech[2])
+    sum_finger_print = [mech[0]] + a1 + a2 + b1 + b2 + r
+    return sum_finger_print

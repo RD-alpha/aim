@@ -7,9 +7,10 @@ from helper import make_image, save_files_for_display, clear_results, clear_chai
 import pickle
 import json
 import joblib
-from ml_helper import make_atom_fingerprint
+from ml_helper import make_fingerprint
 import numpy as np
 import random
+
 
 app = Flask(
     __name__,
@@ -56,7 +57,7 @@ def process_molecule():
 
     # Load the resulting molecules (assuming they are saved as images)
     molecules = {}
-    clf = joblib.load("../../model.pkl")
+    clf = joblib.load("../../xg_model.pkl")
     for filename in os.listdir('results'):
         if filename.endswith('.png'):
             idx = int(filename.split('_')[1].split('.')[0])
@@ -67,15 +68,8 @@ def process_molecule():
                         result_smiles = line.rstrip()
                     line_num += 1
             
-            if mechs[idx][0] < 4:
-                a1 = make_atom_fingerprint(inp_mol.GetAtomWithIdx(mechs[idx][1]))
-                a2 = make_atom_fingerprint(inp_mol.GetAtomWithIdx(mechs[idx][2]))
-                sum_finger_print = [mechs[idx][0]] + a1 + a2
-                y_pred = clf.predict(np.array(sum_finger_print).reshape(1, -1))
-                print(y_pred)
-            
-            else:
-                y_pred = [-1]
+                fp = make_fingerprint(inp_mol, mechs[idx])
+                y_pred = clf.predict(np.array(fp).reshape(1, -1))
             
             molecules[idx] = {'image': 'results/' + filename, 'smiles': result_smiles, 'mechanism': mechs[idx], 'predicted': int(y_pred[0])}
             
