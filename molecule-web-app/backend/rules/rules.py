@@ -239,26 +239,19 @@ def a_to_b(mol, i, j):
         e_mol.AddBond(i,j, order=Chem.BondType.values[bond_order+1])
     return e_mol.GetMol()
 
+
 def clean_mol(list_mol, mechanisms, original_mol = None):
-    existing_inchi = set([])
+    existing_smiles = set([])
     clean_list = []
     updated_mech = []
-    if original_mol is not None:
-        original_mol_count = 0
-        for a in original_mol.GetAtoms():
-            if a.GetFormalCharge() != 0:
-                original_mol_count += 1
-        og_inchi = (Chem.MolToInchi(original_mol, options='-FixedH -RecMet'), original_mol_count)
+    if original_mol is not None:       
+        og_smiles = Chem.MolToSmiles(original_mol, kekuleSmiles=True)
     for idx in range(len(list_mol)):
         mol = list_mol[idx]
-        mol_count = 0
-        for a in mol.GetAtoms():
-            if a.GetFormalCharge() != 0:
-                mol_count += 1
-        inchi = (Chem.MolToInchi(mol, options='-FixedH -RecMet'), mol_count)
-        if inchi not in existing_inchi:
-            if original_mol == None or inchi != og_inchi:
-                existing_inchi.add(inchi)
+        smiles = Chem.MolToSmiles(mol, kekuleSmiles=True)
+        if smiles not in existing_smiles:
+            if original_mol == None or smiles != og_smiles:
+                existing_smiles.add(smiles)
                 clean_list.append(mol)
                 updated_mech.append(mechanisms[idx])
     return (clean_list, updated_mech)
