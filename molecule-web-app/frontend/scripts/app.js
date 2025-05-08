@@ -7,10 +7,36 @@ document.addEventListener('DOMContentLoaded', function() {
     const clearHistoryButton = document.getElementById('clear-history-button');
     const saveHistoryButton = document.getElementById('save-history-button');
     const randomSuggestionButton = document.getElementById('random-suggestion-button');
+    const toggleHistoryButton = document.getElementById('toggle-history-button');
+    const historyContainer = document.getElementById('history-container');
+    const infoModal = document.getElementById('info-modal');
+    const closeModal = document.getElementById('close-modal');
+
+
+     // Show the modal on first load
+     infoModal.style.display = 'block';
+
+     // Close the modal when the close button is clicked
+     closeModal.addEventListener('click', () => {
+         infoModal.style.display = 'none';
+     });
+
     var mechStep = [];
     var nextStep = [];
     var saveMech = false;
     var id = -1;
+
+     // Toggle the visibility of the history container
+    toggleHistoryButton.addEventListener('click', () => {
+        if (historyContainer.classList.contains('hidden')) {
+            historyContainer.classList.remove('hidden');
+            toggleHistoryButton.textContent = '←'; // Change arrow direction
+        } else {
+            historyContainer.classList.add('hidden');
+            toggleHistoryButton.textContent = '→'; // Change arrow direction
+        }
+    });
+
 
     function callProcessMolecule(smiles, cleanup, kekulise) {
             fetch('/process_molecule', {
@@ -78,7 +104,16 @@ document.addEventListener('DOMContentLoaded', function() {
             img.alt = molecule.smiles;
             img.classList.add('result-image');
             const molId = molecule.image.match(/mol_(\d+)\.png/)[1];
-            img.dataset.molID = molId;;
+            img.dataset.molID = molId;
+            // Preselect based on prediction
+            if (molecule.predicted === 1) {
+                img.style.border = '3px solid green';
+                imageChoices[molId] = { mechanism: molecule.mechanism, probable: 1 };
+            } else {
+                img.style.border = '3px solid red';
+                imageChoices[molId] = { mechanism: molecule.mechanism, probable: 0 };
+            }
+
             img.addEventListener('click', function() {
                 smilesInput.value = molecule.smiles;
                 nextStep = molecule.mechanism;
