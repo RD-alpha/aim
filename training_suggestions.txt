@@ -384,7 +384,6 @@ c1ccccc1.CCO
 c1ccccc1.CN
 c1ccccc1.C#N-
 c1ccccc1.CC[O-]
-c1ccccc1.CC=C
 c1ccccc1.O
 c1ccccc1.N
 c1ccccc1.CCS
