@@ -5,12 +5,21 @@ import shutil
 from rules.rules import execute_step
 from helper import make_image, save_files_for_display, clear_results, clear_chain
 import pickle
+import json
+import joblib
+from ml_helper import make_fingerprint
+import numpy as np
+import random
+
 
 app = Flask(
     __name__,
     static_folder='../frontend',           # Path to your static files
     template_folder='../frontend'          # Path to your HTML files
 )
+
+
+root_folder = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../'))
 
 @app.route('/')
 def serve_index():
@@ -36,23 +45,19 @@ def process_molecule():
     #save file for history
     history_count = make_image(smiles)
 
-    # Save the SMILES string to a temporary file
-    with open('temp_smiles.txt', 'w') as f:
-        f.write(smiles)
-    print(smiles)
-
     if id != -1:
         with open('chain/mol_' + str(id) + '.pkl', 'rb') as f:
             chain_mol = pickle.load(f)
-        mols, mechs = execute_step(smiles, cleanup, kekulise, chain_mol)
+        mols, mechs, inp_mol = execute_step(smiles, cleanup, kekulise, chain_mol)
     else:
-        mols, mechs = execute_step(smiles, cleanup, kekulise)
+        mols, mechs, inp_mol = execute_step(smiles, cleanup, kekulise)
 
     clear_chain()
     save_files_for_display(mols)
 
     # Load the resulting molecules (assuming they are saved as images)
     molecules = {}
+    clf = joblib.load("../../xg_model.pkl")
     for filename in os.listdir('results'):
         if filename.endswith('.png'):
             idx = int(filename.split('_')[1].split('.')[0])
@@ -62,7 +67,12 @@ def process_molecule():
                     if line_num == idx:
                         result_smiles = line.rstrip()
                     line_num += 1
-            molecules[idx] = {'image': 'results/' + filename, 'smiles': result_smiles, 'mechanism': mechs[idx]}
+            
+                fp = make_fingerprint(inp_mol, mechs[idx])
+                y_pred = clf.predict(np.array(fp).reshape(1, -1))
+            
+            molecules[idx] = {'image': 'results/' + filename, 'smiles': result_smiles, 'mechanism': mechs[idx], 'predicted': int(y_pred[0])}
+            
     
     clear_results()
     
@@ -90,7 +100,7 @@ def clear_history():
 def save_history():
     backend_dir = os.path.dirname(os.path.abspath(__file__))
     pickles_folder = os.path.join(backend_dir, 'pickles')
-    reactions_folder = os.path.abspath(os.path.join(backend_dir, '../../reactions'))
+    reactions_folder = os.path.abspath(os.path.join(root_folder, 'reactions'))
     
     data = request.get_json()
     mechanism = data.get('mechanism')
@@ -122,6 +132,62 @@ def save_history():
         os.makedirs(pickles_folder)
         
     return jsonify({'message': 'History saved'})
+
+@app.route('/save_training_data', methods=['POST'])
+def save_training_data():
+    data = request.get_json()   
+    backend_dir = os.path.dirname(os.path.abspath(__file__))
+    chain_folder = os.path.join(backend_dir, 'chain')
+    training_folder = os.path.abspath(os.path.join(root_folder, 'training'))
+    pickles_folder = os.path.abspath(os.path.join(backend_dir, 'pickles'))
+    # Find the pickle file with the highest x in the pickles folder by sorting
+    highest_file = None
+    if os.path.exists(pickles_folder):
+        pickle_files = [filename for filename in os.listdir(pickles_folder)]
+        sorted_files = sorted(pickle_files, key=lambda f: int(f.split('_')[1].split('.')[0]), reverse=True)
+        if sorted_files:
+            highest_file = sorted_files[0]
+            highest_file_path = os.path.join(pickles_folder, highest_file)
+
+    # Find the highest numbered folder in the training directory
+    existing_folders = [int(folder) for folder in os.listdir(training_folder) if folder.isdigit()]
+    next_folder_number = max(existing_folders, default=0) + 1
+    new_folder = os.path.join(training_folder, str(next_folder_number))
+
+    # Create the new folder
+    os.makedirs(new_folder)
+
+    # Copy the contents of the chain folder to the new folder
+    if os.path.exists(chain_folder):
+        for filename in os.listdir(chain_folder):
+            source_file = os.path.join(chain_folder, filename)
+            if os.path.isfile(source_file):
+                shutil.copy(source_file, new_folder)
+                shutil.copy(highest_file_path, os.path.join(new_folder, 'sm.pkl'))
+    with open(os.path.join(new_folder, 'data.json'), 'w') as f:
+        json.dump(data, f)
+    return jsonify({'message': 'Training data saved'})
+
+@app.route('/get_random_suggestion', methods=['GET'])
+def get_random_suggestion():
+    suggestions_file = os.path.join(root_folder, 'training_suggestions.txt')
+    try:
+        with open(suggestions_file, 'r') as f:
+            lines = f.readlines()
+        if not lines:
+            return jsonify({'error': 'No suggestions available'}), 404
+
+        # Pick a random line
+        
+        random_line = random.choice(lines).strip()
+
+        # Remove the selected line from the file
+        with open(suggestions_file, 'w') as f:
+            f.writelines(line for line in lines if line.strip() != random_line)
+
+        return jsonify({'suggestion': random_line})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 
 if __name__ == '__main__':
