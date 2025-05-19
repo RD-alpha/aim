@@ -198,6 +198,7 @@ def make_atom_fingerprint(atom):
         aromatic_bit = [0]
 
     # adjacency bitstring
+    # TODO: add C(EN)3 for good leaving group
     # [C+, C-, CH0, CH, C-EN, C=EN, EN, EP]
 
     adjecency_bitstring = [0] * 8
@@ -250,7 +251,11 @@ def new_bond_fingerprint(mol, a1_idx, a2_idx):
     fragments = Chem.GetMolFrags(mol)
     for f in fragments:
         if a1.GetIdx() in f and a2.GetIdx() in f:
-            len_path = len(Chem.GetShortestPath(mol, a1.GetIdx(), a2.GetIdx()))
+            try:
+                len_path = len(Chem.GetShortestPath(mol, a1.GetIdx(), a2.GetIdx()))
+            except:
+                print("Error in calculating shortest path")
+                continue
             if len_path == 3:
                 ring_size_bitstring[0] = 1
             elif len_path == 4:
