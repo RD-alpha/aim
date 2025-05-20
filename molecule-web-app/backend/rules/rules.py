@@ -190,12 +190,12 @@ def identify_acidic_CH(mol):
         if atom.GetAtomicNum() == 6 and atom.GetTotalNumHs() > 0 and atom.GetFormalCharge() > -1:
             for atom2 in atom.GetNeighbors():
                 if atom2.GetFormalCharge() > 0:
-                    atom.SetProp('sink', 'proton')
+                    atom.SetProp('sink', 'CH')
                 for atom3 in atom2.GetNeighbors():
                     # this tolerance is too high but allows for elimination reaction
                     # could include optional double bond criterion
                     if electronegativity_dict[atom3.GetAtomicNum()]>2.55:
-                        atom.SetProp('sink', 'proton')
+                        atom.SetProp('sink', 'CH')
                         exit_loop = True
                         break
                 if exit_loop:
@@ -331,6 +331,47 @@ def execute_step(mol_inp_smiles, cleanup = False, kekulise = False, chain_mol = 
                 connected_mols.append(p_mol)
                 mechanisms.append([4, i, j, None, None])
                 continue
+
+            if sink_type == 'CH':
+                if source_type == 'hydride':
+                    # probably unlikely that we will use a metal hydride as base for enolisation
+                    continue
+                # Same proton transfer behaviour as above
+                c_mol = Chem.Mol(mol_inp)
+                a = c_mol.GetAtomWithIdx(j)
+                a.SetFormalCharge(a.GetFormalCharge() - 1)
+                if a.GetNumExplicitHs() > 0:
+                    a.SetNumExplicitHs(a.GetNumExplicitHs() - 1)
+                elif a.GetTotalNumHs() == 1:
+                    a.SetNoImplicit(True)
+                a2 = c_mol.GetAtomWithIdx(i)
+                a2.SetFormalCharge(a2.GetFormalCharge() + 1)
+                # Required for sensible RDKit behaviour or else it produces radicals
+                if a2.GetNumExplicitHs() > 0 or a2.GetFormalCharge() == 0:
+                    a2.SetNumExplicitHs(a2.GetNumExplicitHs() + 1)
+                
+                for atom2 in a.GetNeighbors():
+                    for b in atom2.GetBonds():
+                        #Find any bonds that have a leaving group for elimination
+                        if b.HasProp('sink') and b.GetProp('sink_bond_atom') == 'both':
+                            k = atom2.GetIdx()
+                            l = b.GetOtherAtomIdx(k)
+                        elif b.HasProp('sink') and atom2.GetIdx() == int(b.GetProp('sink_bond_atom')):
+                            k = atom2.GetIdx()
+                            l = int(b.GetProp('sink_other_atom'))
+                        else: 
+                            continue
+                        if c_mol.GetAtomWithIdx(l).GetFormalCharge() >= 0:
+                            intermediate = a_to_b(Chem.Mol(c_mol), j, k)
+                            connected_mols.append(b_to_a(Chem.Mol(intermediate), k, l))
+                            mechanisms.append([8, i, j, k, l])
+                    if atom2.GetFormalCharge() > 0 and atom2.HasProp('sink') and atom2.GetProp('sink')== 'empty AO':
+                        k = atom2.GetIdx()
+                        mechanisms.append([9, i, j, k, None])
+                        connected_mols.append(a_to_b(c_mol, j, k))
+                continue
+            
+
             if hydride_flag:
                 m_mol = Chem.Mol(h_mol)
                 if m_mol.GetAtomWithIdx(j).GetNumExplicitHs()>0:
@@ -454,6 +495,9 @@ def execute_step(mol_inp_smiles, cleanup = False, kekulise = False, chain_mol = 
                     connected_mols.append(p_mol)
                     mechanisms.append([5, i, j, k, None])
                     continue
+                if sink_type == 'CH':
+                    #TODO: make this a little more sophisticated
+                    continue
                 connected_mols.append(a_to_b(n_mol, i, j))
                 mechanisms.append([1, i, j, k, None])
 
@@ -521,6 +565,7 @@ def execute_step(mol_inp_smiles, cleanup = False, kekulise = False, chain_mol = 
         connected_mols, mechanisms = clean_mol(connected_mols, mechanisms, mol_inp)
 
     for mol in connected_mols:
+        Chem.Draw.MolToFile(mol, 'debug.png')
         Chem.SanitizeMol(mol)
         if kekulise:
             Chem.Kekulize(mol, clearAromaticFlags=True)
