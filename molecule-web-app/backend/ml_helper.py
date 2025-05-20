@@ -271,7 +271,8 @@ def new_bond_fingerprint(mol, a1_idx, a2_idx):
 
 def make_fingerprint(sm, mech):
     mech_type = [0] * 8
-    mech_type[mech[0]] = 1
+    if mech[0]<8:
+        mech_type[mech[0]] = 1
     a1 = make_atom_fingerprint(sm.GetAtomWithIdx(mech[1]))
     a2 = make_atom_fingerprint(sm.GetAtomWithIdx(mech[2]))
     if mech[3]:
