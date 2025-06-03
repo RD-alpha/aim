@@ -22,6 +22,7 @@
             <button id="convert-button">Apply rules</button>
             <button id="chain-button">Next step</button>
             <button id="random-suggestion-button">Random suggestion</button>
+            <button id="green-dataset-button">Green dataset</button>
             <div id="results-container"></div>
         </div>
         <div id="history-container" class="hidden">
@@ -38,11 +39,11 @@
         <div class="modal-content">
             <span id="close-modal" class="close-button">&times;</span>
             <h2>Welcome to the Molecule Web App!</h2>
-            <p>Here’s how to use the app:</p>
+            <p>Guidance for consistent training</p>
             <ul>
-                <li>Enter a SMILES string in the input box and click "Apply rules" to process it.</li>
-                <li>Use the "Next step" button to chain reactions.</li>
-                <li>Click "Random suggestion" to get a random SMILES string.</li>
+                <li>Please rate only the mechanistic transformation - do not penalise for reagent incompatibility.</li>
+                <li>Most eliminations should only proceed with base</li>
+                <li>Intramolecular enolisation is being treated as a valid mechanistic step</li>
                 <li>View your history in the sidebar and save or clear it as needed.</li>
             </ul>
         </div>
