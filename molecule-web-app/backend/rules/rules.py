@@ -477,7 +477,7 @@ def execute_step(mol_inp_smiles, cleanup = False, kekulise = False, chain_mol = 
             for counter in range(len(new_mol)):
                 n_mol = Chem.Mol(new_mol[counter])
                 i = order[counter]
-                k = b.GetOtherAtom(n_mol.GetAtomWithIdx(i)).GetIdx()
+                k = b.GetOtherAtomIdx(i)
                 if i == j:
                     continue
                 if sink_type == 'proton':
@@ -496,8 +496,41 @@ def execute_step(mol_inp_smiles, cleanup = False, kekulise = False, chain_mol = 
                     mechanisms.append([5, i, j, k, None])
                     continue
                 if sink_type == 'CH':
-                    #TODO: make this a little more sophisticated
+                    # Same proton transfer behaviour as above
+                    c_mol = Chem.Mol(n_mol)
+                    a = c_mol.GetAtomWithIdx(j)
+                    a.SetFormalCharge(a.GetFormalCharge() - 1)
+                    if a.GetNumExplicitHs() > 0:
+                        a.SetNumExplicitHs(a.GetNumExplicitHs() - 1)
+                    elif a.GetTotalNumHs() == 1:
+                        a.SetNoImplicit(True)
+                    a2 = c_mol.GetAtomWithIdx(i)
+                    a2.SetFormalCharge(a2.GetFormalCharge() + 1)
+                    # Required for sensible RDKit behaviour or else it produces radicals
+                    if a2.GetNumExplicitHs() > 0 or a2.GetFormalCharge() == 0:
+                        a2.SetNumExplicitHs(a2.GetNumExplicitHs() + 1)
+                    
+                    for atom2 in a.GetNeighbors():
+                        for b2 in atom2.GetBonds():
+                            #Find any bonds that have a leaving group for elimination
+                            if b2.HasProp('sink') and b2.GetProp('sink_bond_atom') == 'both':
+                                k = atom2.GetIdx()
+                                l = b2.GetOtherAtomIdx(k)
+                            elif b2.HasProp('sink') and atom2.GetIdx() == int(b2.GetProp('sink_bond_atom')):
+                                k = atom2.GetIdx()
+                                l = int(b2.GetProp('sink_other_atom'))
+                            else: 
+                                continue
+                            if c_mol.GetAtomWithIdx(l).GetFormalCharge() >= 0:
+                                intermediate = a_to_b(Chem.Mol(c_mol), j, k)
+                                connected_mols.append(b_to_a(Chem.Mol(intermediate), k, l))
+                                mechanisms.append([8, i, j, k, l])
+                        if atom2.GetFormalCharge() > 0 and atom2.HasProp('sink') and atom2.GetProp('sink')== 'empty AO':
+                            k = atom2.GetIdx()
+                            mechanisms.append([9, i, j, k, None])
+                            connected_mols.append(a_to_b(c_mol, j, k))
                     continue
+                   
                 connected_mols.append(a_to_b(n_mol, i, j))
                 mechanisms.append([1, i, j, k, None])
 
@@ -540,7 +573,7 @@ def execute_step(mol_inp_smiles, cleanup = False, kekulise = False, chain_mol = 
                         n_mol = Chem.Mol(new_mol[counter])
                         i = order[counter]
                         k = b1.GetOtherAtom(n_mol.GetAtomWithIdx(i)).GetIdx()
-                        if i == j:
+                        if i == j or mol_inp.GetAtomWithIdx(l).GetFormalCharge() < 0:
                             continue
                         n_mol = b_to_a(n_mol, j, l)
                         connected_mols.append(a_to_b(n_mol, i, j))
@@ -565,7 +598,6 @@ def execute_step(mol_inp_smiles, cleanup = False, kekulise = False, chain_mol = 
         connected_mols, mechanisms = clean_mol(connected_mols, mechanisms, mol_inp)
 
     for mol in connected_mols:
-        Chem.Draw.MolToFile(mol, 'debug.png')
         Chem.SanitizeMol(mol)
         if kekulise:
             Chem.Kekulize(mol, clearAromaticFlags=True)

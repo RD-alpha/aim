@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const clearHistoryButton = document.getElementById('clear-history-button');
     const saveHistoryButton = document.getElementById('save-history-button');
     const randomSuggestionButton = document.getElementById('random-suggestion-button');
+    const greenDatasetButton = document.getElementById('green-dataset-button');
     const toggleHistoryButton = document.getElementById('toggle-history-button');
     const historyContainer = document.getElementById('history-container');
     const infoModal = document.getElementById('info-modal');
@@ -208,6 +209,19 @@ document.addEventListener('DOMContentLoaded', function() {
 
     randomSuggestionButton.addEventListener('click', () => {
         fetch('/get_random_suggestion')
+            .then(response => response.json())
+            .then(data => {
+                if (data.suggestion) {
+                    smilesInput.value = data.suggestion;
+                } else {
+                    console.error('No suggestions available');
+                }
+            })
+            .catch(error => console.error('Error:', error));
+    });
+
+    greenDatasetButton.addEventListener('click', () => {
+        fetch('/get_green_suggestion')
             .then(response => response.json())
             .then(data => {
                 if (data.suggestion) {
