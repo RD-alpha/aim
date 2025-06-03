@@ -594,6 +594,25 @@ def execute_step(mol_inp_smiles, cleanup = False, kekulise = False, chain_mol = 
                     n_mol = b_to_a(n_mol,j, l)
                     connected_mols.append(a_to_b(n_mol, i, j))
                     mechanisms.append([3, i, j, k, l])
+
+    for sink_idx, sink_type in sinks_bonds.items():
+        b = mol_inp.GetBondWithIdx(sink_idx)
+        if b.GetProp('sink_bond_atom') == 'both':
+            continue
+        if b.GetBondTypeAsDouble() != 1:
+            continue
+        j = b.GetIntProp('sink_bond_atom')
+        l = b.GetIntProp('sink_other_atom')
+        if mol_inp.GetAtomWithIdx(l).GetFormalCharge() < 0:
+            continue
+        if mol_inp.GetAtomWithIdx(j).GetFormalCharge() > 0 or mol_inp.GetAtomWithIdx(j).GetAtomicNum() != 6:
+            continue
+
+        new_mol = Chem.Mol(mol_inp)
+        counter += 1
+        connected_mols.append(b_to_a(new_mol, j, l))
+        mechanisms.append([10, None, j, None, l])
+
     if cleanup:
         connected_mols, mechanisms = clean_mol(connected_mols, mechanisms, mol_inp)
 
