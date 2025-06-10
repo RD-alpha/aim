@@ -188,7 +188,7 @@ document.addEventListener('DOMContentLoaded', function() {
         historyImg.src = "history/" + history_idx.toString() + ".png" + "?v=" + new Date().getTime();
         historyImg.alt = smilesInput.value;
         historyImg.classList.add('history-image');
-        historyList.appendChild(historyImg);
+        historyList.insertBefore(historyImg, historyList.firstChild);
     }
 
     saveHistoryButton.addEventListener('click', () => {
