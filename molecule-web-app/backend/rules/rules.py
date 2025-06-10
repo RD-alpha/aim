@@ -451,13 +451,14 @@ def execute_step(mol_inp_smiles, cleanup = False, kekulise = False, chain_mol = 
         new_mol = [Chem.Mol(mol_inp)]
         order = []
         if b.GetProp('source_bond_atom')=='both':
-            new_mol.append(Chem.Mol(mol_inp))
             counter = 0
             for a in a_list:
                 i = a.GetIdx()
                 k = b.GetOtherAtom(a).GetIdx()
                 if mol_inp.GetAtomWithIdx(k).GetFormalCharge() > 0:
                     continue
+                if counter == 1:
+                    new_mol.append(Chem.Mol(mol_inp))
                 new_mol[counter] = b_to_a(new_mol[counter], k, i)
                 order.append(i)
                 counter += 1
@@ -541,13 +542,14 @@ def execute_step(mol_inp_smiles, cleanup = False, kekulise = False, chain_mol = 
         new_mol = [Chem.Mol(mol_inp)]
         order = []
         if b1.GetProp('source_bond_atom')=='both':
-            new_mol.append(Chem.Mol(mol_inp))
             counter = 0
             for a in a1_list:
                 i = a.GetIdx()
                 k = b1.GetOtherAtom(a).GetIdx()
                 if mol_inp.GetAtomWithIdx(k).GetFormalCharge() > 0:
                     continue
+                if counter == 1:
+                    new_mol.append(Chem.Mol(mol_inp))
                 new_mol[counter] = Chem.Mol(b_to_a(new_mol[counter], k, i))
                 counter += 1
                 order.append(i)
