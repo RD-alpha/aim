@@ -155,7 +155,7 @@ def save_training_data():
 
     # Create the new folder
     os.makedirs(new_folder)
-
+    
     # Copy the contents of the chain folder to the new folder
     if os.path.exists(chain_folder):
         for filename in os.listdir(chain_folder):
