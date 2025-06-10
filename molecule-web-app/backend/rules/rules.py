@@ -593,11 +593,8 @@ def execute_step(mol_inp_smiles, cleanup = False, kekulise = False, chain_mol = 
                     connected_mols.append(a_to_b(n_mol, i, j))
                     mechanisms.append([3, i, j, k, l])
 
-<<<<<<< HEAD
     # Rule 5: Forming carbocations
 
-=======
->>>>>>> 970bb29... introduce rule 5, add mechanism vector but not fingerprint
     for sink_idx, sink_type in sinks_bonds.items():
         b = mol_inp.GetBondWithIdx(sink_idx)
         if b.GetProp('sink_bond_atom') == 'both':
@@ -608,18 +605,10 @@ def execute_step(mol_inp_smiles, cleanup = False, kekulise = False, chain_mol = 
         l = b.GetIntProp('sink_other_atom')
         if mol_inp.GetAtomWithIdx(l).GetFormalCharge() < 0:
             continue
-<<<<<<< HEAD
         if mol_inp.GetAtomWithIdx(j).GetFormalCharge() > 0 or mol_inp.GetAtomWithIdx(j).GetAtomicNum() != 6 or mol_inp.GetAtomWithIdx(j).GetTotalNumHs() > 1:
             continue
 
         new_mol = Chem.Mol(mol_inp)
-=======
-        if mol_inp.GetAtomWithIdx(j).GetFormalCharge() > 0 or mol_inp.GetAtomWithIdx(j).GetAtomicNum() != 6:
-            continue
-
-        new_mol = Chem.Mol(mol_inp)
-        counter += 1
->>>>>>> 970bb29... introduce rule 5, add mechanism vector but not fingerprint
         connected_mols.append(b_to_a(new_mol, j, l))
         mechanisms.append([10, None, j, None, l])
 
