@@ -160,6 +160,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Add submit button
         const submitButton = document.createElement('button');
+        const userNameInput = document.getElementById('contributor-input');
         submitButton.textContent = 'Save training data';
         submitButton.classList.add('submit-button');
         submitButton.addEventListener('click', () => {
@@ -169,7 +170,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ choices: imageChoices })
+                body: JSON.stringify({ choices: imageChoices, contributor: userNameInput.value})
             })
             .then(response => {
                 if (response.ok) {
