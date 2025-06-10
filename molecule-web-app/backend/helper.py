@@ -22,7 +22,7 @@ def save_files_for_display(mols):
     file_num = 0
     for mol in mols:
         mol_smiles = Chem.MolToSmiles(mol)
-        print(mol_smiles)
+        #print(mol_smiles)
         Chem.SanitizeMol(mol)
         file_name = "mol_" + str(file_num)
         try:
@@ -41,13 +41,12 @@ def save_files_for_display(mols):
     source_folder = os.path.join(backend_dir, 'results')
     # Remove target folder if it exists
     if os.path.exists(target_folder):
-        print('it exists')
         shutil.rmtree(target_folder)
-        print(f"[INFO] Removed existing folder: {target_folder}")
+        #print(f"[INFO] Removed existing folder: {target_folder}")
 
     # Copy folder from source to target
     shutil.copytree(source_folder, target_folder)
-    print(f"[INFO] Copied {source_folder} → {target_folder}")
+    #print(f"[INFO] Copied {source_folder} → {target_folder}")
 
    
     return None

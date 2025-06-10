@@ -76,7 +76,7 @@ def process_molecule():
     clear_results()
     
 
-    print(molecules)
+    #print(molecules)
     return jsonify({'molecules': molecules, 'history_idx': history_count})
 
 
@@ -103,7 +103,7 @@ def save_history():
     
     data = request.get_json()
     mechanism = data.get('mechanism')
-    print(mechanism)
+    #print(mechanism)
     with open('pickles/mechanism.txt','a') as f:
         for step in mechanism:
             for num in step:
