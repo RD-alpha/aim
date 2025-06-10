@@ -7,8 +7,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const clearHistoryButton = document.getElementById('clear-history-button');
     const saveHistoryButton = document.getElementById('save-history-button');
     const randomSuggestionButton = document.getElementById('random-suggestion-button');
-    const greenDatasetButton = document.getElementById('green-dataset-button');
-    const toggleHistoryButton = document.getElementById('toggle-history-button');
+    // const greenDatasetButton = document.getElementById('green-dataset-button');
+    //const toggleHistoryButton = document.getElementById('toggle-history-button');
     const historyContainer = document.getElementById('history-container');
     const infoModal = document.getElementById('info-modal');
     const closeModal = document.getElementById('close-modal');
@@ -28,15 +28,15 @@ document.addEventListener('DOMContentLoaded', function() {
     var id = -1;
 
      // Toggle the visibility of the history container
-    toggleHistoryButton.addEventListener('click', () => {
-        if (historyContainer.classList.contains('hidden')) {
-            historyContainer.classList.remove('hidden');
-            toggleHistoryButton.textContent = '←'; // Change arrow direction
-        } else {
-            historyContainer.classList.add('hidden');
-            toggleHistoryButton.textContent = '→'; // Change arrow direction
-        }
-    });
+   // toggleHistoryButton.addEventListener('click', () => {
+    //    if (historyContainer.classList.contains('hidden')) {
+      //      historyContainer.classList.remove('hidden');
+    //        toggleHistoryButton.textContent = '←'; // Change arrow direction
+    //    } else {
+    //        historyContainer.classList.add('hidden');
+    //        toggleHistoryButton.textContent = '→'; // Change arrow direction
+     //   }
+   // });
 
 
     function callProcessMolecule(smiles, cleanup, kekulise) {
