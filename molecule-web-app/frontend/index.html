@@ -11,8 +11,11 @@
     <div id="app">
         <div id="main-container">
             <h1>Rules-Based Chemistry</h1>
+            <div>
             <label for="smiles-input">Enter SMILES:</label>
             <input type="text" id="smiles-input" placeholder="Enter SMILES string here">
+            <div id="input-mol"></div>
+            </div>
             <div>
                 <input type="checkbox" id="cleanup-checkbox" checked>
                 <label for="cleanup-checkbox">Clean up molecules</label>
@@ -22,10 +25,9 @@
             <button id="convert-button">Apply rules</button>
             <button id="chain-button">Next step</button>
             <button id="random-suggestion-button">Random suggestion</button>
-            <button id="green-dataset-button">Green dataset</button>
             <div id="results-container"></div>
         </div>
-        <div id="history-container" class="hidden">
+        <div id="history-container"">
             <button id="toggle-history-button" class="arrow-button">→</button>
             <h2>History</h2>
             <div id="history-list"></div>
@@ -38,14 +40,9 @@
     <div id="info-modal" class="modal">
         <div class="modal-content">
             <span id="close-modal" class="close-button">&times;</span>
-            <h2>Welcome to the Molecule Web App!</h2>
+            <h2>Thank you for volunteering your chemistry expertise!</h2>
             <p>Guidance for consistent training</p>
-            <ul>
-                <li>Please rate only the mechanistic transformation - do not penalise for reagent incompatibility.</li>
-                <li>Most eliminations should only proceed with base</li>
-                <li>Intramolecular enolisation is being treated as a valid mechanistic step</li>
-                <li>View your history in the sidebar and save or clear it as needed.</li>
-            </ul>
+            <a href="help.html">Help</a>
         </div>
     </div>
 </body>

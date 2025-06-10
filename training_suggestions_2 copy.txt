@@ -1,6 +1,6 @@
 CCBr.CCO
 CCBr.CN
-CCBr.C#[N-]
+CCBr.[C-]#N
 CCBr.CC[O-]
 CCBr.CC=C
 CCBr.O
@@ -15,7 +15,7 @@ CCBr.[O-]O
 CCBr.[Cl-]
 CCCI.CCO
 CCCI.CN
-CCCI.C#[N-]
+CCCI.[C-]#N
 CCCI.CC[O-]
 CCCI.CC=C
 CCCI.O
@@ -30,7 +30,7 @@ CCCI.[O-]O
 CCCI.[Cl-]
 IC1CCCCC1.CCO
 IC1CCCCC1.CN
-IC1CCCCC1.C#[N-]
+IC1CCCCC1.[C-]#N
 IC1CCCCC1.CC[O-]
 IC1CCCCC1.CC=C
 IC1CCCCC1.O
@@ -45,7 +45,7 @@ IC1CCCCC1.[O-]O
 IC1CCCCC1.[Cl-]
 CC(=O)C=C.CCO
 CC(=O)C=C.CN
-CC(=O)C=C.C#[N-]
+CC(=O)C=C.[C-]#N
 CC(=O)C=C.CC[O-]
 CC(=O)C=C.CC=C
 CC(=O)C=C.O
@@ -60,7 +60,7 @@ CC(=O)C=C.[O-]O
 CC(=O)C=C.[Cl-]
 CCCC(Cl)=O.CCO
 CCCC(Cl)=O.CN
-CCCC(Cl)=O.C#[N-]
+CCCC(Cl)=O.[C-]#N
 CCCC(Cl)=O.CC[O-]
 CCCC(Cl)=O.CC=C
 CCCC(Cl)=O.O
@@ -75,7 +75,7 @@ CCCC(Cl)=O.[O-]O
 CCCC(Cl)=O.[Cl-]
 ClCl.CCO
 ClCl.CN
-ClCl.C#[N-]
+ClCl.[C-]#N
 ClCl.CC[O-]
 ClCl.CC=C
 ClCl.O
@@ -90,7 +90,7 @@ ClCl.[O-]O
 ClCl.[Cl-]
 I.CCO
 I.CN
-I.C#[N-]
+I.[C-]#N
 I.CC[O-]
 I.CC=C
 I.O
@@ -105,7 +105,7 @@ I.[O-]O
 I.[Cl-]
 COC(C)=O.CCO
 COC(C)=O.CN
-COC(C)=O.C#[N-]
+COC(C)=O.[C-]#N
 COC(C)=O.CC[O-]
 COC(C)=O.CC=C
 COC(C)=O.O
@@ -120,7 +120,7 @@ COC(C)=O.[O-]O
 COC(C)=O.[Cl-]
 C[C+](C)C.CCO
 C[C+](C)C.CN
-C[C+](C)C.C#[N-]
+C[C+](C)C.[C-]#N
 C[C+](C)C.CC[O-]
 C[C+](C)C.CC=C
 C[C+](C)C.O
@@ -135,7 +135,7 @@ C[C+](C)C.[O-]O
 C[C+](C)C.[Cl-]
 FB(F)F.CCO
 FB(F)F.CN
-FB(F)F.C#[N-]
+FB(F)F.[C-]#N
 FB(F)F.CC[O-]
 FB(F)F.CC=C
 FB(F)F.O
@@ -150,7 +150,7 @@ FB(F)F.[O-]O
 FB(F)F.[Cl-]
 BrBr.CCO
 BrBr.CN
-BrBr.C#[N-]
+BrBr.[C-]#N
 BrBr.CC[O-]
 BrBr.CC=C
 BrBr.O
@@ -165,7 +165,7 @@ BrBr.[O-]O
 BrBr.[Cl-]
 II.CCO
 II.CN
-II.C#[N-]
+II.[C-]#N
 II.CC[O-]
 II.CC=C
 II.O
@@ -180,7 +180,7 @@ II.[O-]O
 II.[Cl-]
 OO.CCO
 OO.CN
-OO.C#[N-]
+OO.[C-]#N
 OO.CC[O-]
 OO.CC=C
 OO.O
@@ -195,7 +195,7 @@ OO.[O-]O
 OO.[Cl-]
 O=[N+](O)[O-].CCO
 O=[N+](O)[O-].CN
-O=[N+](O)[O-].C#[N-]
+O=[N+](O)[O-].[C-]#N
 O=[N+](O)[O-].CC[O-]
 O=[N+](O)[O-].CC=C
 O=[N+](O)[O-].O
@@ -210,7 +210,7 @@ O=[N+](O)[O-].[O-]O
 O=[N+](O)[O-].[Cl-]
 C[N+](=O)[O-].CCO
 C[N+](=O)[O-].CN
-C[N+](=O)[O-].C#[N-]
+C[N+](=O)[O-].[C-]#N
 C[N+](=O)[O-].CC[O-]
 C[N+](=O)[O-].CC=C
 C[N+](=O)[O-].O

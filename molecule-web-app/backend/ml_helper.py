@@ -134,6 +134,8 @@ electronegativity_dict = {1: 2.2,
  53: 2.66}
 
 def make_atom_fingerprint(atom):
+    if atom is None:
+        return [0] * 34
 
     # Charge bitstring
     charge_bitstring = [0] * 3
@@ -243,6 +245,8 @@ def make_bond_fingerprint(bond):
 
 
 def new_bond_fingerprint(mol, a1_idx, a2_idx):
+    if a1_idx == None or a2_idx is None:
+        return [0] * 5
     a1 = mol.GetAtomWithIdx(a1_idx)
     a2 = mol.GetAtomWithIdx(a2_idx)
     # ring size bitstring
@@ -270,10 +274,14 @@ def new_bond_fingerprint(mol, a1_idx, a2_idx):
 
 
 def make_fingerprint(sm, mech):
-    mech_type = [0] * 10
+    mech_type = [0] * 11
     mech_type[mech[0]] = 1
-    a1 = make_atom_fingerprint(sm.GetAtomWithIdx(mech[1]))
-    a2 = make_atom_fingerprint(sm.GetAtomWithIdx(mech[2]))
+    atom_fps = []
+    for i in range(1, 5):
+        if mech[i] is None:
+            atom_fps.append(make_atom_fingerprint(None))
+        else:
+            atom_fps.append(make_atom_fingerprint(sm.GetAtomWithIdx(mech[i])))
     if mech[3]:
         b1 = make_bond_fingerprint(sm.GetBondBetweenAtoms(mech[1], mech[3]))
     else:
@@ -283,5 +291,5 @@ def make_fingerprint(sm, mech):
     else:
         b2 = [0] * 4
     r = new_bond_fingerprint(sm, mech[1], mech[2])
-    sum_finger_print = mech_type + a1 + a2 + b1 + b2 + r
+    sum_finger_print = mech_type + atom_fps[0] + atom_fps[1] + atom_fps[2] + atom_fps[3] + b1 + b2 + r
     return sum_finger_print
