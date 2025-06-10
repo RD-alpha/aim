@@ -220,19 +220,6 @@ document.addEventListener('DOMContentLoaded', function() {
             .catch(error => console.error('Error:', error));
     });
 
-    greenDatasetButton.addEventListener('click', () => {
-        fetch('/get_green_suggestion')
-            .then(response => response.json())
-            .then(data => {
-                if (data.suggestion) {
-                    smilesInput.value = data.suggestion;
-                } else {
-                    console.error('No suggestions available');
-                }
-            })
-            .catch(error => console.error('Error:', error));
-    });
-
 });
 
     

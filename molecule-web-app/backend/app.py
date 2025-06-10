@@ -51,7 +51,6 @@ def process_molecule():
         mols, mechs, inp_mol = execute_step(smiles, cleanup, kekulise, chain_mol)
     else:
         mols, mechs, inp_mol = execute_step(smiles, cleanup, kekulise)
-
     clear_chain()
     save_files_for_display(mols)
 
