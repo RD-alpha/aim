@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const historyContainer = document.getElementById('history-container');
     const infoModal = document.getElementById('info-modal');
     const closeModal = document.getElementById('close-modal');
-
+    const confirmationPopup = document.getElementById('confirmation-popup');
 
      // Show the modal on first load
      infoModal.style.display = 'block';
@@ -175,6 +175,11 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(response => {
                 if (response.ok) {
                     console.log('Training data saved successfully');
+                    
+                    confirmationPopup.classList.add('show');
+                    setTimeout(() => {
+                        confirmationPopup.classList.remove('show');
+                    }, 2000); // Hide after 2 seconds
                 } else {
                     console.error('Error saving training data');
                 }
@@ -220,6 +225,8 @@ document.addEventListener('DOMContentLoaded', function() {
             })
             .catch(error => console.error('Error:', error));
     });
+
+   
 
 });
 
