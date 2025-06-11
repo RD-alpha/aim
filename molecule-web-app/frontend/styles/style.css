@@ -252,6 +252,23 @@ footer {
     color: #000;
 }
 
+
+#confirmation-popup{
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transition: translateY(50 px);
+    color: green;
+    background-color: #2ecc71;
+    border-radius: 5px;
+    padding: 12px 20px;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    pointer-events: none;
+}
+#confirmation-popup.show {
+    opacity: 1;
+}
 /* Responsive Design for Phone Users */
 @media (max-width: 768px) {
     body {
