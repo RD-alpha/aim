@@ -131,7 +131,7 @@ def identify_sink(mol, rules = "all"):
             atom.SetProp('sink', 'empty AO')
 
         # The second row p block expansion pack
-        if atom.GetAtomicNum() < 17 and atom.GetAtomicNum() >13:
+        if atom.GetAtomicNum() < 17 and atom.GetAtomicNum() >13 and atom.GetFormalCharge() >= 0:
             atom.SetProp('sink', 'empty AO')
 
     for bond in mol.GetBonds():
@@ -611,8 +611,12 @@ def execute_step(mol_inp_smiles, cleanup = False, kekulise = False, chain_mol = 
         l = b.GetIntProp('sink_other_atom')
         if mol_inp.GetAtomWithIdx(l).GetFormalCharge() < 0:
             continue
-        if mol_inp.GetAtomWithIdx(j).GetFormalCharge() > 0 or (mol_inp.GetAtomWithIdx(j).GetAtomicNum() != 6 and mol_inp.GetAtomWithIdx(j).GetFormalCharge() == 0) or mol_inp.GetAtomWithIdx(j).GetTotalNumHs() > 1:
-            continue
+        if mol_inp.GetAtomWithIdx(j).GetAtomicNum() == 6:
+            if mol_inp.GetAtomWithIdx(j).GetTotalNumHs() > 1:
+                continue
+        else:
+            if mol_inp.GetAtomWithIdx(j).GetFormalCharge() > -1:
+                continue
 
         new_mol = Chem.Mol(mol_inp)
         connected_mols.append(b_to_a(new_mol, j, l))
