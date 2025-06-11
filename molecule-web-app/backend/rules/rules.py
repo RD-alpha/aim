@@ -130,6 +130,10 @@ def identify_sink(mol, rules = "all"):
         if valence_electrons < 3 and lone_electrons + num_bond_electrons < 2:
             atom.SetProp('sink', 'empty AO')
 
+        # The second row p block expansion pack
+        if atom.GetAtomicNum() < 17 and atom.GetAtomicNum() >13:
+            atom.SetProp('sink', 'empty AO')
+
     for bond in mol.GetBonds():
         # Conditional on all rules being swtiched on
         atoms = [bond.GetBeginAtom(), bond.GetEndAtom()]
