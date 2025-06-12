@@ -131,7 +131,7 @@ def identify_sink(mol, rules = "all"):
             atom.SetProp('sink', 'empty AO')
 
         # The second row p block expansion pack
-        if atom.GetAtomicNum() < 17 and atom.GetAtomicNum() >13 and atom.GetFormalCharge() >= 0:
+        if atom.GetAtomicNum() < 17 and atom.GetAtomicNum() >13 and atom.GetFormalCharge() >= 0 and atom.GetTotalValence() < 6:
             atom.SetProp('sink', 'hypervalent AO')
 
     for bond in mol.GetBonds():
@@ -181,7 +181,7 @@ def identify_sink(mol, rules = "all"):
     for atom in mol.GetAtoms():
         if atom.HasProp('sink') and atom.GetProp('sink') == 'hypervalent':
             atom.SetProp('sink', 'empty AO')
-            
+
 def identify_acidic_CH(mol):
     """
     This works by looking to see if any adjacent bonds are

@@ -255,6 +255,8 @@ def new_bond_fingerprint(mol, a1_idx, a2_idx):
     fragments = Chem.GetMolFrags(mol)
     for f in fragments:
         if a1.GetIdx() in f and a2.GetIdx() in f:
+            if a1.GetIdx() == a2.GetIdx():
+                continue
             try:
                 len_path = len(Chem.GetShortestPath(mol, a1.GetIdx(), a2.GetIdx()))
             except:
