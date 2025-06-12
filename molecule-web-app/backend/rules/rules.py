@@ -132,7 +132,7 @@ def identify_sink(mol, rules = "all"):
 
         # The second row p block expansion pack
         if atom.GetAtomicNum() < 17 and atom.GetAtomicNum() >13 and atom.GetFormalCharge() >= 0 and atom.GetTotalValence() < 6:
-            atom.SetProp('sink', 'hypervalent AO')
+            atom.SetProp('sink', 'hypervalent')
 
     for bond in mol.GetBonds():
         # Conditional on all rules being swtiched on
