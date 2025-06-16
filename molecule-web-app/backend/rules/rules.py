@@ -1,4 +1,5 @@
 from rdkit import Chem
+from datetime import datetime
 ptable = Chem.GetPeriodicTable()
 electronegativity_dict = {1: 2.2,
  3: 0.98,
@@ -629,7 +630,13 @@ def execute_step(mol_inp_smiles, cleanup = False, kekulise = False, chain_mol = 
         connected_mols, mechanisms = clean_mol(connected_mols, mechanisms, mol_inp)
 
     for mol in connected_mols:
-        Chem.SanitizeMol(mol)
+        try:
+            Chem.SanitizeMol(mol)
+        except:
+            print('There was a sanitisation error')
+            timestamp = datetime.now().strftime("%d_%H%M%S")
+            Chem.Draw.MolToFile(mol, f'logs/debug{timestamp}.png')
+            continue
         if kekulise:
             Chem.Kekulize(mol, clearAromaticFlags=True)
     
