@@ -58,7 +58,7 @@ def process_molecule():
     molecules = {}
 
     # Load decision tree model
-    clf = joblib.load("../../models/v11/xg_model.pkl")
+    clf = joblib.load("../../models/v12/xg_model.pkl")
     for filename in os.listdir('results'):
         if filename.endswith('.png'):
             idx = int(filename.split('_')[1].split('.')[0])
