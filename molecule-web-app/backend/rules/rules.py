@@ -585,11 +585,11 @@ def execute_step(mol_inp_smiles, cleanup = False, kekulise = False, chain_mol = 
                         n_mol = b_to_a(n_mol, j, l)
                         connected_mols.append(a_to_b(n_mol, i, j))
                         mechanisms.append([3, i, j, k, l])
-                        counter += 1
+                        
             else:
                 j = b2.GetIntProp('sink_bond_atom')
                 l = b2.GetIntProp('sink_other_atom')
-                counter = 0
+                
                 for counter in range(len(new_mol)):
                     i = order[counter]
                     n_mol = Chem.Mol(new_mol[counter])
