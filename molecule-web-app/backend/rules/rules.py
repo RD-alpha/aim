@@ -266,6 +266,16 @@ def execute_step(mol_inp_smiles, cleanup = False, kekulise = False, chain_mol = 
 
     if chain_mol is not None:
         mol_inp = chain_mol
+        for a in mol_inp.GetAtoms():
+            a.ClearProp('source')
+            a.ClearProp('sink')
+        for b in mol_inp.GetBonds():
+            b.ClearProp('source')
+            b.ClearProp('sink')
+            b.ClearProp('source_bond_atom')
+            b.ClearProp('sink_bond_atom')
+            b.ClearProp('source_other_atom')
+            b.ClearProp('sink_other_atom')
     else:
         mol_inp = Chem.MolFromSmiles(mol_inp_smiles)
 
