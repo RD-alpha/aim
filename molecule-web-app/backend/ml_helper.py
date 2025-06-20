@@ -27,7 +27,7 @@ Bitstring Representation:
    - [4]: Oxygen (O).
    - [5]: Fluorine (F).
    - [6]: Magnesium (Mg).
-   - [7]: Aluminum (Al).
+   - [7]: Aluminium (Al).
    - [8]: Silicon (Si).
    - [9]: Phosphorus (P).
    - [10]: Sulfur (S).
@@ -36,11 +36,11 @@ Bitstring Representation:
    - [13]: Iodine (I).
    - [14]: Transition metals (atomic numbers 20–30).
 
-5. Aromaticity Bitstring (1 bit):
+5. Aromaticity Bitstring (2 bit):
    - [0]: Atom is not aromatic.
    - [1]: Atom is aromatic.
 
-6. Adjacency Bitstring (8 bits):
+6. Adjacency Bitstring (9 bits):
    - [0]: Neighboring carbon has a positive formal charge (C+).
    - [1]: Neighboring carbon has a negative formal charge (C-).
    - [2]: Neighboring carbon has at least one hydrogen (CH).
@@ -49,6 +49,7 @@ Bitstring Representation:
    - [5]: Neighboring atom is electronegative (EN).
    - [6]: Neighboring atom is electropositive (EP).
    - [7]: Neighboring carbon has no hydrogens (CH0).
+   - [8]: Neighbouring carbon is sp2 or sp hybridized
 
 7. Bond Type Bitstring (3 bits):
    - [0]: Single bond.
@@ -69,12 +70,12 @@ ___________________________________
 - Hydrogen Count Bitstring: 4 bits
 - Hybridization Bitstring: 3 bits
 - Element Bitstring: 15 bits
-- Aromaticity Bitstring: 1 bit
-- Adjacency Bitstring: 8 bits
+- Aromaticity Bitstring: 2 bits
+- Adjacency Bitstring: 9 bits
 _________________________________
-Atom Fingerprint Total: 34 bits
+Atom Fingerprint Total: 36 bits
 _________________________________
-34*4 = 136 bits for atoms
+36*4 = 144 bits for atoms
 - Bond Type Bitstring: 3 bits
 - Bond Fingerprint Total: 6 bits
 __________________________________
@@ -135,7 +136,7 @@ electronegativity_dict = {1: 2.2,
 
 def make_atom_fingerprint(atom):
     if atom is None:
-        return [0] * 34
+        return [0] * 36
 
     # Charge bitstring
     charge_bitstring = [0] * 3
@@ -195,19 +196,21 @@ def make_atom_fingerprint(atom):
     new_mol = Chem.Mol(atom.GetOwningMol())
     Chem.SetAromaticity(new_mol)
     if new_mol.GetAtomWithIdx(atom.GetIdx()).GetIsAromatic():
-        aromatic_bit = [1]
+        aromatic_bits = [0, 1]
     else:
-        aromatic_bit = [0]
+        aromatic_bits = [1, 0]
 
     # adjacency bitstring
     # TODO: add C(EN)3 for good leaving group
     # [C+, C-, CH0, CH, C-EN, C=EN, EN, EP]
 
-    adjecency_bitstring = [0] * 8
+    adjecency_bitstring = [0] * 9
     for a in atom.GetNeighbors():
         if a.GetAtomicNum() == 6:
             if a.GetFormalCharge() > 0:
                 adjecency_bitstring[0] = 1
+            if a.GetHybridization() == Chem.rdchem.HybridizationType.SP2 or a.GetHybridization() == Chem.rdchem.HybridizationType.SP:
+                adjecency_bitstring[8] = 1
             elif a.GetFormalCharge() < 0:
                 adjecency_bitstring[1] = 1
             if a.GetTotalNumHs() > 0:
@@ -226,7 +229,7 @@ def make_atom_fingerprint(atom):
             adjecency_bitstring[6] = 1
  
 
-    total_bit_string = charge_bitstring + h_number_bitstring + hybridization_bitstring + element_bitstring + aromatic_bit + adjecency_bitstring
+    total_bit_string = charge_bitstring + h_number_bitstring + hybridization_bitstring + element_bitstring + aromatic_bits + adjecency_bitstring
     return total_bit_string
 
 def make_bond_fingerprint(bond):
