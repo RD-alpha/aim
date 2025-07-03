@@ -1,0 +1,6 @@
+Layer 1 took 0.06 seconds
+Layer 2 took 0.45 seconds
+Layer 3 took 0.69 seconds
+Layer 4 took 4.82 seconds
+Layer 5 took 36.36 seconds
+Layer 6 took 328.94 seconds

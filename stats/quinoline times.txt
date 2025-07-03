@@ -1,0 +1,5 @@
+Layer 1 took 0.18 seconds
+Layer 2 took 0.66 seconds
+Layer 3 took 7.65 seconds
+Layer 4 took 66.33 seconds
+Layer 5 took 576.51 seconds
