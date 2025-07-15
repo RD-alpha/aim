@@ -61,8 +61,8 @@ def process_molecule():
     # Load decision tree model
     #clf = joblib.load("../../models/v12/xg_model.pkl")
     # Load the model
-    clf = xgboost.XGBClassifier()
-    clf.load_model('models/v12/xg_model.json')
+    clf = XGBClassifier()
+    clf.load_model('../../models/v12/xg_model.json')
     for filename in os.listdir('results'):
         if filename.endswith('.png'):
             idx = int(filename.split('_')[1].split('.')[0])

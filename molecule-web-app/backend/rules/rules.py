@@ -298,8 +298,9 @@ def execute_step(mol_inp_smiles, cleanup = False, kekulise = False, chain_mol = 
     sinks_atoms = {}
     sources_bonds = {}
     sinks_bonds = {}
+    reset_implicit_flag = False
+
     for atom1 in mol_inp.GetAtoms():
-        atom1.SetNoImplicit(False)
         if atom1.HasProp('source'):
             sources_atoms[atom1.GetIdx()] = atom1.GetProp('source')
         if atom1.HasProp('sink'):
@@ -340,11 +341,15 @@ def execute_step(mol_inp_smiles, cleanup = False, kekulise = False, chain_mol = 
                     a.SetNumExplicitHs(a.GetNumExplicitHs() - 1)
                 elif a.GetTotalNumHs() == 1:
                         a.SetNoImplicit(True)
+                        reset_implicit_flag = True
                 a2 = p_mol.GetAtomWithIdx(i)
                 a2.SetFormalCharge(a2.GetFormalCharge() + 1)
                 if a2.GetNumExplicitHs() > 0 or a2.GetFormalCharge() == 0:
                     a2.SetNumExplicitHs(a2.GetNumExplicitHs() + 1)
                 connected_mols.append(p_mol)
+                if reset_implicit_flag:
+                    reset_implicit_flag = False
+                    a.SetNoImplicit(False)
                 mechanisms.append([4, i, j, None, None])
                 continue
 
@@ -360,6 +365,7 @@ def execute_step(mol_inp_smiles, cleanup = False, kekulise = False, chain_mol = 
                     a.SetNumExplicitHs(a.GetNumExplicitHs() - 1)
                 elif a.GetTotalNumHs() == 1:
                     a.SetNoImplicit(True)
+                    reset_implicit_flag = True
                 a2 = c_mol.GetAtomWithIdx(i)
                 a2.SetFormalCharge(a2.GetFormalCharge() + 1)
                 # Required for sensible RDKit behaviour or else it produces radicals
@@ -385,6 +391,9 @@ def execute_step(mol_inp_smiles, cleanup = False, kekulise = False, chain_mol = 
                         k = atom2.GetIdx()
                         mechanisms.append([9, i, j, k, None])
                         connected_mols.append(a_to_b(c_mol, j, k))
+                if reset_implicit_flag:
+                    reset_implicit_flag = False
+                    a.SetNoImplicit(False)
                 continue
             
 
@@ -505,12 +514,16 @@ def execute_step(mol_inp_smiles, cleanup = False, kekulise = False, chain_mol = 
                         a.SetNumExplicitHs(a.GetNumExplicitHs() - 1)
                     elif a.GetTotalNumHs() == 1:
                         a.SetNoImplicit(True)
+                        reset_implicit_flag = True
                     a2 = p_mol.GetAtomWithIdx(i)
                     a2.SetFormalCharge(a2.GetFormalCharge() + 1)
                     if a2.GetNumExplicitHs() > 0:
                         a2.SetNumExplicitHs(a2.GetNumExplicitHs() + 1)
                     connected_mols.append(p_mol)
                     mechanisms.append([5, i, j, k, None])
+                    if reset_implicit_flag:
+                        reset_implicit_flag = False
+                        a.SetNoImplicit(False)
                     continue
                 if sink_type == 'CH':
                     # Same proton transfer behaviour as above
@@ -521,6 +534,7 @@ def execute_step(mol_inp_smiles, cleanup = False, kekulise = False, chain_mol = 
                         a.SetNumExplicitHs(a.GetNumExplicitHs() - 1)
                     elif a.GetTotalNumHs() == 1:
                         a.SetNoImplicit(True)
+                        reset_implicit_flag = True
                     a2 = c_mol.GetAtomWithIdx(i)
                     a2.SetFormalCharge(a2.GetFormalCharge() + 1)
                     # Required for sensible RDKit behaviour or else it produces radicals
@@ -546,6 +560,9 @@ def execute_step(mol_inp_smiles, cleanup = False, kekulise = False, chain_mol = 
                             k = atom2.GetIdx()
                             mechanisms.append([9, i, j, k, None])
                             connected_mols.append(a_to_b(c_mol, j, k))
+                    if reset_implicit_flag:
+                        reset_implicit_flag = False
+                        a.SetNoImplicit(False)
                     continue
                    
                 connected_mols.append(a_to_b(n_mol, i, j))
