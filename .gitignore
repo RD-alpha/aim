@@ -10,3 +10,4 @@
 molecule-web-app/backend/pickles/
 molecule-web-app/backend/chain/
 /web.sock
+/training
