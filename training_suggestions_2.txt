@@ -97,7 +97,6 @@ COC(C)=O.N
 COC(C)=O.CCS
 COC(C)=O.c1ccccc1
 COC(C)=O.C[Mg]Br
-COC(C)=O.C=C[Mg]Br
 COC(C)=O.C[Li]
 COC(C)=O.[BH4-]
 COC(C)=O.[O-]O
@@ -131,7 +130,6 @@ FB(F)F.[Cl-]
 BrBr.CCO
 BrBr.CN
 BrBr.[C-]#N
-BrBr.CC[O-]
 BrBr.O
 BrBr.N
 BrBr.c1ccccc1
@@ -145,7 +143,6 @@ II.CCO
 II.CN
 II.[C-]#N
 II.CC[O-]
-II.O
 II.N
 II.c1ccccc1
 II.C[Mg]Br
@@ -187,7 +184,6 @@ C[N+](=O)[O-].CN
 C[N+](=O)[O-].[C-]#N
 C[N+](=O)[O-].CC[O-]
 C[N+](=O)[O-].CC=C
-C[N+](=O)[O-].O
 C[N+](=O)[O-].N
 C[N+](=O)[O-].CCS
 C[N+](=O)[O-].c1ccccc1
