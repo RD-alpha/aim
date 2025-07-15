@@ -53,6 +53,7 @@ def process_molecule():
     else:
         mols, mechs, inp_mol = execute_step(smiles, cleanup, kekulise)
     clear_chain()
+    clear_results()
     save_files_for_display(mols)
 
     # Load the resulting molecules (assuming they are saved as images)
@@ -77,10 +78,8 @@ def process_molecule():
                 y_pred = clf.predict(np.array(fp).reshape(1, -1))
             
             molecules[idx] = {'image': 'results/' + filename, 'smiles': result_smiles, 'mechanism': mechs[idx], 'predicted': int(y_pred[0])}
-            
-    
+
     clear_results()
-    
 
     #print(molecules)
     return jsonify({'molecules': molecules, 'history_idx': history_count})
