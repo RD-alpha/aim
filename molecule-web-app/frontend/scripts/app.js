@@ -146,10 +146,18 @@ document.addEventListener('DOMContentLoaded', function() {
                 img.style.border = '3px solid green';
                 imageChoices[molId] = {mechanism: molecule.mechanism, probable: 1};
             });
+            // Add grey button
+            const greyButton = document.createElement('button');
+            greenButton.classList.add('grey-button');
+            greenButton.addEventListener('click', () => {
+                img.style.border = '3px solid grey';
+                imageChoices[molId] = {mechanism: molecule.mechanism, probable: null};
+            });
 
             // Append buttons to the button container
             buttonContainer.appendChild(redButton);
             buttonContainer.appendChild(greenButton);
+            buttonContainer.appendChild(greyButton);
             buttonContainer.appendChild(text);
 
             // Append elements to the container
