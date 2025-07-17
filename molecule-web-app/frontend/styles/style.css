@@ -202,12 +202,12 @@ footer {
     background: #27ae60;
 }
 
-.green-button {
+.grey-button {
     background: darkgrey;
     color: white;
 }
 
-.green-button:hover {
+.grey-button:hover {
     background: grey;
 }
 
