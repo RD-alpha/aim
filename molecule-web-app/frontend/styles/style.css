@@ -174,7 +174,7 @@ footer {
     margin-bottom: 20px;
 }
 
-.red-button, .green-button {
+.red-button, .green-button, .grey-button {
     margin: 5px;
     padding: 5px 10px;
     font-size: 1.3 rem;
@@ -200,6 +200,15 @@ footer {
 
 .green-button:hover {
     background: #27ae60;
+}
+
+.green-button {
+    background: darkgrey;
+    color: white;
+}
+
+.green-button:hover {
+    background: grey;
 }
 
 .submit-button {

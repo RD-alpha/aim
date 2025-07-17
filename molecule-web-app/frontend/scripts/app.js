@@ -148,9 +148,9 @@ document.addEventListener('DOMContentLoaded', function() {
             });
             // Add grey button
             const greyButton = document.createElement('button');
-            greenButton.classList.add('grey-button');
-            greenButton.addEventListener('click', () => {
-                img.style.border = '3px solid grey';
+            greyButton.classList.add('grey-button');
+            greyButton.addEventListener('click', () => {
+                img.style.border = 'none';
                 imageChoices[molId] = {mechanism: molecule.mechanism, probable: null};
             });
 
