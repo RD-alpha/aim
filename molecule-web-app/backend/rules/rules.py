@@ -390,7 +390,7 @@ def execute_step(mol_inp_smiles, cleanup = False, kekulise = False, chain_mol = 
                     if atom2.GetFormalCharge() > 0 and atom2.HasProp('sink') and atom2.GetProp('sink')== 'empty AO':
                         k = atom2.GetIdx()
                         mechanisms.append([9, i, j, k, None])
-                        connected_mols.append(a_to_b(c_mol, j, k))
+                        connected_mols.append(a_to_b(Chem.Mol(c_mol), j, k))
                 if reset_implicit_flag:
                     reset_implicit_flag = False
                     a.SetNoImplicit(False)
@@ -559,13 +559,13 @@ def execute_step(mol_inp_smiles, cleanup = False, kekulise = False, chain_mol = 
                         if atom2.GetFormalCharge() > 0 and atom2.HasProp('sink') and atom2.GetProp('sink')== 'empty AO':
                             k = atom2.GetIdx()
                             mechanisms.append([9, i, j, k, None])
-                            connected_mols.append(a_to_b(c_mol, j, k))
+                            connected_mols.append(a_to_b(Chem.Mol(c_mol), j, k))
                     if reset_implicit_flag:
                         reset_implicit_flag = False
                         a.SetNoImplicit(False)
                     continue
                    
-                connected_mols.append(a_to_b(n_mol, i, j))
+                connected_mols.append(a_to_b(Chem.Mol(n_mol), i, j))
                 mechanisms.append([1, i, j, k, None])
 
 

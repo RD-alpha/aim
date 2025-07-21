@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, send_from_directory
+from flask import Flask, request, jsonify, send_from_directory # type: ignore
 from rdkit import Chem
 import os
 import shutil
