@@ -134,7 +134,7 @@ electronegativity_dict = {1: 2.2,
  52: 2.1,
  53: 2.66}
 
-def make_atom_fingerprint(atom):
+def make_atom_fingerprint(atom, other_atom_idx=None):
     if atom is None:
         return [0] * 36
 
@@ -206,6 +206,8 @@ def make_atom_fingerprint(atom):
 
     adjecency_bitstring = [0] * 9
     for a in atom.GetNeighbors():
+        if other_atom_idx != None and a.GetIdx() == other_atom_idx:
+            continue
         if a.GetAtomicNum() == 6:
             if a.GetFormalCharge() > 0:
                 adjecency_bitstring[0] = 1
@@ -286,7 +288,12 @@ def make_fingerprint(sm, mech):
         if mech[i] is None:
             atom_fps.append(make_atom_fingerprint(None))
         else:
-            atom_fps.append(make_atom_fingerprint(sm.GetAtomWithIdx(mech[i])))
+            if i in [1, 2]:
+                atom_fps.append(make_atom_fingerprint(sm.GetAtomWithIdx(mech[i]), mech[i + 2]))
+            elif i in [3, 4]:
+                atom_fps.append(make_atom_fingerprint(sm.GetAtomWithIdx(mech[i]), mech[i - 2]))
+            else:
+                atom_fps.append(make_atom_fingerprint(sm.GetAtomWithIdx(mech[i])))
     if mech[3]:
         b1 = make_bond_fingerprint(sm.GetBondBetweenAtoms(mech[1], mech[3]))
     else:
