@@ -300,7 +300,7 @@ def execute_step(mol_inp_smiles, cleanup = False, kekulise = False, chain_mol = 
     sinks_atoms = {}
     sources_bonds = {}
     sinks_bonds = {}
-    reset_implicit_flag = False
+ 
 
     for atom1 in mol_inp.GetAtoms():
         if atom1.HasProp('source'):
@@ -345,17 +345,11 @@ def execute_step(mol_inp_smiles, cleanup = False, kekulise = False, chain_mol = 
                     a.SetNumExplicitHs(a.GetNumExplicitHs() - 1)
                 elif a.GetTotalNumHs() == 1:
                         a.SetNoImplicit(True)
-                        reset_implicit_flag = True
                 a2 = p_mol.GetAtomWithIdx(i)
                 a2.SetFormalCharge(a2.GetFormalCharge() + 1)
-                if a2.GetAtomicNum() == 8:
-                    print(a2.GetNoImplicit())
                 if a2.GetNumExplicitHs() > 0 or a2.GetFormalCharge() == 0:
                     a2.SetNumExplicitHs(a2.GetNumExplicitHs() + 1)
-                
-                if reset_implicit_flag:
-                    reset_implicit_flag = False
-                    a.SetNoImplicit(False)
+
                     
                 connected_mols.append(p_mol)
                 mechanisms.append([4, i, j, None, None])
@@ -373,7 +367,6 @@ def execute_step(mol_inp_smiles, cleanup = False, kekulise = False, chain_mol = 
                     a.SetNumExplicitHs(a.GetNumExplicitHs() - 1)
                 elif a.GetTotalNumHs() == 1:
                     a.SetNoImplicit(True)
-                    reset_implicit_flag = True
                 a2 = c_mol.GetAtomWithIdx(i)
                 a2.SetFormalCharge(a2.GetFormalCharge() + 1)
                 # Required for sensible RDKit behaviour or else it produces radicals
@@ -399,9 +392,7 @@ def execute_step(mol_inp_smiles, cleanup = False, kekulise = False, chain_mol = 
                         k = atom2.GetIdx()
                         mechanisms.append([9, i, j, k, None])
                         connected_mols.append(a_to_b(Chem.Mol(c_mol), j, k))
-                if reset_implicit_flag:
-                    reset_implicit_flag = False
-                    a.SetNoImplicit(False)
+
                 continue
             
 
@@ -522,15 +513,11 @@ def execute_step(mol_inp_smiles, cleanup = False, kekulise = False, chain_mol = 
                         a.SetNumExplicitHs(a.GetNumExplicitHs() - 1)
                     elif a.GetTotalNumHs() == 1:
                         a.SetNoImplicit(True)
-                        reset_implicit_flag = True
+
                     a2 = p_mol.GetAtomWithIdx(i)
                     a2.SetFormalCharge(a2.GetFormalCharge() + 1)
                     if a2.GetNumExplicitHs() > 0:
                         a2.SetNumExplicitHs(a2.GetNumExplicitHs() + 1)
-                    
-                    if reset_implicit_flag:
-                        reset_implicit_flag = False
-                        a.SetNoImplicit(False)
 
                     connected_mols.append(p_mol)
                     mechanisms.append([5, i, j, k, None])
@@ -543,9 +530,9 @@ def execute_step(mol_inp_smiles, cleanup = False, kekulise = False, chain_mol = 
                     a.SetFormalCharge(a.GetFormalCharge() - 1)
                     if a.GetNumExplicitHs() > 0:
                         a.SetNumExplicitHs(a.GetNumExplicitHs() - 1)
-                    # elif a.GetTotalNumHs() == 1:
-                    #     a.SetNoImplicit(True)
-                    #     # reset_implicit_flag = True
+                    elif a.GetTotalNumHs() == 1:
+                        a.SetNoImplicit(True)
+
                     a2 = c_mol.GetAtomWithIdx(i)
                     a2.SetFormalCharge(a2.GetFormalCharge() + 1)
                     # Required for sensible RDKit behaviour or else it produces radicals
@@ -572,9 +559,8 @@ def execute_step(mol_inp_smiles, cleanup = False, kekulise = False, chain_mol = 
                             k = atom2.GetIdx()
                             mechanisms.append([9, i, j, k, None])
                             connected_mols.append(a_to_b(Chem.Mol(c_mol), j, k))
-                    # if reset_implicit_flag:
-                    #      reset_implicit_flag = False
-                    #      a.SetNoImplicit(False)
+                  
+            
                     continue
                    
                 connected_mols.append(a_to_b(Chem.Mol(n_mol), i, j))
