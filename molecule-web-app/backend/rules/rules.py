@@ -132,7 +132,7 @@ def identify_sink(mol, rules = "all"):
             atom.SetProp('sink', 'empty AO')
 
         # The second row p block expansion pack
-        if atom.GetAtomicNum() < 17 and atom.GetAtomicNum() >13 and atom.GetFormalCharge() >= 0 and atom.GetTotalValence() < 6:
+        if atom.GetAtomicNum() < 17 and atom.GetAtomicNum() > 13 and atom.GetFormalCharge() >= 0 and atom.GetTotalValence() < 6:
             atom.SetProp('sink', 'hypervalent')
 
     for bond in mol.GetBonds():
@@ -269,6 +269,8 @@ def execute_step(mol_inp_smiles, cleanup = False, kekulise = False, chain_mol = 
         for a in mol_inp.GetAtoms():
             a.ClearProp('source')
             a.ClearProp('sink')
+            if a.GetFormalCharge() == 0:
+                a.SetNoImplicit(False)
         for b in mol_inp.GetBonds():
             b.ClearProp('source')
             b.ClearProp('sink')
@@ -331,6 +333,8 @@ def execute_step(mol_inp_smiles, cleanup = False, kekulise = False, chain_mol = 
             if i == j:
                 continue
             if sink_type == 'proton':
+
+                # TODO: This is the issue
                 if source_type == 'hydride':
                     print('There will be hydrogen but we will skip for now')
                     continue
@@ -344,12 +348,16 @@ def execute_step(mol_inp_smiles, cleanup = False, kekulise = False, chain_mol = 
                         reset_implicit_flag = True
                 a2 = p_mol.GetAtomWithIdx(i)
                 a2.SetFormalCharge(a2.GetFormalCharge() + 1)
+                if a2.GetAtomicNum() == 8:
+                    print(a2.GetNoImplicit())
                 if a2.GetNumExplicitHs() > 0 or a2.GetFormalCharge() == 0:
                     a2.SetNumExplicitHs(a2.GetNumExplicitHs() + 1)
-                connected_mols.append(p_mol)
+                
                 if reset_implicit_flag:
                     reset_implicit_flag = False
                     a.SetNoImplicit(False)
+                    
+                connected_mols.append(p_mol)
                 mechanisms.append([4, i, j, None, None])
                 continue
 
@@ -519,11 +527,14 @@ def execute_step(mol_inp_smiles, cleanup = False, kekulise = False, chain_mol = 
                     a2.SetFormalCharge(a2.GetFormalCharge() + 1)
                     if a2.GetNumExplicitHs() > 0:
                         a2.SetNumExplicitHs(a2.GetNumExplicitHs() + 1)
-                    connected_mols.append(p_mol)
-                    mechanisms.append([5, i, j, k, None])
+                    
                     if reset_implicit_flag:
                         reset_implicit_flag = False
                         a.SetNoImplicit(False)
+
+                    connected_mols.append(p_mol)
+                    mechanisms.append([5, i, j, k, None])
+
                     continue
                 if sink_type == 'CH':
                     # Same proton transfer behaviour as above
@@ -532,9 +543,9 @@ def execute_step(mol_inp_smiles, cleanup = False, kekulise = False, chain_mol = 
                     a.SetFormalCharge(a.GetFormalCharge() - 1)
                     if a.GetNumExplicitHs() > 0:
                         a.SetNumExplicitHs(a.GetNumExplicitHs() - 1)
-                    elif a.GetTotalNumHs() == 1:
-                        a.SetNoImplicit(True)
-                        reset_implicit_flag = True
+                    # elif a.GetTotalNumHs() == 1:
+                    #     a.SetNoImplicit(True)
+                    #     # reset_implicit_flag = True
                     a2 = c_mol.GetAtomWithIdx(i)
                     a2.SetFormalCharge(a2.GetFormalCharge() + 1)
                     # Required for sensible RDKit behaviour or else it produces radicals
@@ -556,13 +567,14 @@ def execute_step(mol_inp_smiles, cleanup = False, kekulise = False, chain_mol = 
                                 intermediate = a_to_b(Chem.Mol(c_mol), j, k)
                                 connected_mols.append(b_to_a(Chem.Mol(intermediate), k, l))
                                 mechanisms.append([8, i, j, k, l])
-                        if atom2.GetFormalCharge() > 0 and atom2.HasProp('sink') and atom2.GetProp('sink')== 'empty AO':
+                        if atom2.GetFormalCharge() > 0 and atom2.HasProp('sink') and atom2.GetProp('sink') == 'empty AO':
+                            print('atom2', atom2.GetIdx(), atom2.GetProp('sink'))
                             k = atom2.GetIdx()
                             mechanisms.append([9, i, j, k, None])
                             connected_mols.append(a_to_b(Chem.Mol(c_mol), j, k))
-                    if reset_implicit_flag:
-                        reset_implicit_flag = False
-                        a.SetNoImplicit(False)
+                    # if reset_implicit_flag:
+                    #      reset_implicit_flag = False
+                    #      a.SetNoImplicit(False)
                     continue
                    
                 connected_mols.append(a_to_b(Chem.Mol(n_mol), i, j))
@@ -656,16 +668,22 @@ def execute_step(mol_inp_smiles, cleanup = False, kekulise = False, chain_mol = 
     if cleanup:
         connected_mols, mechanisms = clean_mol(connected_mols, mechanisms, mol_inp)
 
+    idx = 0
     for mol in connected_mols:
         try:
             Chem.SanitizeMol(mol)
         except:
             print('There was a sanitisation error')
             timestamp = datetime.now().strftime("%d_%H%M%S")
-            Chem.Draw.MolToFile(mol, f'logs/debug{timestamp}.png')
-            continue
+            opts = Chem.Draw.rdMolDraw2D.MolDrawOptions()
+            opts.addAtomIndices = True
+            Chem.Draw.MolToFile(mol, f'/home/rd611/aim/logs/debug{timestamp}.png', options=opts)
+            Chem.Draw.MolToFile(mol_inp, f'/home/rd611/aim/logs/_inp_{timestamp}.png', options=opts)
+            print(timestamp, mechanisms[idx])
+            break
         if kekulise:
             Chem.Kekulize(mol, clearAromaticFlags=True)
+        idx += 1
     
     return (connected_mols, mechanisms, mol_inp)
 
