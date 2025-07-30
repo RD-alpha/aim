@@ -334,7 +334,7 @@ def execute_step(mol_inp_smiles, cleanup = False, kekulise = False, chain_mol = 
                 continue
             if sink_type == 'proton':
 
-                # TODO: This is the issue
+            
                 if source_type == 'hydride':
                     print('There will be hydrogen but we will skip for now')
                     continue
@@ -555,7 +555,6 @@ def execute_step(mol_inp_smiles, cleanup = False, kekulise = False, chain_mol = 
                                 connected_mols.append(b_to_a(Chem.Mol(intermediate), k, l))
                                 mechanisms.append([8, i, j, k, l])
                         if atom2.GetFormalCharge() > 0 and atom2.HasProp('sink') and atom2.GetProp('sink') == 'empty AO':
-                            print('atom2', atom2.GetIdx(), atom2.GetProp('sink'))
                             k = atom2.GetIdx()
                             mechanisms.append([9, i, j, k, None])
                             connected_mols.append(a_to_b(Chem.Mol(c_mol), j, k))
