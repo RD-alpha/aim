@@ -1,12 +1,11 @@
 from flask import Flask, request, jsonify, send_from_directory, session, redirect, url_for, send_file # type: ignore
-from werkzeug.utils import secure_filename
 from rdkit import Chem
 import os
 import shutil
 import uuid
 import tempfile
 from rules.rules import execute_step
-from helper import make_image, save_files_for_display, clear_results, clear_chain
+from helper import make_image, save_files_for_display, clear_results, clear_pickles
 import pickle
 import json
 import joblib
@@ -35,6 +34,10 @@ def get_session_temp_dir():
     temp_base = tempfile.gettempdir()
     session_dir = os.path.join(temp_base, f"webapp_session_{session_id}")
     os.makedirs(session_dir, exist_ok=True)
+    os.makedirs(os.path.join(session_dir, 'results'), exist_ok=True)
+    os.makedirs(os.path.join(session_dir, 'history'), exist_ok=True)
+    os.makedirs(os.path.join(session_dir, 'pickles'), exist_ok=True)
+    # os.makedirs(os.path.join(session_dir, 'chain'), exist_ok=True)  #
     return session_dir
 
 def cleanup_session_temp_dir():
@@ -80,6 +83,7 @@ def process_molecule():
     #TODO: reimplement that carrying forward of molecules
     #clear_chain()
     clear_results(tmp_dir)
+    clear_pickles(tmp_dir)
     save_files_for_display(mols, inp_mol, tmp_dir)
 
     # Load the resulting molecules (assuming they are saved as images)
@@ -105,7 +109,6 @@ def process_molecule():
             
             molecules[idx] = {'image':filename, 'smiles': result_smiles, 'mechanism': mechs[idx], 'predicted': int(y_pred[0])}
 
-    clear_results(tmp_dir)
 
     #print(molecules)
     return jsonify({'molecules': molecules, 'history_idx': history_count})
@@ -209,45 +212,22 @@ def get_random_suggestion():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
     
-@app.route('/list_results')
-def list_results():
-    tmp_dir = get_session_temp_dir()
-    results_folder = os.path.join(tmp_dir, 'results')
-    if not os.path.exists(results_folder):
-        return jsonify({'error': 'No results found'}), 404
 
-    results = []
-    for filename in sorted(os.listdir(results_folder)):
-        if filename.endswith('.png'):
-            results.append(filename)
-
-    return jsonify({'results': results})
-
-@app.route('list_history')
-def list_history():
-    tmp_dir = get_session_temp_dir()
-    history_folder = os.path.join(tmp_dir, 'history')
-    if not os.path.exists(history_folder):
-        return jsonify({'error': 'No history found'}), 404
-
-    history = []
-    for filename in sorted(os.listdir(history_folder)):
-        if filename.endswith('.png'):
-            history.append(filename)
-
-    return jsonify({'history': history})
-
-
-@app.route('/session_file/<filename>')
-def session_file(filename):
+@app.route('/session_file/<path:filepath>')
+def session_file(filepath):
     session_dir = get_session_temp_dir()
-    safe_filename = secure_filename(filename)
-    file_path = os.path.join(session_dir, safe_filename)
+    # Prevent directory traversal attacks
+    safe_path = os.path.normpath(filepath)
+    abs_file_path = os.path.abspath(os.path.join(session_dir, safe_path))
 
-    if not os.path.exists(file_path):
+    # Ensure the requested file is within the session directory
+    if not abs_file_path.startswith(session_dir):
+        return 'Invalid file path', 400
+
+    if not os.path.exists(abs_file_path):
         return 'File not found', 404
 
-    return send_file(file_path)
+    return send_file(abs_file_path)
 
 
 if __name__ == '__main__':

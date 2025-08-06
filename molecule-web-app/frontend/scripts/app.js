@@ -100,7 +100,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const imgContainer = document.createElement('div');
             imgContainer.classList.add('image-container');
             const img = document.createElement('img');
-            img.src = `/session_file/results/${molecule.image}`;
+            img.src = `/session_file/results/${molecule.image}?_=${Date.now()}`;
             img.alt = molecule.smiles;
             img.classList.add('result-image');
             const molId = molecule.image.match(/mol_(\d+)\.png/)[1];
@@ -198,25 +198,26 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function addHistory(history_idx) {
         const historyImg = document.createElement('img');
-        historyImg.src = `/session_file/history/${history_idx}.png`;
+        historyImg.src = `/session_file/history/${history_idx}.png?_=${Date.now()}`;
         historyImg.alt = smilesInput.value;
         historyImg.classList.add('history-image');
         historyList.insertBefore(historyImg, historyList.firstChild);
     }
 
-    saveHistoryButton.addEventListener('click', () => {
-        console.log(mechStep);
-        fetch('/save_history', { 
-            method: 'POST',  
-            headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            mechanism: mechStep
-          })
-        });
-        mechStep = [];
-    })
+    // TODO: add a button to save the history    
+    // saveHistoryButton.addEventListener('click', () => {
+    //     console.log(mechStep);
+    //     fetch('/save_history', { 
+    //         method: 'POST',  
+    //         headers: {
+    //         'Content-Type': 'application/json'
+    //       },
+    //       body: JSON.stringify({
+    //         mechanism: mechStep
+    //       })
+    //     });
+    //     mechStep = [];
+    // });
     /* TODO: add a then statement to catch errors */
 
 
