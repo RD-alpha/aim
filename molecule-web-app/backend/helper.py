@@ -21,7 +21,7 @@ def save_files_for_display(mols, inp_mol, tmp_dir):
     file_num = 0
     
     # Save starting material as a pickle
-    with open(os.path.join(pickle_folder, + "sm.pkl", 'wb')) as f:
+    with open(os.path.join(pickle_folder, "sm.pkl"), 'wb') as f:
                 pickle.dump(inp_mol, f)
 
     for mol in mols:
@@ -36,7 +36,7 @@ def save_files_for_display(mols, inp_mol, tmp_dir):
 
             # Save history feature is currently on hold
             # Save molecules as pickles to later save for training
-            with open(os.path.join(pickle_folder, + file_name + ".pkl", 'wb')) as f:
+            with open(os.path.join(pickle_folder, file_name + ".pkl"), 'wb') as f:
                 pickle.dump(mol, f)
             file_num += 1
             
@@ -47,6 +47,13 @@ def save_files_for_display(mols, inp_mol, tmp_dir):
 
 def clear_results(tmp_dir):
     source_folder = os.path.join(tmp_dir, 'results')
+    if os.path.exists(source_folder):
+        shutil.rmtree(source_folder)
+        os.makedirs(source_folder)
+    return None
+
+def clear_pickles(tmp_dir):
+    source_folder = os.path.join(tmp_dir, 'pickles')
     if os.path.exists(source_folder):
         shutil.rmtree(source_folder)
         os.makedirs(source_folder)
