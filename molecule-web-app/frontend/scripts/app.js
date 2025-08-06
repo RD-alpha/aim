@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const resultsContainer = document.getElementById('results-container');
     const historyList = document.getElementById('history-list');
     const clearHistoryButton = document.getElementById('clear-history-button');
-    const saveHistoryButton = document.getElementById('save-history-button');
+    // const saveHistoryButton = document.getElementById('save-history-button');
     const randomSuggestionButton = document.getElementById('random-suggestion-button');
     // const greenDatasetButton = document.getElementById('green-dataset-button');
     //const toggleHistoryButton = document.getElementById('toggle-history-button');
@@ -99,9 +99,8 @@ document.addEventListener('DOMContentLoaded', function() {
         sortedMolecules.forEach(molecule => {
             const imgContainer = document.createElement('div');
             imgContainer.classList.add('image-container');
-
             const img = document.createElement('img');
-            img.src = molecule.image + "?v=" + new Date().getTime();
+            img.src = `/session_file/results/${molecule.image}`;
             img.alt = molecule.smiles;
             img.classList.add('result-image');
             const molId = molecule.image.match(/mol_(\d+)\.png/)[1];
@@ -199,7 +198,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function addHistory(history_idx) {
         const historyImg = document.createElement('img');
-        historyImg.src = "history/" + history_idx.toString() + ".png" + "?v=" + new Date().getTime();
+        historyImg.src = `/session_file/history/${history_idx}.png`;
         historyImg.alt = smilesInput.value;
         historyImg.classList.add('history-image');
         historyList.insertBefore(historyImg, historyList.firstChild);
