@@ -51,7 +51,7 @@ electronegativity_dict = {1: 2.2,
  51: 2.05,
  52: 2.1,
  53: 2.66}
-import pickle
+
 
 
 def identify_source(mol, rules = "all"):
