@@ -11,3 +11,5 @@ molecule-web-app/backend/pickles/
 molecule-web-app/backend/chain/
 /web.sock
 /training_sets
+/2773.pkl
+/2824.pkl

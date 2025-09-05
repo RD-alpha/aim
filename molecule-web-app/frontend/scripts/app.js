@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const infoModal = document.getElementById('info-modal');
     const closeModal = document.getElementById('close-modal');
     const confirmationPopup = document.getElementById('confirmation-popup');
+    const errorPopup = document.getElementById('error-popup');
 
      // Show the modal on first load
      infoModal.style.display = 'block';
@@ -53,14 +54,21 @@ document.addEventListener('DOMContentLoaded', function() {
             })
             .then(response => response.json())
             .then(data => {
-                console.log(data)
+                console.log(data);
                 if (saveMech == true) {
                 mechStep.push(nextStep);
                 }
                 displayResults(data.molecules);
                 addHistory(data.history_idx);
             })
-            .catch(error => console.error('Error:', error));
+            .catch(error => {
+                console.error('Error:', error);
+                errorPopup.classList.add('show');
+                setTimeout(() => {
+                        errorPopup.classList.remove('show');
+                    }, 2000); // Hide after 2 seconds
+            
+    });
         }
 
     convertButton.addEventListener('click', function() {
