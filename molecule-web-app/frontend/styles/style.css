@@ -278,6 +278,25 @@ footer {
 #confirmation-popup.show {
     opacity: 1;
 }
+
+#error-popup{
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transition: translateY(50 px);
+    color: red;
+    background-color: #e2b9b9;
+    border-radius: 5px;
+    padding: 12px 20px;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    pointer-events: none;
+}
+#error-popup.show {
+    opacity: 1;
+}
+
+
 /* Responsive Design for Phone Users */
 @media (max-width: 768px) {
     body {
