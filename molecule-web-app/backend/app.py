@@ -8,7 +8,6 @@ from rules.rules import execute_step
 from helper import make_image, save_files_for_display, clear_results, clear_pickles
 import pickle
 import json
-import joblib
 from ml_helper import make_fingerprint
 import numpy as np
 import random
@@ -23,6 +22,12 @@ app = Flask(
 app.secret_key = 'T0rz5wNS1nS1p2mDU7Zg6DmFxnyQM5Gg'
 
 # --- Utilities ---
+
+config_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '/../config.json'))
+with open(config_path) as f:
+    config = json.load(f)
+MODEL_VERSION = config['model_version']
+
 
 def get_or_create_session_id():
     if 'session_id' not in session:
@@ -93,7 +98,8 @@ def process_molecule():
     #clf = joblib.load("../../models/v12/xg_model.pkl")
     # Load the model
     clf = XGBClassifier()
-    clf.load_model('../../models/v15/xg_model.json')
+    model_path = f'../../models/{MODEL_VERSION}/xg_model.json'
+    clf.load_model(model_path)
     for filename in os.listdir(os.path.join(tmp_dir, 'results')):
         if filename.endswith('.png'):
             idx = int(filename.split('_')[1].split('.')[0])
@@ -229,6 +235,10 @@ def session_file(filepath):
 
     return send_file(abs_file_path)
 
+# Add to app.py
+@app.route('/api/version')
+def get_version():
+    return jsonify({'model_version': MODEL_VERSION})
 
 if __name__ == '__main__':
     app.run(debug=True)

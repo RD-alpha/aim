@@ -242,7 +242,17 @@ document.addEventListener('DOMContentLoaded', function() {
             .catch(error => console.error('Error:', error));
     });
 
-   
+
+    // Fetch the version from the backend
+fetch('/api/version')
+  .then(response => response.json())
+  .then(data => {
+
+    document.getElementById('version-info').textContent = `Model version: ${data.model_version}`;
+  })
+  .catch(error => {
+    console.error('Error fetching version:', error);
+  });
 
 });
 
