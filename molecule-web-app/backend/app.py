@@ -23,7 +23,7 @@ app.secret_key = 'T0rz5wNS1nS1p2mDU7Zg6DmFxnyQM5Gg'
 
 # --- Utilities ---
 
-config_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '/../config.json'))
+config_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../config.json'))
 with open(config_path) as f:
     config = json.load(f)
 MODEL_VERSION = config['model_version']

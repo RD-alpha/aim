@@ -248,7 +248,7 @@ fetch('/api/version')
   .then(response => response.json())
   .then(data => {
 
-    document.getElementById('version-info').textContent = `Model version: ${data.model_version}`;
+    document.getElementById('model-version').textContent = `Model version: ${data.model_version}`;
   })
   .catch(error => {
     console.error('Error fetching version:', error);
