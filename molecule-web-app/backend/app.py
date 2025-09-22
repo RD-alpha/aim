@@ -175,7 +175,7 @@ def clear_history():
 def save_training_data():
     tmp_dir = get_session_temp_dir()
     data = request.get_json()   
-    training_folder = os.path.abspath(os.path.join(root_folder, 'training'))
+    training_folder = os.path.abspath(os.path.join(root_folder, 'training_current'))
     pickles_folder = os.path.abspath(os.path.join(tmp_dir, 'pickles'))
    
     # Find the highest numbered folder in the training directory
