@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Molecule Viewer</title>
+</head>
+<body>
+  <h1>Clickable Molecule</h1>
+
+  <!-- SVG injected here -->
+  <div id="mol-container">
+    {{ svg|safe }}
+  </div>
+  <img src="data:image/png;base64,{{ png_bin }}" />
+
+  <form action="">
+  <!-- <label for="fname">First name:</label> -->
+  <input type="text" id="mech_0" name="mech_0">
+  <!-- <label for="lname">Last name:</label> -->
+  <input type="text" id="mech_1" name="mech_1">
+  <input type="text" id="mech_2" name="mech_2">
+  <input type="text" id="mech_3" name="mech_3">
+  <input type="text" id="mech_4" name="mech_4">
+  <!-- <input type="submit" value="Submit"> -->
+</form>
+
+<button id="pick-atom-btn" type="button">Pick Atoms</button>
+<script>
+    let picking = false;
+    let currentInput = 1;
+
+    document.getElementById("pick-atom-btn").addEventListener("click", function() {
+        picking = true;
+        currentInput = 1;
+        this.disabled = true;
+    });
+
+    document.querySelectorAll("[class^='atom-']").forEach(el => {
+        el.addEventListener("click", function(e) {
+            if (picking && currentInput <= 4) {
+                const atomClass = Array.from(e.target.classList).find(cls => cls.startsWith("atom-"));
+                if (atomClass) {
+                    const atomNum = atomClass.split("-")[1];
+                    const input = document.getElementById("mech_" + currentInput);
+                    if (input) {
+                        input.value = atomNum;
+                        currentInput++;
+                        if (currentInput > 4) {
+                            picking = false;
+                            document.getElementById("pick-atom-btn").disabled = false;
+                        }
+                    }
+                }
+            }
+        });
+    });
+</script>
+
+</body>
+</html>
