@@ -253,7 +253,6 @@ def whatnext():
     random_mol = random.randint(0, num_arrows)
     with open(os.path.join(training_folder, f'{random_dir}/mol_{random_mol}.pkl'), 'rb') as f:
         next_mol = pickle.load(f)
-
     with open(os.path.join(training_folder, f'{random_dir}/data.json'), 'r') as f:
         j_data = json.load(f)
 
@@ -262,12 +261,13 @@ def whatnext():
     # Convert PIL Image → base64
     buf = BytesIO()
     img.save(buf, format="PNG")
-
-    drawer = Chem.rdMolDraw2D.MolDraw2DSVG(300, 300)
+    c_list = []
+    for a in next_mol.GetAtoms():
+        if a.GetAtomicNum() == 6:
+            c_list.append(a.GetIdx())
+    drawer = Chem.Draw.rdMolDraw2D.MolDraw2DSVG(300, 300)
     opts = drawer.drawOptions()
-    for i, atom in enumerate(next_mol.GetAtoms()):
-        opts.atomLabels[i] = str(atom.GetIdx())  # label atoms with indices
-    drawer.DrawMolecule(mol)
+    drawer.DrawMolecule(next_mol, highlightAtoms = c_list)
     drawer.FinishDrawing()
     svg_code = drawer.GetDrawingText()
     png_bindata = base64.b64encode(buf.getvalue()).decode("utf-8")
