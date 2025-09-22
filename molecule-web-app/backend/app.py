@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, send_from_directory, session, redirect, url_for, send_file # type: ignore
+from flask import Flask, request, jsonify, send_from_directory, session, redirect, url_for, send_file, render_template # type: ignore
 from rdkit import Chem
 import os
 import shutil
@@ -12,7 +12,8 @@ from ml_helper import make_fingerprint
 import numpy as np
 import random
 from xgboost import XGBClassifier
-
+from io import BytesIO
+import base64
 
 app = Flask(
     __name__,
@@ -239,6 +240,40 @@ def session_file(filepath):
 @app.route('/api/version')
 def get_version():
     return jsonify({'model_version': MODEL_VERSION})
+
+@app.route("/whatnext")
+def whatnext():
+    # Load some existing arrows
+    training_folder = os.path.abspath(os.path.join(root_folder, 'training'))
+    num_dirs = len([name for name in os.listdir(training_folder) if os.path.isdir(os.path.join(training_folder, name))])
+    random_dir = random.randint(1, num_dirs + 1)
+    with open(os.path.join(training_folder,f'{random_dir}/sm.pkl'), 'rb') as f:
+        sm = pickle.load(f)
+    num_arrows = len([fname for fname in os.listdir(os.path.join(training_folder,f'{random_dir}')) if fname.startswith('mol_')])
+    random_mol = random.randint(0, num_arrows)
+    with open(os.path.join(training_folder, f'{random_dir}/mol_{random_mol}.pkl'), 'rb') as f:
+        next_mol = pickle.load(f)
+
+    with open(os.path.join(training_folder, f'{random_dir}/data.json'), 'r') as f:
+        j_data = json.load(f)
+
+    img = Chem.Draw.MolToImage(sm, size=(300,300))
+
+    # Convert PIL Image → base64
+    buf = BytesIO()
+    img.save(buf, format="PNG")
+
+    drawer = Chem.rdMolDraw2D.MolDraw2DSVG(300, 300)
+    opts = drawer.drawOptions()
+    for i, atom in enumerate(next_mol.GetAtoms()):
+        opts.atomLabels[i] = str(atom.GetIdx())  # label atoms with indices
+    drawer.DrawMolecule(mol)
+    drawer.FinishDrawing()
+    svg_code = drawer.GetDrawingText()
+    png_bindata = base64.b64encode(buf.getvalue()).decode("utf-8")
+
+    mech = j_data['choices'][str(random_mol)]['mechanism']
+    return render_template("whatnext.html", svg=svg_code, png_bin = png_bindata)
 
 if __name__ == '__main__':
     app.run(debug=True)
