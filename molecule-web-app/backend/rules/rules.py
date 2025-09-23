@@ -1,4 +1,4 @@
-from rdkit import Chem
+from rdkit import Chem # pyright: ignore[reportMissingImports]
 from datetime import datetime
 ptable = Chem.GetPeriodicTable()
 electronegativity_dict = {1: 2.2,
@@ -264,6 +264,131 @@ def clean_mol(list_mol, mechanisms, original_mol = None):
                 updated_mech.append(mechanisms[idx])
     return (clean_list, updated_mech)
 
+def lose_hydride(mol, i):
+    h_mol = Chem.Mol(mol)
+    a = h_mol.GetAtomWithIdx(i)
+    a.SetNumExplicitHs(a.GetNumExplicitHs() - 1)
+    a.SetFormalCharge(a.GetFormalCharge() + 1)
+    return h_mol
+
+def transfer_proton(mol, j, i):
+    p_mol = Chem.Mol(mol)
+    a = p_mol.GetAtomWithIdx(j)
+    a.SetFormalCharge(a.GetFormalCharge() - 1)
+    if a.GetNumExplicitHs() > 0:
+        a.SetNumExplicitHs(a.GetNumExplicitHs() - 1)
+    elif a.GetTotalNumHs() == 1:
+            a.SetNoImplicit(True)
+    a2 = p_mol.GetAtomWithIdx(i)
+    a2.SetFormalCharge(a2.GetFormalCharge() + 1)
+    if a2.GetNumExplicitHs() > 0 or a2.GetFormalCharge() == 0:
+        a2.SetNumExplicitHs(a2.GetNumExplicitHs() + 1)
+    return p_mol
+    return (mechanisms, connected_mols)
+
+
+def c_h_elimination(mol, i, j, mechanisms, connected_mols):
+    c_mol = Chem.Mol(mol)
+    a = c_mol.GetAtomWithIdx(j)
+    a.SetFormalCharge(a.GetFormalCharge() - 1)
+    if a.GetNumExplicitHs() > 0:
+        a.SetNumExplicitHs(a.GetNumExplicitHs() - 1)
+    elif a.GetTotalNumHs() == 1:
+        a.SetNoImplicit(True)
+    a2 = c_mol.GetAtomWithIdx(i)
+    a2.SetFormalCharge(a2.GetFormalCharge() + 1)
+    # Required for sensible RDKit behaviour or else it produces radicals
+    if a2.GetNumExplicitHs() > 0 or a2.GetFormalCharge() == 0:
+        a2.SetNumExplicitHs(a2.GetNumExplicitHs() + 1)
+    for atom2 in a.GetNeighbors():
+        for b in atom2.GetBonds():
+            #Find any bonds that have a leaving group for elimination
+            if b.HasProp('sink') and b.GetProp('sink_bond_atom') == 'both':
+                k = atom2.GetIdx()
+                l = b.GetOtherAtomIdx(k)
+            elif b.HasProp('sink') and atom2.GetIdx() == int(b.GetProp('sink_bond_atom')):
+                k = atom2.GetIdx()
+                l = int(b.GetProp('sink_other_atom'))
+            else: 
+                continue
+            if mol.GetAtomWithIdx(l).GetFormalCharge() >= 0:
+                intermediate = a_to_b(Chem.Mol(c_mol), j, k)
+                connected_mols.append(b_to_a(Chem.Mol(intermediate), k, l))
+                mechanisms.append([8, i, j, k, l])
+        if atom2.GetFormalCharge() > 0 and atom2.HasProp('sink') and atom2.GetProp('sink')== 'empty AO':
+            k = atom2.GetIdx()
+            mechanisms.append([9, i, j, k, None])
+            connected_mols.append(a_to_b(Chem.Mol(c_mol), j, k))
+        return (mechanisms, connected_mols)
+    
+def bond_to_hydride(mol, i, j, l, mechanisms, connected_mols):
+    m_mol = Chem.Mol(mol)
+    m_mol = b_to_a(m_mol, j, l)
+    m_mol.GetAtomWithIdx(j).SetNumExplicitHs(m_mol.GetAtomWithIdx(j).GetNumImplicitHs() + 1)
+    m_mol.GetAtomWithIdx(j).SetFormalCharge(m_mol.GetAtomWithIdx(j).GetFormalCharge() - 1)
+    connected_mols.append(m_mol)
+    mechanisms.append([7, i, j, None, l])
+    return (mechanisms, connected_mols)
+
+def break_bond_source(mol, b, a_list):
+    order = []
+    new_mol = []
+    if b.GetProp('source_bond_atom')=='both':
+        counter = 0
+        for a in a_list:
+            i = a.GetIdx()
+            k = b.GetOtherAtom(a).GetIdx()
+            if mol.GetAtomWithIdx(k).GetFormalCharge() > 0:
+                continue
+            new_mol.append(Chem.Mol(mol))
+            new_mol[counter] = b_to_a(new_mol[counter], k, i)
+            order.append(i)
+            counter += 1
+    else:
+        i = b.GetIntProp('source_bond_atom')
+        k = b.GetIntProp('source_other_atom')
+        if mol.GetAtomWithIdx(k).GetFormalCharge() > 0:
+            return (new_mol, order)
+        order.append(i)
+        new_mol[0] = b_to_a(new_mol[0], k, i)
+    return (new_mol, order)
+
+def break_bond_sink(new_mol, order, a, b1, b2, mechanisms, connected_mols):
+    j = a.GetIdx()
+    l = b2.GetOtherAtom(a).GetIdx()
+    for counter in range(len(new_mol)):
+        n_mol = Chem.Mol(new_mol[counter])
+        i = order[counter]
+        k = b1.GetOtherAtom(n_mol.GetAtomWithIdx(i)).GetIdx()
+        if i == j or n_mol.GetAtomWithIdx(l).GetFormalCharge() < 0:
+            continue
+        n_mol = b_to_a(n_mol, j, l)
+        connected_mols.append(a_to_b(n_mol, i, j))
+        mechanisms.append([3, i, j, k, l])
+    return (mechanisms, connected_mols)
+
+def carbocat(mol, sink_idx, connected_mols, mechanisms):
+    b = mol.GetBondWithIdx(sink_idx)
+    if b.GetProp('sink_bond_atom') == 'both':
+        return (mechanisms, connected_mols)
+    if b.GetBondTypeAsDouble() != 1:
+        return (mechanisms, connected_mols)
+    j = b.GetIntProp('sink_bond_atom')
+    l = b.GetIntProp('sink_other_atom')
+    if mol.GetAtomWithIdx(l).GetFormalCharge() < 0:
+        return (mechanisms, connected_mols)
+    if mol.GetAtomWithIdx(j).GetAtomicNum() == 6:
+        if mol.GetAtomWithIdx(j).GetTotalNumHs() > 1:
+            return (mechanisms, connected_mols)
+    else:
+        if mol.GetAtomWithIdx(j).GetFormalCharge() > -1:
+            return (mechanisms, connected_mols)
+
+    new_mol = Chem.Mol(mol)
+    connected_mols.append(b_to_a(new_mol, j, l))
+    mechanisms.append([10, None, j, None, l])
+    return (mechanisms, connected_mols)
+
 def execute_step(mol_inp_smiles, cleanup = False, kekulise = False, chain_mol = None):
 
     if chain_mol is not None:
@@ -322,38 +447,24 @@ def execute_step(mol_inp_smiles, cleanup = False, kekulise = False, chain_mol = 
             continue
         hydride_flag = False
         if source_type == 'hydride':
-                h_mol = Chem.Mol(mol_inp)
                 hydride_flag = True
-                a = h_mol.GetAtomWithIdx(i)
-                a.SetNumExplicitHs(a.GetNumExplicitHs() - 1)
-                a.SetFormalCharge(a.GetFormalCharge() + 1)
+                h_mol = lose_hydride(mol_inp, i)
         for sink_idx, sink_type in sinks_atoms.items():
             j = sink_idx
+
             if mol_inp.GetAtomWithIdx(j).GetFormalCharge() < 0:
                 continue
             if i == j:
                 continue
-            if sink_type == 'proton':
 
-            
-                if source_type == 'hydride':
+            if sink_type == 'proton':
+                if hydride_flag:
                     print('There will be hydrogen but we will skip for now')
                     continue
-                p_mol = Chem.Mol(mol_inp)
-                a = p_mol.GetAtomWithIdx(j)
-                a.SetFormalCharge(a.GetFormalCharge() - 1)
-                if a.GetNumExplicitHs() > 0:
-                    a.SetNumExplicitHs(a.GetNumExplicitHs() - 1)
-                elif a.GetTotalNumHs() == 1:
-                        a.SetNoImplicit(True)
-                a2 = p_mol.GetAtomWithIdx(i)
-                a2.SetFormalCharge(a2.GetFormalCharge() + 1)
-                if a2.GetNumExplicitHs() > 0 or a2.GetFormalCharge() == 0:
-                    a2.SetNumExplicitHs(a2.GetNumExplicitHs() + 1)
-
-                    
+                
+                p_mol = transfer_proton(mol_inp, j, i)
                 connected_mols.append(p_mol)
-                mechanisms.append([4, i, j, None, None])
+                mechanisms.append([4, i, j, None, None])   
                 continue
 
             if sink_type == 'CH':
@@ -361,41 +472,8 @@ def execute_step(mol_inp_smiles, cleanup = False, kekulise = False, chain_mol = 
                     # probably unlikely that we will use a metal hydride as base for enolisation
                     continue
                 # Same proton transfer behaviour as above
-                c_mol = Chem.Mol(mol_inp)
-                a = c_mol.GetAtomWithIdx(j)
-                a.SetFormalCharge(a.GetFormalCharge() - 1)
-                if a.GetNumExplicitHs() > 0:
-                    a.SetNumExplicitHs(a.GetNumExplicitHs() - 1)
-                elif a.GetTotalNumHs() == 1:
-                    a.SetNoImplicit(True)
-                a2 = c_mol.GetAtomWithIdx(i)
-                a2.SetFormalCharge(a2.GetFormalCharge() + 1)
-                # Required for sensible RDKit behaviour or else it produces radicals
-                if a2.GetNumExplicitHs() > 0 or a2.GetFormalCharge() == 0:
-                    a2.SetNumExplicitHs(a2.GetNumExplicitHs() + 1)
-                
-                for atom2 in a.GetNeighbors():
-                    for b in atom2.GetBonds():
-                        #Find any bonds that have a leaving group for elimination
-                        if b.HasProp('sink') and b.GetProp('sink_bond_atom') == 'both':
-                            k = atom2.GetIdx()
-                            l = b.GetOtherAtomIdx(k)
-                        elif b.HasProp('sink') and atom2.GetIdx() == int(b.GetProp('sink_bond_atom')):
-                            k = atom2.GetIdx()
-                            l = int(b.GetProp('sink_other_atom'))
-                        else: 
-                            continue
-                        if c_mol.GetAtomWithIdx(l).GetFormalCharge() >= 0:
-                            intermediate = a_to_b(Chem.Mol(c_mol), j, k)
-                            connected_mols.append(b_to_a(Chem.Mol(intermediate), k, l))
-                            mechanisms.append([8, i, j, k, l])
-                    if atom2.GetFormalCharge() > 0 and atom2.HasProp('sink') and atom2.GetProp('sink')== 'empty AO':
-                        k = atom2.GetIdx()
-                        mechanisms.append([9, i, j, k, None])
-                        connected_mols.append(a_to_b(Chem.Mol(c_mol), j, k))
-
+                mechanisms, connected_mols = c_h_elimination(mol_inp, i, j, mechanisms, connected_mols)
                 continue
-            
 
             if hydride_flag:
                 m_mol = Chem.Mol(h_mol)
@@ -405,6 +483,7 @@ def execute_step(mol_inp_smiles, cleanup = False, kekulise = False, chain_mol = 
                 connected_mols.append(m_mol)
                 mechanisms.append([6, i, j, None, None])
                 continue
+
             new_mol = Chem.Mol(mol_inp)
             connected_mols.append(a_to_b(new_mol, i, j))
             mechanisms.append([0, i, j, None, None])
@@ -417,55 +496,44 @@ def execute_step(mol_inp_smiles, cleanup = False, kekulise = False, chain_mol = 
             continue
         hydride_flag = False
         if source_type == 'hydride':
-                h_mol = Chem.Mol(mol_inp)
+                h_mol = lose_hydride(mol_inp, i)
                 hydride_flag = True
                 a = h_mol.GetAtomWithIdx(i)
-                a.SetNumExplicitHs(a.GetNumExplicitHs() - 1)
-                a.SetFormalCharge(a.GetFormalCharge() + 1)
         for sink_idx, sink_type in sinks_bonds.items():
             b = mol_inp.GetBondWithIdx(sink_idx)
-            a_list = [b.GetBeginAtom(), b.GetEndAtom()]
+
             if b.GetProp('sink_bond_atom') == 'both':
                 for a in a_list:
                     j = a.GetIdx()
                     l = b.GetOtherAtom(a).GetIdx()
-                    if hydride_flag:
-                        m_mol = Chem.Mol(h_mol)
-                        m_mol = b_to_a(m_mol, j, l)
-                        m_mol = Chem.Mol(m_mol)
-                        m_mol.GetAtomWithIdx(j).SetNumExplicitHs(m_mol.GetAtomWithIdx(j).GetNumImplicitHs() + 1)
-                        m_mol.GetAtomWithIdx(j).SetFormalCharge(m_mol.GetAtomWithIdx(j).GetFormalCharge() - 1)
-                        connected_mols.append(m_mol)
-                        mechanisms.append([7, i, j, None, l])
-                        continue
-                    new_mol = Chem.Mol(mol_inp)
-                    new_mol = b_to_a(new_mol, j, l)
                     if mol_inp.GetAtomWithIdx(l).GetFormalCharge()<0:
                         continue
                     if i == j:
                         continue
-                    new_mol = a_to_b(new_mol, i, j)
 
+                    if hydride_flag:
+                        mechanisms, connected_mols = bond_to_hydride(h_mol, i, j, l, mechanisms, connected_mols)
+                        continue
+
+                    new_mol = Chem.Mol(mol_inp)
+                    new_mol = b_to_a(new_mol, j, l)
+                    new_mol = a_to_b(new_mol, i, j)
                     connected_mols.append(new_mol)
                     mechanisms.append([1, i, j, None, l])
             else:
                 j = b.GetIntProp('sink_bond_atom')
                 l = b.GetIntProp('sink_other_atom')
-                if hydride_flag:
-                        m_mol = Chem.Mol(h_mol)
-                        m_mol = b_to_a(m_mol, j, l)
-                        m_mol = Chem.Mol(m_mol)
-                        m_mol.GetAtomWithIdx(j).SetNumExplicitHs(m_mol.GetAtomWithIdx(j).GetNumImplicitHs() + 1)
-                        m_mol.GetAtomWithIdx(j).SetFormalCharge(m_mol.GetAtomWithIdx(j).GetFormalCharge() - 1)
-                        connected_mols.append(m_mol)
-                        mechanisms.append([7, i, j, None, l])
+                if mol_inp.GetAtomWithIdx(l).GetFormalCharge()<0:
                         continue
-                if mol_inp.GetAtomWithIdx(l).GetFormalCharge() < 0:
+                if i == j:
+                        continue
+                
+                if hydride_flag:
+                    mechanisms, connected_mols = bond_to_hydride(h_mol, i, j, l, mechanisms, connected_mols)
                     continue
+                
                 new_mol = Chem.Mol(mol_inp)
                 new_mol = b_to_a(new_mol,j, l)
-                if i == j:
-                    continue
                 connected_mols.append(a_to_b(new_mol, i, j))
                 mechanisms.append([1, i, j, None, l])
 
@@ -475,27 +543,12 @@ def execute_step(mol_inp_smiles, cleanup = False, kekulise = False, chain_mol = 
     for source_idx, source_type in sources_bonds.items():
         b = mol_inp.GetBondWithIdx(source_idx)
         a_list = [b.GetBeginAtom(), b.GetEndAtom()]
-        new_mol = [Chem.Mol(mol_inp)]
-        order = []
-        if b.GetProp('source_bond_atom')=='both':
-            counter = 0
-            for a in a_list:
-                i = a.GetIdx()
-                k = b.GetOtherAtom(a).GetIdx()
-                if mol_inp.GetAtomWithIdx(k).GetFormalCharge() > 0:
-                    continue
-                if counter == 1:
-                    new_mol.append(Chem.Mol(mol_inp))
-                new_mol[counter] = b_to_a(new_mol[counter], k, i)
-                order.append(i)
-                counter += 1
-        else:
-            i = b.GetIntProp('source_bond_atom')
-            k = b.GetIntProp('source_other_atom')
-            if mol_inp.GetAtomWithIdx(k).GetFormalCharge() > 0:
-                    continue
-            order.append(i)
-            new_mol[0] = b_to_a(new_mol[0], k, i)
+
+        new_mol, order = break_bond_source(mol_inp, b, a_list)
+
+        if new_mol == []:
+            continue
+       
         for sink_idx, sink_type in sinks_atoms.items():
             j = sink_idx
             if mol_inp.GetAtomWithIdx(i).GetFormalCharge() < 0:
@@ -506,61 +559,18 @@ def execute_step(mol_inp_smiles, cleanup = False, kekulise = False, chain_mol = 
                 k = b.GetOtherAtomIdx(i)
                 if i == j:
                     continue
+                if mol_inp.GetAtomWithIdx(i).GetFormalCharge() > 0:
+                    continue
+
                 if sink_type == 'proton':
-                    p_mol = Chem.Mol(n_mol)
-                    a = p_mol.GetAtomWithIdx(j)
-                    a.SetFormalCharge(a.GetFormalCharge() - 1)
-                    if a.GetNumExplicitHs() > 0:
-                        a.SetNumExplicitHs(a.GetNumExplicitHs() - 1)
-                    elif a.GetTotalNumHs() == 1:
-                        a.SetNoImplicit(True)
-
-                    a2 = p_mol.GetAtomWithIdx(i)
-                    a2.SetFormalCharge(a2.GetFormalCharge() + 1)
-                    if a2.GetNumExplicitHs() > 0:
-                        a2.SetNumExplicitHs(a2.GetNumExplicitHs() + 1)
-
+                    p_mol = transfer_proton(n_mol, j, i)
                     connected_mols.append(p_mol)
                     mechanisms.append([5, i, j, k, None])
 
                     continue
                 if sink_type == 'CH':
                     # Same proton transfer behaviour as above
-                    c_mol = Chem.Mol(n_mol)
-                    a = c_mol.GetAtomWithIdx(j)
-                    a.SetFormalCharge(a.GetFormalCharge() - 1)
-                    if a.GetNumExplicitHs() > 0:
-                        a.SetNumExplicitHs(a.GetNumExplicitHs() - 1)
-                    elif a.GetTotalNumHs() == 1:
-                        a.SetNoImplicit(True)
-
-                    a2 = c_mol.GetAtomWithIdx(i)
-                    a2.SetFormalCharge(a2.GetFormalCharge() + 1)
-                    # Required for sensible RDKit behaviour or else it produces radicals
-                    if a2.GetNumExplicitHs() > 0 or a2.GetFormalCharge() == 0:
-                        a2.SetNumExplicitHs(a2.GetNumExplicitHs() + 1)
-                    
-                    for atom2 in a.GetNeighbors():
-                        for b2 in atom2.GetBonds():
-                            #Find any bonds that have a leaving group for elimination
-                            if b2.HasProp('sink') and b2.GetProp('sink_bond_atom') == 'both':
-                                k = atom2.GetIdx()
-                                l = b2.GetOtherAtomIdx(k)
-                            elif b2.HasProp('sink') and atom2.GetIdx() == int(b2.GetProp('sink_bond_atom')):
-                                k = atom2.GetIdx()
-                                l = int(b2.GetProp('sink_other_atom'))
-                            else: 
-                                continue
-                            if c_mol.GetAtomWithIdx(l).GetFormalCharge() >= 0:
-                                intermediate = a_to_b(Chem.Mol(c_mol), j, k)
-                                connected_mols.append(b_to_a(Chem.Mol(intermediate), k, l))
-                                mechanisms.append([8, i, j, k, l])
-                        if atom2.GetFormalCharge() > 0 and atom2.HasProp('sink') and atom2.GetProp('sink') == 'empty AO':
-                            k = atom2.GetIdx()
-                            mechanisms.append([9, i, j, k, None])
-                            connected_mols.append(a_to_b(Chem.Mol(c_mol), j, k))
-                  
-            
+                    mechanisms, connected_mols = c_h_elimination(n_mol, i, j, mechanisms, connected_mols)
                     continue
                    
                 connected_mols.append(a_to_b(Chem.Mol(n_mol), i, j))
@@ -572,27 +582,11 @@ def execute_step(mol_inp_smiles, cleanup = False, kekulise = False, chain_mol = 
     for source_idx, source_type in sources_bonds.items():
         b1 = mol_inp.GetBondWithIdx(source_idx)
         a1_list = [b1.GetBeginAtom(), b1.GetEndAtom()]
-        new_mol = [Chem.Mol(mol_inp)]
-        order = []
-        if b1.GetProp('source_bond_atom')=='both':
-            counter = 0
-            for a in a1_list:
-                i = a.GetIdx()
-                k = b1.GetOtherAtom(a).GetIdx()
-                if mol_inp.GetAtomWithIdx(k).GetFormalCharge() > 0:
-                    continue
-                if counter == 1:
-                    new_mol.append(Chem.Mol(mol_inp))
-                new_mol[counter] = Chem.Mol(b_to_a(new_mol[counter], k, i))
-                counter += 1
-                order.append(i)
-        else:
-            i = b1.GetIntProp('source_bond_atom')
-            k = b1.GetIntProp('source_other_atom')
-            if mol_inp.GetAtomWithIdx(k).GetFormalCharge() > 0:
-                    continue
-            order.append(i)
-            new_mol[0] = Chem.Mol(b_to_a(new_mol[0], k, i))
+        new_mol, order = break_bond_source(mol_inp, b1, a1_list)
+
+        if new_mol == []:
+            continue
+        
         for sink_idx, sink_type in sinks_bonds.items():
             if sink_idx == source_idx:
                 continue
@@ -600,56 +594,15 @@ def execute_step(mol_inp_smiles, cleanup = False, kekulise = False, chain_mol = 
             a2_list = [b2.GetBeginAtom(), b2.GetEndAtom()]
             if b2.GetProp('sink_bond_atom') == 'both':
                 for a in a2_list:
-                    j = a.GetIdx()
-                    l = b2.GetOtherAtom(a).GetIdx()
-                    for counter in range(len(new_mol)):
-                        n_mol = Chem.Mol(new_mol[counter])
-                        i = order[counter]
-                        k = b1.GetOtherAtom(n_mol.GetAtomWithIdx(i)).GetIdx()
-                        if i == j or mol_inp.GetAtomWithIdx(l).GetFormalCharge() < 0:
-                            continue
-                        n_mol = b_to_a(n_mol, j, l)
-                        connected_mols.append(a_to_b(n_mol, i, j))
-                        mechanisms.append([3, i, j, k, l])
+                    mechanisms, connected_mols = break_bond_sink(new_mol, order, a, b1, b2, mechanisms, connected_mols)
                         
             else:
-                j = b2.GetIntProp('sink_bond_atom')
-                l = b2.GetIntProp('sink_other_atom')
-                
-                for counter in range(len(new_mol)):
-                    i = order[counter]
-                    n_mol = Chem.Mol(new_mol[counter])
-                    k = b1.GetOtherAtom(n_mol.GetAtomWithIdx(i)).GetIdx()
-                    if i == j:
-                        continue
-                    if mol_inp.GetAtomWithIdx(l).GetFormalCharge() < 0:
-                        continue
-                    n_mol = b_to_a(n_mol,j, l)
-                    connected_mols.append(a_to_b(n_mol, i, j))
-                    mechanisms.append([3, i, j, k, l])
+                mechanisms, connected_mols = break_bond_sink(new_mol, order, a, b1, b2, mechanisms, connected_mols)
 
     # Rule 5: Forming carbocations
 
     for sink_idx, sink_type in sinks_bonds.items():
-        b = mol_inp.GetBondWithIdx(sink_idx)
-        if b.GetProp('sink_bond_atom') == 'both':
-            continue
-        if b.GetBondTypeAsDouble() != 1:
-            continue
-        j = b.GetIntProp('sink_bond_atom')
-        l = b.GetIntProp('sink_other_atom')
-        if mol_inp.GetAtomWithIdx(l).GetFormalCharge() < 0:
-            continue
-        if mol_inp.GetAtomWithIdx(j).GetAtomicNum() == 6:
-            if mol_inp.GetAtomWithIdx(j).GetTotalNumHs() > 1:
-                continue
-        else:
-            if mol_inp.GetAtomWithIdx(j).GetFormalCharge() > -1:
-                continue
-
-        new_mol = Chem.Mol(mol_inp)
-        connected_mols.append(b_to_a(new_mol, j, l))
-        mechanisms.append([10, None, j, None, l])
+        mechanisms, connected_mols = carbocat(mol_inp, sink_idx, connected_mols, mechanisms)
 
     if cleanup:
         connected_mols, mechanisms = clean_mol(connected_mols, mechanisms, mol_inp)
