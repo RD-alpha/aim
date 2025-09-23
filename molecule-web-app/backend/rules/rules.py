@@ -389,8 +389,7 @@ def carbocat(mol, sink_idx, connected_mols, mechanisms):
     mechanisms.append([10, None, j, None, l])
     return (mechanisms, connected_mols)
 
-def execute_step(mol_inp_smiles, cleanup = False, kekulise = False, chain_mol = None):
-
+def initialise_molecule(mol_inp_smiles, kekulise = False, chain_mol=None):
     if chain_mol is not None:
         mol_inp = chain_mol
         for a in mol_inp.GetAtoms():
@@ -415,8 +414,11 @@ def execute_step(mol_inp_smiles, cleanup = False, kekulise = False, chain_mol = 
             print('there was a Kekulisation error')
 
     prepare_molecule(mol_inp)
+    return mol_inp
 
-  
+def execute_step(mol_inp_smiles, cleanup = False, kekulise = False, chain_mol = None):
+
+    mol_inp = initialise_molecule(mol_inp_smiles, kekulise, chain_mol)
 
     connected_mols = []
 
