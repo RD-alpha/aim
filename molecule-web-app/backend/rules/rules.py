@@ -389,36 +389,9 @@ def carbocat(mol, sink_idx, connected_mols, mechanisms):
     mechanisms.append([10, None, j, None, l])
     return (mechanisms, connected_mols)
 
-def initialise_molecule(mol_inp_smiles, kekulise = False, chain_mol=None):
-    if chain_mol is not None:
-        mol_inp = chain_mol
-        for a in mol_inp.GetAtoms():
-            a.ClearProp('source')
-            a.ClearProp('sink')
-            if a.GetFormalCharge() == 0:
-                a.SetNoImplicit(False)
-        for b in mol_inp.GetBonds():
-            b.ClearProp('source')
-            b.ClearProp('sink')
-            b.ClearProp('source_bond_atom')
-            b.ClearProp('sink_bond_atom')
-            b.ClearProp('source_other_atom')
-            b.ClearProp('sink_other_atom')
-    else:
-        mol_inp = Chem.MolFromSmiles(mol_inp_smiles)
 
-    if kekulise:
-        try:
-            Chem.Kekulize(mol_inp, clearAromaticFlags=True)
-        except:
-            print('there was a Kekulisation error')
+def execute_step(mol_inp, kekulise= False, cleanup = False):
 
-    prepare_molecule(mol_inp)
-    return mol_inp
-
-def execute_step(mol_inp_smiles, cleanup = False, kekulise = False, chain_mol = None):
-
-    mol_inp = initialise_molecule(mol_inp_smiles, kekulise, chain_mol)
 
     connected_mols = []
 
@@ -505,6 +478,7 @@ def execute_step(mol_inp_smiles, cleanup = False, kekulise = False, chain_mol = 
             b = mol_inp.GetBondWithIdx(sink_idx)
 
             if b.GetProp('sink_bond_atom') == 'both':
+                a_list = [b.GetBeginAtom(), b.GetEndAtom()]
                 for a in a_list:
                     j = a.GetIdx()
                     l = b.GetOtherAtom(a).GetIdx()
@@ -599,6 +573,7 @@ def execute_step(mol_inp_smiles, cleanup = False, kekulise = False, chain_mol = 
                     mechanisms, connected_mols = break_bond_sink(new_mol, order, a, b1, b2, mechanisms, connected_mols)
                         
             else:
+                a = mol_inp.GetAtomWithIdx(b2.GetIntProp('sink_bond_atom'))
                 mechanisms, connected_mols = break_bond_sink(new_mol, order, a, b1, b2, mechanisms, connected_mols)
 
     # Rule 5: Forming carbocations
