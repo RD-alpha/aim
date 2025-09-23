@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify, send_from_directory, session, redirect, url_for, send_file, render_template # type: ignore
-from rdkit import Chem
+from rdkit import Chem # pyright: ignore[reportMissingImports]
 import os
 import shutil
 import uuid
@@ -11,7 +11,7 @@ import json
 from ml_helper import make_fingerprint
 import numpy as np
 import random
-from xgboost import XGBClassifier
+from xgboost import XGBClassifier # pyright: ignore[reportMissingImports]
 from io import BytesIO
 import base64
 
