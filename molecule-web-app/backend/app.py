@@ -86,7 +86,8 @@ def process_molecule():
         mols, mechs, inp_mol = run_next_step(smiles, cleanup, kekulise, chain_mol)
     else:
         mols, mechs, inp_mol = run_next_step(smiles, cleanup, kekulise)
-
+    
+    follow_on_mols = []
     for i, mol in enumerate(mols):
         follow_on_mols = follow_on(mol, mechs[i])
 
@@ -95,7 +96,8 @@ def process_molecule():
     clear_results(tmp_dir)
     clear_pickles(tmp_dir)
     save_files_for_display(mols, inp_mol, tmp_dir)
-    save_files_for_display(follow_on_mols, inp_mol, tmp_dir, prefix="followon_")
+    if follow_on_mols:
+        save_files_for_display(follow_on_mols, inp_mol, tmp_dir, prefix="followon_")
 
     # Load the resulting molecules (assuming they are saved as images)
     molecules = {}
