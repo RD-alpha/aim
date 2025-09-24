@@ -1,11 +1,12 @@
 from rdkit import Chem
-from rules import execute_step
+from .rules import execute_step
 from ml_helper import make_fingerprint
 import xgboost
 import numpy as np
+import os
 
 clf = xgboost.XGBClassifier()
-clf.load_model('models/v15/xg_model.json')
+clf.load_model(os.path.join(os.path.abspath('__file__'),'../../../models/v15/xg_model.json'))
 
 
 def follow_on(next_mol, mech):

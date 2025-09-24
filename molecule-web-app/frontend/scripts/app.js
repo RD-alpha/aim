@@ -174,7 +174,8 @@ document.addEventListener('DOMContentLoaded', function() {
             resultsContainer.appendChild(imgContainer);
         });
 
-        const followOns = molecules.follow_ons
+        const followOns = molecules.follow_ons;
+        if (followOns){
             followOns.forEach( followOn => {
                 const imgContainer = document.createElement('div');
                 imgContainer.classList.add('image-container');
@@ -186,7 +187,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 imgContainer.appendChild(followOnImg);
                 resultsContainer.appendChild(imgContainer);
             });
-
+}
         // Add submit button
         const submitButton = document.createElement('button');
         const userNameInput = document.getElementById('contributor-input');
