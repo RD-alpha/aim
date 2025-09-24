@@ -15,7 +15,7 @@ def make_image(smiles, tmp_dir):
 
     return count
 
-def save_files_for_display(mols, inp_mol, tmp_dir):
+def save_files_for_display(mols, inp_mol, tmp_dir, prefix = "mol_"):
     source_folder = os.path.join(tmp_dir, 'results')
     pickle_folder = os.path.join(tmp_dir, 'pickles')
     file_num = 0
@@ -27,7 +27,7 @@ def save_files_for_display(mols, inp_mol, tmp_dir):
     for mol in mols:
         mol_smiles = Chem.MolToSmiles(mol)
         Chem.SanitizeMol(mol)
-        file_name = "mol_" + str(file_num)
+        file_name = prefix + str(file_num)
         try:
             Chem.Draw.MolToFile(mol, os.path.join(source_folder, file_name + ".png"))
             with open (os.path.join(source_folder, "products.txt"), 'a', encoding='utf-8') as file:

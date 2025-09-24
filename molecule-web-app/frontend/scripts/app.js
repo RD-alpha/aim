@@ -129,6 +129,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 id = molId;
             });
 
+            
             // Create button container
             const buttonContainer = document.createElement('div');
             buttonContainer.classList.add('button-container');
@@ -172,6 +173,19 @@ document.addEventListener('DOMContentLoaded', function() {
             imgContainer.appendChild(buttonContainer);
             resultsContainer.appendChild(imgContainer);
         });
+
+        const followOns = molecules.follow_ons
+            followOns.forEach( followOn => {
+                const imgContainer = document.createElement('div');
+                imgContainer.classList.add('image-container');
+                imgContainer.classList.add('follow-on-container');
+                const followOnImg = document.createElement('img');
+                followOnImg.src = `/session_file/results/${followOn.image}?_=${Date.now()}`;
+                followOnImg.alt = "Follow-on product";
+                followOnImg.classList.add('followon-image');
+                imgContainer.appendChild(followOnImg);
+                resultsContainer.appendChild(imgContainer);
+            });
 
         // Add submit button
         const submitButton = document.createElement('button');

@@ -4,7 +4,8 @@ import os
 import shutil
 import uuid
 import tempfile
-from rules.rules import execute_step
+from rules.rules import run_next_step
+from rules.next_step import follow_on
 from helper import make_image, save_files_for_display, clear_results, clear_pickles
 import pickle
 import json
@@ -78,23 +79,27 @@ def process_molecule():
     #save file for history
     history_count = make_image(smiles, tmp_dir)
 
-    # TODO: reimplement that carrying forward of molecules - currently this should always be going into the else branch
+    
     if id != -1:
         with open('chain/mol_' + str(id) + '.pkl', 'rb') as f:
             chain_mol = pickle.load(f)
-        mols, mechs, inp_mol = execute_step(smiles, cleanup, kekulise, chain_mol)
+        mols, mechs, inp_mol = run_next_step(smiles, cleanup, kekulise, chain_mol)
     else:
-        mols, mechs, inp_mol = execute_step(smiles, cleanup, kekulise)
+        mols, mechs, inp_mol = run_next_step(smiles, cleanup, kekulise)
+
+    for i, mol in enumerate(mols):
+        follow_on_mols = follow_on(mol, mechs[i])
 
     #TODO: reimplement that carrying forward of molecules
     #clear_chain()
     clear_results(tmp_dir)
     clear_pickles(tmp_dir)
     save_files_for_display(mols, inp_mol, tmp_dir)
+    save_files_for_display(follow_on_mols, inp_mol, tmp_dir, prefix="followon_")
 
     # Load the resulting molecules (assuming they are saved as images)
     molecules = {}
-
+    follow_ons ={}
     # Load decision tree model
     #clf = joblib.load("../../models/v12/xg_model.pkl")
     # Load the model
@@ -102,7 +107,7 @@ def process_molecule():
     model_path = f'../../models/{MODEL_VERSION}/xg_model.json'
     clf.load_model(model_path)
     for filename in os.listdir(os.path.join(tmp_dir, 'results')):
-        if filename.endswith('.png'):
+        if filename.endswith('.png') and filename.startswith('mol_'):
             idx = int(filename.split('_')[1].split('.')[0])
             with open(os.path.join(tmp_dir, 'results/products.txt'), 'r') as f:
                 line_num = 0
@@ -110,15 +115,20 @@ def process_molecule():
                     if line_num == idx:
                         result_smiles = line.rstrip()
                     line_num += 1
-            
-                fp = make_fingerprint(inp_mol, mechs[idx])
-                y_pred = clf.predict(np.array(fp).reshape(1, -1))
-            
+            fp = make_fingerprint(inp_mol, mechs[idx])
+            y_pred = clf.predict(np.array(fp).reshape(1, -1))
             molecules[idx] = {'image':filename, 'smiles': result_smiles, 'mechanism': mechs[idx], 'predicted': int(y_pred[0])}
+        if filename.endswith('.png') and filename.startswith('followon_'):
+            idx = int(filename.split('_')[1].split('.')[0])
+            follow_ons[idx] = {'image':filename}
+
+            
+            
+
 
 
     #print(molecules)
-    return jsonify({'molecules': molecules, 'history_idx': history_count})
+    return jsonify({'molecules': molecules, 'history_idx': history_count, 'follow_ons': follow_ons})
 
 
 

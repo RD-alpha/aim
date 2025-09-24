@@ -389,6 +389,30 @@ def carbocat(mol, sink_idx, connected_mols, mechanisms):
     mechanisms.append([10, None, j, None, l])
     return (mechanisms, connected_mols)
 
+def run_next_step(smiles, kekulise = False, cleanup = False, chain_mol = None):
+    if chain_mol is not None:
+        mol_inp = chain_mol
+        for a in mol_inp.GetAtoms():
+            a.ClearProp('source')
+            a.ClearProp('sink')
+            if a.GetFormalCharge() == 0:
+                a.SetNoImplicit(False)
+        for b in mol_inp.GetBonds():
+            b.ClearProp('source')
+            b.ClearProp('sink')
+            b.ClearProp('source_bond_atom')
+            b.ClearProp('sink_bond_atom')
+            b.ClearProp('source_other_atom')
+            b.ClearProp('sink_other_atom')
+    else:
+        mol_inp = Chem.MolFromSmiles(smiles)
+        if mol_inp is None:
+            raise ValueError("Invalid SMILES string")
+        if kekulise:
+            Chem.Kekulize(mol_inp, clearAromaticFlags=True)
+        Chem.SanitizeMol(mol_inp)
+    connected_mols, mechanisms, mol_inp = execute_step(mol_inp, kekulise, cleanup)
+    return (connected_mols, mechanisms, mol_inp)
 
 def execute_step(mol_inp, kekulise= False, cleanup = False):
 
