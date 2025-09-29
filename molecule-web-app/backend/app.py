@@ -83,13 +83,17 @@ def process_molecule():
     if id != -1:
         with open('chain/mol_' + str(id) + '.pkl', 'rb') as f:
             chain_mol = pickle.load(f)
-        mols, mechs, inp_mol = run_next_step(smiles, cleanup, kekulise, chain_mol)
+        mols, mechs, inp_mol = run_next_step(smiles, kekulise, cleanup, chain_mol)
     else:
-        mols, mechs, inp_mol = run_next_step(smiles, cleanup, kekulise)
+        mols, mechs, inp_mol = run_next_step(smiles, kekulise, cleanup)
     
+    print('DEBUG:', mols)
+
     follow_on_mols = []
     for i, mol in enumerate(mols):
         follow_on_mols = follow_on(mol, mechs[i])
+
+    print('DEBUG:', follow_on_mols)
 
     #TODO: reimplement that carrying forward of molecules
     #clear_chain()
