@@ -411,6 +411,7 @@ def run_next_step(smiles, kekulise = False, cleanup = False, chain_mol = None):
         if kekulise:
             Chem.Kekulize(mol_inp, clearAromaticFlags=True)
         Chem.SanitizeMol(mol_inp)
+    prepare_molecule(mol_inp)
     connected_mols, mechanisms, mol_inp = execute_step(mol_inp, kekulise, cleanup)
     return (connected_mols, mechanisms, mol_inp)
 

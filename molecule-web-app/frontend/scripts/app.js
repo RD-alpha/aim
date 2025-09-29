@@ -58,7 +58,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (saveMech == true) {
                 mechStep.push(nextStep);
                 }
-                displayResults(data.molecules);
+                displayResults(data.molecules, data.follow_ons);
                 addHistory(data.history_idx);
             })
             .catch(error => {
@@ -97,7 +97,7 @@ document.addEventListener('DOMContentLoaded', function() {
         fetch('/clear_history', { method: 'POST' });
     });
 
-    function displayResults(molecules) {
+    function displayResults(molecules, follow_ons) {
         resultsContainer.innerHTML = '';
         saveMech = false;
         const imageChoices = {}; // Object to store user choices for each image
@@ -174,20 +174,19 @@ document.addEventListener('DOMContentLoaded', function() {
             resultsContainer.appendChild(imgContainer);
         });
 
-        const followOns = molecules.follow_ons;
-        if (followOns){
-            followOns.forEach( followOn => {
+        const followOns = Object.values(follow_ons);
+        followOns.forEach( followOn => {
                 const imgContainer = document.createElement('div');
                 imgContainer.classList.add('image-container');
                 imgContainer.classList.add('follow-on-container');
                 const followOnImg = document.createElement('img');
                 followOnImg.src = `/session_file/results/${followOn.image}?_=${Date.now()}`;
                 followOnImg.alt = "Follow-on product";
-                followOnImg.classList.add('followon-image');
+		followOnImg.classList.add('result-image');
                 imgContainer.appendChild(followOnImg);
                 resultsContainer.appendChild(imgContainer);
             });
-}
+
         // Add submit button
         const submitButton = document.createElement('button');
         const userNameInput = document.getElementById('contributor-input');
