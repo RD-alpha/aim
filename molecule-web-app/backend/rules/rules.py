@@ -350,6 +350,7 @@ def break_bond_source(mol, b, a_list):
         if mol.GetAtomWithIdx(k).GetFormalCharge() > 0:
             return (new_mol, order)
         order.append(i)
+        new_mol.append(Chem.Mol(mol))
         new_mol[0] = b_to_a(new_mol[0], k, i)
     return (new_mol, order)
 
@@ -389,7 +390,7 @@ def carbocat(mol, sink_idx, connected_mols, mechanisms):
     mechanisms.append([10, None, j, None, l])
     return (mechanisms, connected_mols)
 
-def run_next_step(smiles, kekulise = False, cleanup = False, chain_mol = None):
+def run_next_step(smiles, kekulise = False, cleanup = True, chain_mol = None):
     if chain_mol is not None:
         mol_inp = chain_mol
         for a in mol_inp.GetAtoms():
@@ -552,7 +553,7 @@ def execute_step(mol_inp, kekulise= False, cleanup = False):
        
         for sink_idx, sink_type in sinks_atoms.items():
             j = sink_idx
-            if mol_inp.GetAtomWithIdx(i).GetFormalCharge() < 0:
+            if mol_inp.GetAtomWithIdx(j).GetFormalCharge() < 0:
                 continue
             for counter in range(len(new_mol)):
                 n_mol = Chem.Mol(new_mol[counter])
