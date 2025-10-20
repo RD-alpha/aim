@@ -91,7 +91,7 @@ def process_molecule():
 
     follow_on_mols = []
     for i, mol in enumerate(mols):
-        follow_on_mols = follow_on(mol, mechs[i])
+        follow_on_mols.append(follow_on(mol, mechs[i]))
 
     print('DEBUG:', follow_on_mols)
 

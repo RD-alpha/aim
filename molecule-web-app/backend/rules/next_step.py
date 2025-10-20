@@ -65,8 +65,7 @@ def prepare_atoms(atom):
     return None
 
 def follow_on(next_mol, mech):
-    bonds_to_highlight = []
-    atoms_to_highlight = []
+
     accepted_follow_on = []
     for a in next_mol.GetAtoms():
         a.ClearProp('source')
