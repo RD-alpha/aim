@@ -90,8 +90,12 @@ def process_molecule():
     print('DEBUG:', mols)
 
     follow_on_mols = []
+    follow_on_smiles = []
     for i, mol in enumerate(mols):
-        follow_on_mols = follow_on_mols + follow_on(mol, mechs[i])
+        f_mols, f_smiles = follow_on(mol, mechs[i])[0]
+        follow_on_mols = follow_on_mols + f_mols
+        follow_on_smiles = follow_on_smiles + f_smiles
+
 
     print('DEBUG:', follow_on_mols)
 
@@ -126,7 +130,7 @@ def process_molecule():
             molecules[idx] = {'image':filename, 'smiles': result_smiles, 'mechanism': mechs[idx], 'predicted': int(y_pred[0])}
         if filename.endswith('.png') and filename.startswith('followon_'):
             idx = int(filename.split('_')[1].split('.')[0])
-            follow_ons[idx] = {'image':filename}
+            follow_ons[idx] = {'image':filename, 'smiles':follow_on_smiles[idx]}
 
             
             

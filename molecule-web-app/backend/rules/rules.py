@@ -115,7 +115,7 @@ def identify_sink(mol, rules = "all"):
 
          # Find multiple bonds ignoring aromatic systems      
         if bond.GetBondTypeAsDouble() > 1.5:
-            atoms = [bond.GetBeginAtom() ,bond.GetEndAtom()]
+            atoms = [bond.GetBeginAtom(), bond.GetEndAtom()]
             if atoms[0].GetAtomicNum() == atoms[1].GetAtomicNum():
                 bond.SetProp('sink', 'pi star')
                 bond.SetProp('sink_bond_atom', 'both')
@@ -236,7 +236,7 @@ def transfer_proton(mol, j, i):
     if a2.GetNumExplicitHs() > 0 or a2.GetFormalCharge() == 0:
         a2.SetNumExplicitHs(a2.GetNumExplicitHs() + 1)
     return p_mol
-    return (mechanisms, connected_mols)
+    #return (mechanisms, connected_mols)
 
 
 def c_h_elimination(mol, i, j, mechanisms, connected_mols):
@@ -364,11 +364,12 @@ def run_next_step(smiles, kekulise = False, cleanup = True, chain_mol = None):
             raise ValueError("Invalid SMILES string")
         if kekulise:
             Chem.Kekulize(mol_inp, clearAromaticFlags=True)
+        
     prepare_molecule(mol_inp)
     connected_mols, mechanisms, mol_inp = execute_step(mol_inp, kekulise, cleanup)
     return (connected_mols, mechanisms, mol_inp)
 
-def execute_step(mol_inp, kekulise= False, cleanup = False):
+def execute_step(mol_inp, kekulise = False, cleanup = False):
 
 
     connected_mols = []
