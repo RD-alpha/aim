@@ -64,7 +64,7 @@ Bitstring Representation:
    - [4]: Atom pair is part of a 7+ membered ring.
 
 Total Bitstring Length:
-- Mechanism Type Bitstring: 8 bits
+- Mechanism Type Bitstring: 11 bits
 ___________________________________
 - Charge Bitstring: 3 bits
 - Hydrogen Count Bitstring: 4 bits
