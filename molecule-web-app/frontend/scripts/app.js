@@ -186,7 +186,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		        followOnImg.style.border = "3px solid blue";
                 imgContainer.appendChild(followOnImg);
                 resultsContainer.appendChild(imgContainer);
-                img.addEventListener('click', function() {
+                followOnImg.addEventListener('click', function() {
                     smilesInput.value = followOn.smiles;
                     nextStep = followOn.mechanism;
                     saveMech = true;

@@ -359,11 +359,11 @@ def run_next_step(smiles, kekulise = False, cleanup = True, chain_mol = None):
             b.ClearProp('sink_other_atom')
     else:
         mol_inp = Chem.MolFromSmiles(smiles)
+        Chem.SanitizeMol(mol_inp)
         if mol_inp is None:
             raise ValueError("Invalid SMILES string")
         if kekulise:
             Chem.Kekulize(mol_inp, clearAromaticFlags=True)
-        Chem.SanitizeMol(mol_inp)
     prepare_molecule(mol_inp)
     connected_mols, mechanisms, mol_inp = execute_step(mol_inp, kekulise, cleanup)
     return (connected_mols, mechanisms, mol_inp)
