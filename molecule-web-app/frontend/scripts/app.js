@@ -182,9 +182,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 const followOnImg = document.createElement('img');
                 followOnImg.src = `/session_file/results/${followOn.image}?_=${Date.now()}`;
                 followOnImg.alt = "Follow-on product";
-		followOnImg.style.border = "3px solid blue";
+                followOnImg.classList.add('result-image');
+		        followOnImg.style.border = "3px solid blue";
                 imgContainer.appendChild(followOnImg);
                 resultsContainer.appendChild(imgContainer);
+                img.addEventListener('click', function() {
+                    smilesInput.value = followOn.smiles;
+                    nextStep = followOn.mechanism;
+                    saveMech = true;
+                    id = molId;
+            });
             });
 
         // Add submit button
