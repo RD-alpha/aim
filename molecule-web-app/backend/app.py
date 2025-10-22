@@ -78,7 +78,9 @@ def process_molecule():
 
     #save file for history
     history_count = make_image(smiles, tmp_dir)
-
+    clf = XGBClassifier()
+    model_path = f'../../models/{MODEL_VERSION}/xg_model.json'
+    clf.load_model(model_path)
     
     if id != -1:
         with open('chain/mol_' + str(id) + '.pkl', 'rb') as f:
@@ -87,17 +89,18 @@ def process_molecule():
     else:
         mols, mechs, inp_mol = run_next_step(smiles, kekulise, cleanup)
     
-    print('DEBUG:', mols)
-
+    predictions = []
     follow_on_mols = []
     follow_on_smiles = []
     for i, mol in enumerate(mols):
-        f_mols, f_smiles = follow_on(mol, mechs[i])[0]
-        follow_on_mols = follow_on_mols + f_mols
-        follow_on_smiles = follow_on_smiles + f_smiles
-
-
-    print('DEBUG:', follow_on_mols)
+        fp = make_fingerprint(inp_mol, mechs[i])
+        y_pred = clf.predict(np.array(fp).reshape(1, -1))
+        predictions.append(int(y_pred[0]))
+        if y_pred[0]:
+            f_mols, f_smiles = follow_on(mol, mechs[i])[0]
+            follow_on_mols = follow_on_mols + f_mols
+            follow_on_smiles = follow_on_smiles + f_smiles
+    
 
     #TODO: reimplement that carrying forward of molecules
     #clear_chain()
@@ -113,9 +116,7 @@ def process_molecule():
     # Load decision tree model
     #clf = joblib.load("../../models/v12/xg_model.pkl")
     # Load the model
-    clf = XGBClassifier()
-    model_path = f'../../models/{MODEL_VERSION}/xg_model.json'
-    clf.load_model(model_path)
+   
     for filename in os.listdir(os.path.join(tmp_dir, 'results')):
         if filename.endswith('.png') and filename.startswith('mol_'):
             idx = int(filename.split('_')[1].split('.')[0])
@@ -126,8 +127,7 @@ def process_molecule():
                         result_smiles = line.rstrip()
                     line_num += 1
             fp = make_fingerprint(inp_mol, mechs[idx])
-            y_pred = clf.predict(np.array(fp).reshape(1, -1))
-            molecules[idx] = {'image':filename, 'smiles': result_smiles, 'mechanism': mechs[idx], 'predicted': int(y_pred[0])}
+            molecules[idx] = {'image':filename, 'smiles': result_smiles, 'mechanism': mechs[idx], 'predicted': predictions[idx]}
         if filename.endswith('.png') and filename.startswith('followon_'):
             idx = int(filename.split('_')[1].split('.')[0])
             follow_ons[idx] = {'image':filename, 'smiles':follow_on_smiles[idx]}
