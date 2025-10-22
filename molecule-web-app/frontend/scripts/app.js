@@ -182,7 +182,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 const followOnImg = document.createElement('img');
                 followOnImg.src = `/session_file/results/${followOn.image}?_=${Date.now()}`;
                 followOnImg.alt = "Follow-on product";
-		followOnImg.classList.add('result-image');
+		followOnImg.style.border = "3px solid blue";
                 imgContainer.appendChild(followOnImg);
                 resultsContainer.appendChild(imgContainer);
             });
