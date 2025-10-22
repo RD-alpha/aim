@@ -65,7 +65,7 @@ def prepare_atoms(atom):
     return None
 
 def follow_on(next_mol, mech):
-
+    smiles_list = []
     accepted_follow_on = []
     for a in next_mol.GetAtoms():
         a.ClearProp('source')
@@ -92,6 +92,7 @@ def follow_on(next_mol, mech):
         pred = clf.predict(fp.reshape(1,-1))[0]
         if pred:
             accepted_follow_on.append(product)
+            smiles_list.append(Chem.MolToSmiles(product))
         print(f'Product {i}, predicted: {pred}')
     
-    return accepted_follow_on
+    return (accepted_follow_on, smiles_list)

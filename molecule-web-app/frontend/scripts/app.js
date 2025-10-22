@@ -188,8 +188,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 resultsContainer.appendChild(imgContainer);
                 followOnImg.addEventListener('click', function() {
                     smilesInput.value = followOn.smiles;
-                    nextStep = followOn.mechanism;
-                    saveMech = true;
                     id = molId;
             });
             });
