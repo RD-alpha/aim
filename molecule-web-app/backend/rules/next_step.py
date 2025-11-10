@@ -11,7 +11,7 @@ electronegativity_dict = electronegativity()
 
 
 clf = xgboost.XGBClassifier()
-clf.load_model(os.path.join(os.path.abspath('__file__'),'../../../models/v15/xg_model.json'))
+clf.load_model(os.path.join(os.path.abspath('__file__'),'../../../models/v31/xg_model.json'))
 
 
 def prepare_atoms(atom):
