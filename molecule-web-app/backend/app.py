@@ -220,7 +220,7 @@ def save_training_data():
 
 @app.route('/get_random_suggestion', methods=['GET'])
 def get_random_suggestion():
-    suggestions_file = os.path.join(root_folder, 'training_suggestions_2.txt')
+    suggestions_file = os.path.join(root_folder, 'retrain.txt')
     try:
         with open(suggestions_file, 'r') as f:
             lines = f.readlines()
