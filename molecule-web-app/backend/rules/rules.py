@@ -529,7 +529,7 @@ def execute_step(mol_inp, kekulise = False, cleanup = False):
                     continue
                    
                 connected_mols.append(a_to_b(Chem.Mol(n_mol), i, j))
-                mechanisms.append([1, i, j, k, None])
+                mechanisms.append([2, i, j, k, None])
 
 
 
