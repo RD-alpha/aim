@@ -97,7 +97,7 @@ def process_molecule():
         y_pred = clf.predict(np.array(fp).reshape(1, -1))
         predictions.append(int(y_pred[0]))
         if y_pred[0]:
-            f_mols, f_smiles = follow_on(mol, mechs[i])[0]
+            f_mols, f_smiles = follow_on(mol, mechs[i])
             follow_on_mols = follow_on_mols + f_mols
             follow_on_smiles = follow_on_smiles + f_smiles
     
@@ -131,10 +131,6 @@ def process_molecule():
         if filename.endswith('.png') and filename.startswith('followon_'):
             idx = int(filename.split('_')[1].split('.')[0])
             follow_ons[idx] = {'image':filename, 'smiles':follow_on_smiles[idx]}
-
-            
-            
-
 
 
     #print(molecules)
