@@ -146,7 +146,6 @@ def identify_acidic_CH(mol):
     elimination to occur in the next step.
     """
     for atom in mol.GetAtoms():
-        exit_loop = False
         if atom.GetAtomicNum() == 6 and atom.GetTotalNumHs() > 0 and atom.GetFormalCharge() > -1:
             for atom2 in atom.GetNeighbors():
                 if atom2.GetFormalCharge() > 0:
@@ -156,10 +155,8 @@ def identify_acidic_CH(mol):
                     # could include optional double bond criterion
                     if electronegativity_dict[atom3.GetAtomicNum()]>2.55:
                         atom.SetProp('sink', 'CH')
-                        exit_loop = True
                         break
-                if exit_loop:
-                    break
+
                 
 def prepare_molecule(mol):
     identify_acidic_CH(mol)
