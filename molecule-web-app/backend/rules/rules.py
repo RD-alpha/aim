@@ -1,7 +1,7 @@
 from rdkit import Chem # pyright: ignore[reportMissingImports]
 from datetime import datetime
 ptable = Chem.GetPeriodicTable()
-from .electronegativity import electronegativity
+from electronegativity import electronegativity
 
 electronegativity_dict = electronegativity()
 
@@ -251,7 +251,7 @@ def c_h_elimination(mol, i, j, mechanisms, connected_mols):
         a2.SetNumExplicitHs(a2.GetNumExplicitHs() + 1)
     for atom2 in a.GetNeighbors():
         for b in atom2.GetBonds():
-            #Find any bonds that have a leaving group for elimination
+            # Find any bonds that have a leaving group for elimination
             if b.HasProp('sink') and b.GetProp('sink_bond_atom') == 'both':
                 k = atom2.GetIdx()
                 l = b.GetOtherAtomIdx(k)
