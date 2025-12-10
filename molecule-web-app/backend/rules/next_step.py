@@ -1,17 +1,15 @@
 from rdkit import Chem
-from .rules import execute_step
+from rules import execute_step
 from ml_helper import make_fingerprint
 import xgboost
 import numpy as np
 import os
 ptable = Chem.GetPeriodicTable()
-from .electronegativity import electronegativity
+from electronegativity import electronegativity
 
 electronegativity_dict = electronegativity()
 
 
-clf = xgboost.XGBClassifier()
-clf.load_model(os.path.join(os.path.abspath('__file__'),'../../../models/v31/xg_model.json'))
 
 
 def prepare_atoms(atom):
@@ -64,7 +62,8 @@ def prepare_atoms(atom):
                 break
     return None
 
-def follow_on(next_mol, mech):
+def follow_on(next_mol, mech, model):
+    clf = model
     smiles_list = []
     accepted_follow_on = []
     for a in next_mol.GetAtoms():
@@ -93,6 +92,6 @@ def follow_on(next_mol, mech):
         if pred:
             accepted_follow_on.append(product)
             smiles_list.append(Chem.MolToSmiles(product))
-        print(f'Product {i}, predicted: {pred}')
+        #print(f'Product {i}, predicted: {pred}')
     
     return (accepted_follow_on, smiles_list)
