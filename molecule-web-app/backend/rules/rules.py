@@ -132,7 +132,7 @@ def identify_sink(mol, rules = "all"):
                         continue
                     bond.SetProp('sink', 'pi star')
                     bond.SetIntProp('sink_bond_atom', atoms[1].GetIdx())
-                    bond.SetIntProp('sink_other_atom',atoms[0].GetIdx())
+                    bond.SetIntProp('sink_other_atom', atoms[0].GetIdx())
     for atom in mol.GetAtoms():
         if atom.HasProp('sink') and atom.GetProp('sink') == 'hypervalent':
             atom.SetProp('sink', 'empty AO')
@@ -151,13 +151,10 @@ def identify_acidic_CH(mol):
                 if atom2.GetFormalCharge() > 0:
                     atom.SetProp('sink', 'CH')
                 for atom3 in atom2.GetNeighbors():
-                    # this tolerance is too high but allows for elimination reaction
-                    # could include optional double bond criterion
                     if electronegativity_dict[atom3.GetAtomicNum()]>2.55:
                         atom.SetProp('sink', 'CH')
                         break
 
-                
 def prepare_molecule(mol):
     identify_acidic_CH(mol)
     identify_sink(mol)
@@ -235,6 +232,7 @@ def transfer_proton(mol, j, i):
     return p_mol
     #return (mechanisms, connected_mols)
 
+import random
 
 def c_h_elimination(mol, i, j, mechanisms, connected_mols):
     c_mol = Chem.Mol(mol)
@@ -264,11 +262,12 @@ def c_h_elimination(mol, i, j, mechanisms, connected_mols):
                 intermediate = a_to_b(Chem.Mol(c_mol), j, k)
                 connected_mols.append(b_to_a(Chem.Mol(intermediate), k, l))
                 mechanisms.append([8, i, j, k, l])
+
         if atom2.GetFormalCharge() > 0 and atom2.HasProp('sink') and atom2.GetProp('sink')== 'empty AO':
             k = atom2.GetIdx()
             mechanisms.append([9, i, j, k, None])
             connected_mols.append(a_to_b(Chem.Mol(c_mol), j, k))
-        return (mechanisms, connected_mols)
+    return (mechanisms, connected_mols)
     
 def bond_to_hydride(mol, i, j, l, mechanisms, connected_mols):
     m_mol = Chem.Mol(mol)
@@ -412,7 +411,7 @@ def execute_step(mol_inp, kekulise = False, cleanup = False):
                 if hydride_flag:
                     print('There will be hydrogen but we will skip for now')
                     continue
-                
+
                 p_mol = transfer_proton(mol_inp, j, i)
                 connected_mols.append(p_mol)
                 mechanisms.append([4, i, j, None, None])   
