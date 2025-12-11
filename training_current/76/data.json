@@ -1,0 +1,1 @@
+{"choices": {"0": {"mechanism": [2, 4, 0, 5, null], "probable": 1}, "1": {"mechanism": [2, 5, 0, 4, null], "probable": 1}, "2": {"mechanism": [3, 1, 4, 0, 5], "probable": 0}, "3": {"mechanism": [3, 1, 5, 0, 4], "probable": 0}, "4": {"mechanism": [3, 9, 4, 0, 5], "probable": 0}, "5": {"mechanism": [3, 9, 5, 0, 4], "probable": 0}}, "contributor": "Richard"}
