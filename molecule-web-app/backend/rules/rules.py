@@ -1,7 +1,8 @@
 from rdkit import Chem # pyright: ignore[reportMissingImports]
 from datetime import datetime
+import sys
 ptable = Chem.GetPeriodicTable()
-from electronegativity import electronegativity
+from .electronegativity import electronegativity
 
 electronegativity_dict = electronegativity()
 
