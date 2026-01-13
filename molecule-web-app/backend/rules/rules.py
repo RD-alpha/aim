@@ -117,6 +117,8 @@ def identify_sink(mol, rules = "all"):
         if bond.GetBondTypeAsDouble() > 1.5:
             atoms = [bond.GetBeginAtom(), bond.GetEndAtom()]
             if atoms[0].GetAtomicNum() == atoms[1].GetAtomicNum():
+                if (atoms[0].HasProp('sink') and atoms[0].GetProp('sink') == 'empty AO') or (atoms[1].HasProp('sink') and atoms[1].GetProp('sink') == 'empty AO'):
+                        continue
                 bond.SetProp('sink', 'pi star')
                 bond.SetProp('sink_bond_atom', 'both')
                 bond.SetProp('sink_other_atom', 'both')
