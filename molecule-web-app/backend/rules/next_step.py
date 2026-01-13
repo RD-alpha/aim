@@ -1,11 +1,11 @@
 from rdkit import Chem
-from rules import execute_step
+from .rules import execute_step
 from ml_helper import make_fingerprint
 import xgboost
 import numpy as np
 import os
 ptable = Chem.GetPeriodicTable()
-from electronegativity import electronegativity
+from .electronegativity import electronegativity
 
 electronegativity_dict = electronegativity()
 
