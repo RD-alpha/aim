@@ -81,7 +81,7 @@ def identify_sink(mol, rules = "all"):
         if lone_electrons + num_bond_electrons < 8 and valence_electrons > 2:
             atom.SetProp('sink', 'empty AO')
         # Special case for s block
-        if valence_electrons < 3 and lone_electrons + num_bond_electrons < 2:
+        if valence_electrons < 3 and num_bond_electrons/2 < valence_electrons and atom.GetFormalCharge() >= 0:
             atom.SetProp('sink', 'empty AO')
 
         # The second row p block expansion pack
