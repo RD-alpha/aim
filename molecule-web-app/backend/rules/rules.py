@@ -374,7 +374,7 @@ def carbocat(mol, sink_idx, connected_mols, mechanisms):
     mechanisms.append([10, None, j, None, l])
     return (mechanisms, connected_mols)
 
-def run_next_step(smiles, kekulise = False, cleanup = True, chain_mol = None):
+def run_next_step(smiles, kekulise = False, cleanup = True, chain_mol = None, screen_charges_enabled = True):
     if chain_mol is not None:
         mol_inp = chain_mol
         for a in mol_inp.GetAtoms():
@@ -398,10 +398,10 @@ def run_next_step(smiles, kekulise = False, cleanup = True, chain_mol = None):
             Chem.Kekulize(mol_inp, clearAromaticFlags=True)
         
     prepare_molecule(mol_inp)
-    connected_mols, mechanisms, mol_inp = execute_step(mol_inp, kekulise, cleanup)
+    connected_mols, mechanisms, mol_inp = execute_step(mol_inp, kekulise, cleanup, screen_charges_enabled)
     return (connected_mols, mechanisms, mol_inp)
 
-def execute_step(mol_inp, kekulise = False, cleanup = False):
+def execute_step(mol_inp, kekulise = False, cleanup = False, screen_charges_enabled = True):
 
 
     connected_mols = []
@@ -608,10 +608,11 @@ def execute_step(mol_inp, kekulise = False, cleanup = False):
 #        p = int(p)
 #        print(p_layer)
 #    charge = q + p
-    charge = 0
-    for atom in mol_inp.GetAtoms():
-        charge += atom.GetFormalCharge()
-    connected_mols, mechanisms = screen_charges(connected_mols, mechanisms, charge)
+    if screen_charges_enabled:
+        charge = 0
+        for atom in mol_inp.GetAtoms():
+            charge += atom.GetFormalCharge()
+        connected_mols, mechanisms = screen_charges(connected_mols, mechanisms, charge)
     idx = 0
     for mol in connected_mols:
         try:
