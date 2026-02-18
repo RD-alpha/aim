@@ -15,7 +15,7 @@ def make_image(smiles, tmp_dir):
 
     return count
 
-def save_files_for_display(mols, inp_mol, tmp_dir):
+def save_files_for_display(mols, inp_mol, tmp_dir, prefix = "mol_"):
     source_folder = os.path.join(tmp_dir, 'results')
     pickle_folder = os.path.join(tmp_dir, 'pickles')
     file_num = 0
@@ -23,26 +23,31 @@ def save_files_for_display(mols, inp_mol, tmp_dir):
     # Save starting material as a pickle
     with open(os.path.join(pickle_folder, "sm.pkl"), 'wb') as f:
                 pickle.dump(inp_mol, f)
-
-    for mol in mols:
-        mol_smiles = Chem.MolToSmiles(mol)
-        Chem.SanitizeMol(mol)
-        file_name = "mol_" + str(file_num)
-        try:
-            Chem.Draw.MolToFile(mol, os.path.join(source_folder, file_name + ".png"))
-            with open (os.path.join(source_folder, "products.txt"), 'a', encoding='utf-8') as file:
-                line = mol_smiles
-                file.write(line +"\n")
+    if prefix == 'mol_':
+        for mol in mols:
+            mol_smiles = Chem.MolToSmiles(mol)
+            Chem.SanitizeMol(mol)
+            file_name = prefix + str(file_num)
+            try:
+                Chem.Draw.MolToFile(mol, os.path.join(source_folder, file_name + ".png"))
+                with open (os.path.join(source_folder, "products.txt"), 'a', encoding='utf-8') as file:
+                    line = mol_smiles
+                    file.write(line +"\n")
 
             # Save history feature is currently on hold
             # Save molecules as pickles to later save for training
-            with open(os.path.join(pickle_folder, file_name + ".pkl"), 'wb') as f:
-                pickle.dump(mol, f)
+                with open(os.path.join(pickle_folder, file_name + ".pkl"), 'wb') as f:
+                    pickle.dump(mol, f)
+                file_num += 1
+
+            except:
+                print('There was an invalid molecule')
+    else:
+        for mol in mols:
+            file_name = prefix + str(file_num)
+            Chem.SanitizeMol(mol)
+            Chem.Draw.MolToFile(mol, os.path.join(source_folder, file_name + ".png"))
             file_num += 1
-            
-        except:
-            print('There was an invalid molecule')
-      
     return None
 
 def clear_results(tmp_dir):
