@@ -1,18 +1,20 @@
-from flask import Flask, request, jsonify, send_from_directory, session, redirect, url_for, send_file # type: ignore
-from rdkit import Chem
+from flask import Flask, request, jsonify, send_from_directory, session, redirect, url_for, send_file, render_template # type: ignore
+from rdkit import Chem # pyright: ignore[reportMissingImports]
 import os
 import shutil
 import uuid
 import tempfile
-from rules.rules import execute_step
+from rules.rules import run_next_step
+from rules.next_step import follow_on
 from helper import make_image, save_files_for_display, clear_results, clear_pickles
 import pickle
 import json
 from ml_helper import make_fingerprint
 import numpy as np
 import random
-from xgboost import XGBClassifier
-
+from xgboost import XGBClassifier # pyright: ignore[reportMissingImports]
+from io import BytesIO
+import base64
 
 app = Flask(
     __name__,
@@ -76,32 +78,47 @@ def process_molecule():
 
     #save file for history
     history_count = make_image(smiles, tmp_dir)
-
-    # TODO: reimplement that carrying forward of molecules - currently this should always be going into the else branch
+    clf = XGBClassifier()
+    model_path = f'../../models/{MODEL_VERSION}/xg_model.json'
+    clf.load_model(model_path)
+    
     if id != -1:
         with open('chain/mol_' + str(id) + '.pkl', 'rb') as f:
             chain_mol = pickle.load(f)
-        mols, mechs, inp_mol = execute_step(smiles, cleanup, kekulise, chain_mol)
+        mols, mechs, inp_mol = run_next_step(smiles, kekulise, cleanup, chain_mol)
     else:
-        mols, mechs, inp_mol = execute_step(smiles, cleanup, kekulise)
+        mols, mechs, inp_mol = run_next_step(smiles, kekulise, cleanup)
+    
+    predictions = []
+    follow_on_mols = []
+    follow_on_smiles = []
+    for i, mol in enumerate(mols):
+        fp = make_fingerprint(inp_mol, mechs[i])
+        y_pred = clf.predict(np.array(fp).reshape(1, -1))
+        predictions.append(int(y_pred[0]))
+        if y_pred[0]:
+            f_mols, f_smiles = follow_on(mol, mechs[i], clf)
+            follow_on_mols = follow_on_mols + f_mols
+            follow_on_smiles = follow_on_smiles + f_smiles
+    
 
     #TODO: reimplement that carrying forward of molecules
     #clear_chain()
     clear_results(tmp_dir)
     clear_pickles(tmp_dir)
     save_files_for_display(mols, inp_mol, tmp_dir)
+    if follow_on_mols:
+        save_files_for_display(follow_on_mols, inp_mol, tmp_dir, prefix="followon_")
 
     # Load the resulting molecules (assuming they are saved as images)
     molecules = {}
-
+    follow_ons ={}
     # Load decision tree model
     #clf = joblib.load("../../models/v12/xg_model.pkl")
     # Load the model
-    clf = XGBClassifier()
-    model_path = f'../../models/{MODEL_VERSION}/xg_model.json'
-    clf.load_model(model_path)
+   
     for filename in os.listdir(os.path.join(tmp_dir, 'results')):
-        if filename.endswith('.png'):
+        if filename.endswith('.png') and filename.startswith('mol_'):
             idx = int(filename.split('_')[1].split('.')[0])
             with open(os.path.join(tmp_dir, 'results/products.txt'), 'r') as f:
                 line_num = 0
@@ -109,15 +126,15 @@ def process_molecule():
                     if line_num == idx:
                         result_smiles = line.rstrip()
                     line_num += 1
-            
-                fp = make_fingerprint(inp_mol, mechs[idx])
-                y_pred = clf.predict(np.array(fp).reshape(1, -1))
-            
-            molecules[idx] = {'image':filename, 'smiles': result_smiles, 'mechanism': mechs[idx], 'predicted': int(y_pred[0])}
+            fp = make_fingerprint(inp_mol, mechs[idx])
+            molecules[idx] = {'image':filename, 'smiles': result_smiles, 'mechanism': mechs[idx], 'predicted': predictions[idx]}
+        if filename.endswith('.png') and filename.startswith('followon_'):
+            idx = int(filename.split('_')[1].split('.')[0])
+            follow_ons[idx] = {'image':filename, 'smiles':follow_on_smiles[idx]}
 
 
     #print(molecules)
-    return jsonify({'molecules': molecules, 'history_idx': history_count})
+    return jsonify({'molecules': molecules, 'history_idx': history_count, 'follow_ons': follow_ons})
 
 
 
@@ -174,7 +191,7 @@ def clear_history():
 def save_training_data():
     tmp_dir = get_session_temp_dir()
     data = request.get_json()   
-    training_folder = os.path.abspath(os.path.join(root_folder, 'training'))
+    training_folder = os.path.abspath(os.path.join(root_folder, 'training_current'))
     pickles_folder = os.path.abspath(os.path.join(tmp_dir, 'pickles'))
    
     # Find the highest numbered folder in the training directory
@@ -199,7 +216,7 @@ def save_training_data():
 
 @app.route('/get_random_suggestion', methods=['GET'])
 def get_random_suggestion():
-    suggestions_file = os.path.join(root_folder, 'training_suggestions_2.txt')
+    suggestions_file = os.path.join(root_folder, 'retrain.txt')
     try:
         with open(suggestions_file, 'r') as f:
             lines = f.readlines()
@@ -239,6 +256,40 @@ def session_file(filepath):
 @app.route('/api/version')
 def get_version():
     return jsonify({'model_version': MODEL_VERSION})
+
+@app.route("/whatnext")
+def whatnext():
+    # Load some existing arrows
+    training_folder = os.path.abspath(os.path.join(root_folder, 'training'))
+    num_dirs = len([name for name in os.listdir(training_folder) if os.path.isdir(os.path.join(training_folder, name))])
+    random_dir = random.randint(1, num_dirs + 1)
+    with open(os.path.join(training_folder,f'{random_dir}/sm.pkl'), 'rb') as f:
+        sm = pickle.load(f)
+    num_arrows = len([fname for fname in os.listdir(os.path.join(training_folder,f'{random_dir}')) if fname.startswith('mol_')])
+    random_mol = random.randint(0, num_arrows)
+    with open(os.path.join(training_folder, f'{random_dir}/mol_{random_mol}.pkl'), 'rb') as f:
+        next_mol = pickle.load(f)
+    with open(os.path.join(training_folder, f'{random_dir}/data.json'), 'r') as f:
+        j_data = json.load(f)
+
+    img = Chem.Draw.MolToImage(sm, size=(300,300))
+
+    # Convert PIL Image → base64
+    buf = BytesIO()
+    img.save(buf, format="PNG")
+    c_list = []
+    for a in next_mol.GetAtoms():
+        if a.GetAtomicNum() == 6:
+            c_list.append(a.GetIdx())
+    drawer = Chem.Draw.rdMolDraw2D.MolDraw2DSVG(300, 300)
+    opts = drawer.drawOptions()
+    drawer.DrawMolecule(next_mol, highlightAtoms = c_list)
+    drawer.FinishDrawing()
+    svg_code = drawer.GetDrawingText()
+    png_bindata = base64.b64encode(buf.getvalue()).decode("utf-8")
+
+    mech = j_data['choices'][str(random_mol)]['mechanism']
+    return render_template("whatnext.html", svg=svg_code, png_bin = png_bindata)
 
 if __name__ == '__main__':
     app.run(debug=True)

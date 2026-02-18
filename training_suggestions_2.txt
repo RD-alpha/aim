@@ -38,7 +38,6 @@ CC(=O)C=C.CN
 CC(=O)C=C.[C-]#N
 CC(=O)C=C.CC=C
 CC(=O)C=C.O
-CC(=O)C=C.N
 CC(=O)C=C.c1ccccc1
 CC(=O)C=C.C[Mg]Br
 CC(=O)C=C.C=C[Mg]Br
@@ -70,8 +69,6 @@ ClCl.CCS
 ClCl.c1ccccc1
 ClCl.C[Mg]Br
 ClCl.C=C[Mg]Br
-ClCl.C[Li]
-ClCl.[BH4-]
 ClCl.[O-]O
 ClCl.[Cl-]
 I.CCO
@@ -118,7 +115,6 @@ FB(F)F.CCO
 FB(F)F.CN
 FB(F)F.CC[O-]
 FB(F)F.CC=C
-FB(F)F.O
 FB(F)F.N
 FB(F)F.CCS
 FB(F)F.c1ccccc1
@@ -138,10 +134,8 @@ BrBr.C=C[Mg]Br
 BrBr.C[Li]
 BrBr.[BH4-]
 BrBr.[O-]O
-BrBr.[Cl-]
 II.CCO
 II.CN
-II.[C-]#N
 II.CC[O-]
 II.N
 II.c1ccccc1

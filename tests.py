@@ -9,4 +9,5 @@ from rules import execute_step
 import helper
 from ml_helper import make_fingerprint
 smiles_inp = 'CC1[C+]([O-])c2ccccc2OC1(C)[O-].O'
-product_mols = execute_step(smiles_inp, True, False, None, False)
+product_mols = execute_step(smiles_inp, True, False, None)
+print(product_mols)

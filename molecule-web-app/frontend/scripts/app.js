@@ -58,7 +58,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (saveMech == true) {
                 mechStep.push(nextStep);
                 }
-                displayResults(data.molecules);
+                displayResults(data.molecules, data.follow_ons);
                 addHistory(data.history_idx);
             })
             .catch(error => {
@@ -97,7 +97,7 @@ document.addEventListener('DOMContentLoaded', function() {
         fetch('/clear_history', { method: 'POST' });
     });
 
-    function displayResults(molecules) {
+    function displayResults(molecules, follow_ons) {
         resultsContainer.innerHTML = '';
         saveMech = false;
         const imageChoices = {}; // Object to store user choices for each image
@@ -129,6 +129,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 id = molId;
             });
 
+            
             // Create button container
             const buttonContainer = document.createElement('div');
             buttonContainer.classList.add('button-container');
@@ -172,6 +173,24 @@ document.addEventListener('DOMContentLoaded', function() {
             imgContainer.appendChild(buttonContainer);
             resultsContainer.appendChild(imgContainer);
         });
+
+        const followOns = Object.values(follow_ons);
+        followOns.forEach( followOn => {
+                const imgContainer = document.createElement('div');
+                imgContainer.classList.add('image-container');
+                imgContainer.classList.add('follow-on-container');
+                const followOnImg = document.createElement('img');
+                followOnImg.src = `/session_file/results/${followOn.image}?_=${Date.now()}`;
+                followOnImg.alt = "Follow-on product";
+                followOnImg.classList.add('result-image');
+		        followOnImg.style.border = "3px solid blue";
+                imgContainer.appendChild(followOnImg);
+                resultsContainer.appendChild(imgContainer);
+                followOnImg.addEventListener('click', function() {
+                    smilesInput.value = followOn.smiles;
+                    id = molId;
+            });
+            });
 
         // Add submit button
         const submitButton = document.createElement('button');
