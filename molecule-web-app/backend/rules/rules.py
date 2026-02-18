@@ -53,6 +53,7 @@ def screen_charges(list_mol, mechanisms, charge = 0):
                 updated_mech.append(mechanisms[idx])
         return (clean_list, updated_mech)
     else:
+        print('No screening')
         return (list_mol, mechanisms)
 
 
@@ -593,15 +594,24 @@ def execute_step(mol_inp, kekulise = False, cleanup = False):
 
     if cleanup:
         connected_mols, mechanisms = clean_mol(connected_mols, mechanisms, mol_inp)
-
-    inchi = Chem.MolToInchi(mol_inp)
+#   inchi = Chem.MolToInchi(mol_inp)
+#   charge = 0
+#   q = 0
+#   p = 0
+#    print(inchi)
+#    if '/q' in inchi:
+#        q_layer = inchi.split('/q')[1].split('/')[0].split(';')
+#        q = sum([int(q) if q!='' else 0 for q in q_layer])
+#        print(q_layer)
+#    if '/p' in inchi:
+#        p_layer = inchi.split('/p')[1].split('/')[0]
+#        p = int(p)
+#        print(p_layer)
+#    charge = q + p
     charge = 0
-    if '/q' in inchi:
-        q_layer = inchi.split('/q')[1].split('/')[0]
-        charge = int(q_layer)
-
+    for atom in mol_inp.GetAtoms():
+        charge += atom.GetFormalCharge()
     connected_mols, mechanisms = screen_charges(connected_mols, mechanisms, charge)
-
     idx = 0
     for mol in connected_mols:
         try:
@@ -620,4 +630,3 @@ def execute_step(mol_inp, kekulise = False, cleanup = False):
         idx += 1
     
     return (connected_mols, mechanisms, mol_inp)
-
