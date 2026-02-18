@@ -62,7 +62,7 @@ def prepare_atoms(atom):
                 break
     return None
 
-def follow_on(next_mol, mech, model):
+def follow_on(next_mol, mech, model, screen_charges_enabled = True):
     clf = model
     smiles_list = []
     accepted_follow_on = []
@@ -83,7 +83,7 @@ def follow_on(next_mol, mech, model):
             prepare_atoms(next_mol.GetAtomWithIdx(a))
     
     try:
-        connected_mols, mechanism, mol_inp = execute_step(next_mol)
+        connected_mols, mechanism, mol_inp = execute_step(next_mol, screen_charges_enabled=screen_charges_enabled)
     except Exception as e:
         print(e)
     for i, product in enumerate(connected_mols):
