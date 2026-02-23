@@ -7,6 +7,56 @@ from .electronegativity import electronegativity
 electronegativity_dict = electronegativity()
 
 
+def clean_mol(list_mol, mechanisms, original_mol = None):
+    existing_smiles = set([])
+    clean_list = []
+    updated_mech = []
+    if original_mol is not None:       
+        og_smiles = Chem.MolToSmiles(original_mol, kekuleSmiles=True)
+    for idx in range(len(list_mol)):
+        mol = list_mol[idx]
+        smiles = Chem.MolToSmiles(mol, kekuleSmiles=True)
+        if smiles not in existing_smiles:
+            if original_mol == None or smiles != og_smiles:
+                existing_smiles.add(smiles)
+                clean_list.append(mol)
+                updated_mech.append(mechanisms[idx])
+    return (clean_list, updated_mech)
+
+def screen_charges(list_mol, mechanisms, charge = 0):
+    if charge == -1: # base mediated reaction will not have cationic intermediates
+        clean_list = []
+        updated_mech = []
+        for idx in range(len(list_mol)):
+            mol = list_mol[idx]
+            keep = True
+            for atom in mol.GetAtoms():
+                if atom.GetFormalCharge() > 0:
+                    keep = False
+                    break
+            if keep:
+                clean_list.append(mol)
+                updated_mech.append(mechanisms[idx])
+        return (clean_list, updated_mech)
+    elif charge == 1: # acid mediated reaction will not have anionic intermediates
+        clean_list = []
+        updated_mech = []
+        for idx in range(len(list_mol)):
+            mol = list_mol[idx]
+            keep = True
+            for atom in mol.GetAtoms():
+                if atom.GetFormalCharge() < 0:
+                    keep = False
+                    break
+            if keep:
+                clean_list.append(mol)
+                updated_mech.append(mechanisms[idx])
+        return (clean_list, updated_mech)
+    else:
+        print('No screening')
+        return (list_mol, mechanisms)
+
+
 def identify_source(mol, rules = "all"):
     for atom in mol.GetAtoms():
         # Look for hydrides - M-H bond
@@ -197,22 +247,6 @@ def a_to_b(mol, i, j):
     return e_mol.GetMol()
 
 
-def clean_mol(list_mol, mechanisms, original_mol = None):
-    existing_smiles = set([])
-    clean_list = []
-    updated_mech = []
-    if original_mol is not None:       
-        og_smiles = Chem.MolToSmiles(original_mol, kekuleSmiles=True)
-    for idx in range(len(list_mol)):
-        mol = list_mol[idx]
-        smiles = Chem.MolToSmiles(mol, kekuleSmiles=True)
-        if smiles not in existing_smiles:
-            if original_mol == None or smiles != og_smiles:
-                existing_smiles.add(smiles)
-                clean_list.append(mol)
-                updated_mech.append(mechanisms[idx])
-    return (clean_list, updated_mech)
-
 def lose_hydride(mol, i):
     h_mol = Chem.Mol(mol)
     a = h_mol.GetAtomWithIdx(i)
@@ -235,7 +269,6 @@ def transfer_proton(mol, j, i):
     return p_mol
     #return (mechanisms, connected_mols)
 
-import random
 
 def c_h_elimination(mol, i, j, mechanisms, connected_mols):
     c_mol = Chem.Mol(mol)
@@ -341,7 +374,7 @@ def carbocat(mol, sink_idx, connected_mols, mechanisms):
     mechanisms.append([10, None, j, None, l])
     return (mechanisms, connected_mols)
 
-def run_next_step(smiles, kekulise = False, cleanup = True, chain_mol = None):
+def run_next_step(smiles, kekulise = False, cleanup = True, chain_mol = None, screen_charges_enabled = True):
     if chain_mol is not None:
         mol_inp = chain_mol
         for a in mol_inp.GetAtoms():
@@ -365,10 +398,10 @@ def run_next_step(smiles, kekulise = False, cleanup = True, chain_mol = None):
             Chem.Kekulize(mol_inp, clearAromaticFlags=True)
         
     prepare_molecule(mol_inp)
-    connected_mols, mechanisms, mol_inp = execute_step(mol_inp, kekulise, cleanup)
+    connected_mols, mechanisms, mol_inp = execute_step(mol_inp, kekulise, cleanup, screen_charges_enabled)
     return (connected_mols, mechanisms, mol_inp)
 
-def execute_step(mol_inp, kekulise = False, cleanup = False):
+def execute_step(mol_inp, kekulise = False, cleanup = False, screen_charges_enabled = True):
 
 
     connected_mols = []
@@ -561,7 +594,25 @@ def execute_step(mol_inp, kekulise = False, cleanup = False):
 
     if cleanup:
         connected_mols, mechanisms = clean_mol(connected_mols, mechanisms, mol_inp)
-
+#   inchi = Chem.MolToInchi(mol_inp)
+#   charge = 0
+#   q = 0
+#   p = 0
+#    print(inchi)
+#    if '/q' in inchi:
+#        q_layer = inchi.split('/q')[1].split('/')[0].split(';')
+#        q = sum([int(q) if q!='' else 0 for q in q_layer])
+#        print(q_layer)
+#    if '/p' in inchi:
+#        p_layer = inchi.split('/p')[1].split('/')[0]
+#        p = int(p)
+#        print(p_layer)
+#    charge = q + p
+    if screen_charges_enabled:
+        charge = 0
+        for atom in mol_inp.GetAtoms():
+            charge += atom.GetFormalCharge()
+        connected_mols, mechanisms = screen_charges(connected_mols, mechanisms, charge)
     idx = 0
     for mol in connected_mols:
         try:
@@ -580,4 +631,3 @@ def execute_step(mol_inp, kekulise = False, cleanup = False):
         idx += 1
     
     return (connected_mols, mechanisms, mol_inp)
-
