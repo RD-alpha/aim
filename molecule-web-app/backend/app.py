@@ -1,15 +1,20 @@
 from flask import Flask, request, jsonify, send_from_directory, session, redirect, url_for, send_file, render_template # type: ignore
 from rdkit import Chem # pyright: ignore[reportMissingImports]
 import os
+import sys
 import shutil
 import uuid
 import tempfile
-from rules.rules import run_next_step
-from rules.next_step import follow_on
+root_folder = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../'))
+if root_folder not in sys.path:
+    sys.path.insert(0, root_folder)
+
+from shared.rules import run_next_step
+from shared.next_step import follow_on
 from helper import make_image, save_files_for_display, clear_results, clear_pickles
 import pickle
 import json
-from ml_helper import make_fingerprint
+from shared.ml_helper import make_fingerprint
 import numpy as np
 import random
 from xgboost import XGBClassifier # pyright: ignore[reportMissingImports]
@@ -51,7 +56,6 @@ def cleanup_session_temp_dir():
     session_dir = get_session_temp_dir()
     shutil.rmtree(session_dir, ignore_errors=True)
 
-root_folder = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../'))
 
 @app.route('/')
 def serve_index():
