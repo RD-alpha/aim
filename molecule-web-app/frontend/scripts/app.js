@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', function() {
    // });
 
 
-    function callProcessMolecule(smiles, cleanup, kekulise) {
+    function callProcessMolecule(smiles, cleanup, kekulise, screenChargesEnabled) {
             fetch('/process_molecule', {
                 method: 'POST',
                 headers: {
@@ -49,6 +49,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 body: JSON.stringify({ smiles: smiles,
                     cleanup: cleanup,
                     kekulise: kekulise,
+                    screen_charges_enabled: screenChargesEnabled,
                     id: id
                  })
             })
@@ -76,8 +77,9 @@ document.addEventListener('DOMContentLoaded', function() {
         const smiles = smilesInput.value;
         const cleanup = document.getElementById('cleanup-checkbox').checked;
         const kekulise = document.getElementById('kekulise-checkbox').checked;
+        const screenChargesEnabled = document.getElementById('screen-charges-checkbox').checked;
         if (smiles) {
-            callProcessMolecule(smiles, cleanup, kekulise);
+            callProcessMolecule(smiles, cleanup, kekulise, screenChargesEnabled);
     }
     });
 
@@ -85,10 +87,11 @@ document.addEventListener('DOMContentLoaded', function() {
         const smiles = smilesInput.value;
         const cleanup = document.getElementById('cleanup-checkbox').checked;
         const kekulise = document.getElementById('kekulise-checkbox').checked;
+        const screenChargesEnabled = document.getElementById('screen-charges-checkbox').checked;
         if (id != -1) {
             /* debug statement */
             console.log("id: " + id);
-           callProcessMolecule(smiles, cleanup, kekulise);
+           callProcessMolecule(smiles, cleanup, kekulise, screenChargesEnabled);
         }
     });
 
