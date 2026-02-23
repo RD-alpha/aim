@@ -1,0 +1,27 @@
+{
+  "name": "unmap-smiles",
+  "displayName": "Copy Unmapped SMILES",
+  "description": "Right-click a SMILES selection and copy it with atom-map numbers removed.",
+  "version": "0.1.0",
+  "engines": { "vscode": "^1.50.0" },
+  "categories": [ "Other" ],
+  "activationEvents": [ "onCommand:unmapSmiles.copyUnmapped" ],
+  "main": "./extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "unmapSmiles.copyUnmapped",
+        "title": "Copy as Unmapped SMILES"
+      }
+    ],
+    "menus": {
+      "editor/context": [
+        {
+          "command": "unmapSmiles.copyUnmapped",
+          "when": "editorHasSelection",
+          "group": "navigation"
+        }
+      ]
+    }
+  }
+}

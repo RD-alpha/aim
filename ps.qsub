@@ -1,0 +1,75 @@
+#!/bin/bash
+#!
+#! Example SLURM job script for Peta4-CascadeLake (Cascade Lake CPUs, HDR IB)
+#! Last updated: Fri 18 Sep 12:24:48 BST 2020
+#!
+
+
+#! sbatch directives begin here ###############################
+#! Name of the job:
+#SBATCH -J NoDuplicates
+#! Which project should be charged:
+#SBATCH -p CLUSTER
+#! How many whole nodes should be allocated?
+#SBATCH --nodes=1
+#! How many (MPI) tasks will there be in total? (<= nodes*56)
+#! The Cascade Lake (cclake) nodes have 56 CPUs (cores) each and
+#! 3410 MiB of memory per CPU.
+#SBATCH --cpus-per-task=16
+#! How much wallclock time will be required?
+#SBATCH --time=12:50:00
+#! What types of email messages do you wish to receive?
+#SBATCH --mail-type=ALL
+#! Uncomment this to prevent the job from being requeued (e.g. if
+#! interrupted by node failure or system downtime):
+##SBATCH --no-requeue
+#! Send termination signal early
+#SBATCH --signal=B:USR1@60
+
+
+
+#! Insert additional module load commands after this line if needed:
+
+
+#! Activate virtual environment
+
+# Initialise conda for this shell
+# source $(conda info --base)/etc/profile.d/conda.sh
+
+source ~/.bashrc
+export PATH=$HOME/.conda/envs/venv/bin:$PATH
+
+SCRATCH=/scratch/$USER/$SLURM_JOB_ID
+mkdir -p $SCRATCH
+export SCRATCH
+
+#! Full path to application executable:
+application="python"
+
+#! Run options for the application:
+options="-u find_path_parallel_no_duplicates.py"
+
+#! Work directory (i.e. where the job will run):
+workdir="$SLURM_SUBMIT_DIR"  # The value of SLURM_SUBMIT_DIR sets workdir to the directory
+                             # in which sbatch is run.
+CMD="$application $options"
+
+
+###############################################################
+### You should not have to change anything below this line ####
+###############################################################
+
+cd $workdir
+echo -e "Changed directory to `pwd`.\n"
+
+JOBID=$SLURM_JOB_ID
+
+echo -e "JobID: $JOBID\n======"
+echo "Time: `date`"
+echo "Running on master node: `hostname`"
+echo "Current directory: `pwd`"
+echo -e "Scratch directory: $SCRATCH"
+
+echo -e "\nExecuting command:\n==================\n$CMD\n"
+
+srun --propagate=ALL $CMD

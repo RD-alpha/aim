@@ -1,0 +1,18 @@
+Changed directory to /home/rd611/aim.
+
+JobID: 23474
+======
+Time: Fri 20 Feb 17:59:48 GMT 2026
+Running on master node: node-0-3.ziggy.ch.private.cam.ac.uk
+Current directory: /home/rd611/aim
+Scratch directory: /scratch/rd611/23474
+
+Executing command:
+==================
+python -u test_rxn.py
+
+  File "/home/rd611/aim/test_rxn.py", line 8
+    --- Initial molecules ---
+                ^^^^^^^^^
+SyntaxError: invalid syntax
+srun: error: node-0-3: task 0: Exited with exit code 1

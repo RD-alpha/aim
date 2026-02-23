@@ -1,0 +1,16 @@
+Changed directory to /home/rd611/aim.
+
+JobID: 23828
+======
+Time: Mon 23 Feb 09:51:11 GMT 2026
+Running on master node: node-0-6.ziggy.ch.private.cam.ac.uk
+Current directory: /home/rd611/aim
+Scratch directory: /scratch/rd611/23828
+
+Executing command:
+==================
+python -u test_rxn.py
+
+srun: Job step aborted: Waiting up to 32 seconds for job step to finish.
+[2026-02-23T09:51:22.905] error: *** STEP 23828.0 ON node-0-6 CANCELLED AT 2026-02-23T09:51:22 DUE to SIGNAL Terminated ***
+[2026-02-23T09:51:22.906] error: *** JOB 23828 ON node-0-6 CANCELLED AT 2026-02-23T09:51:22 DUE to SIGNAL Terminated ***
