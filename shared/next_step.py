@@ -1,6 +1,6 @@
 from rdkit import Chem
 from .rules import execute_step
-from ml_helper import make_fingerprint
+from .ml_helper import make_fingerprint
 import xgboost
 import numpy as np
 import os
