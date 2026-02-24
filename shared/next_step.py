@@ -12,7 +12,7 @@ electronegativity_dict = electronegativity()
 
 
 
-def prepare_atoms(atom):
+def prepare_atoms(atom, hypervalent_enabled = True):
     # Look for hydrides - M-H bond
     if electronegativity_dict[atom.GetAtomicNum()] < 2.05 and atom.GetFormalCharge() < 0 and atom.GetTotalNumHs() > 0:
         atom.SetNumExplicitHs(atom.GetTotalNumHs())
@@ -37,11 +37,12 @@ def prepare_atoms(atom):
         atom.SetProp('sink', 'empty AO')
 
     # The second row p block expansion pack
-    if atom.GetAtomicNum() < 17 and atom.GetAtomicNum() > 13 and atom.GetFormalCharge() >= 0 and atom.GetTotalValence() < 6:
-        if atom.HasProp('sink') and atom.GetProp('sink') == 'proton':
-            pass
-        else:
-            atom.SetProp('sink', 'hypervalent')
+    if hypervalent_enabled:
+        if atom.GetAtomicNum() < 17 and atom.GetAtomicNum() > 13 and atom.GetFormalCharge() >= 0 and atom.GetTotalValence() < 6:
+            if atom.HasProp('sink') and atom.GetProp('sink') == 'proton':
+                pass
+            else:
+                atom.SetProp('sink', 'hypervalent')
 
     if atom.HasProp('sink') and atom.GetProp('sink') == 'hypervalent':
         atom.SetProp('sink', 'empty AO')
@@ -62,7 +63,7 @@ def prepare_atoms(atom):
                 break
     return None
 
-def follow_on(next_mol, mech, model, screen_charges_enabled = True):
+def follow_on(next_mol, mech, model, screen_charges_enabled = True, hypervalent_enabled = True):
     clf = model
     smiles_list = []
     accepted_follow_on = []
@@ -80,7 +81,7 @@ def follow_on(next_mol, mech, model, screen_charges_enabled = True):
 
     for a in mech[1:]:
         if a is not None:
-            prepare_atoms(next_mol.GetAtomWithIdx(a))
+            prepare_atoms(next_mol.GetAtomWithIdx(a), hypervalent_enabled=hypervalent_enabled)
     
     try:
         connected_mols, mechanism, mol_inp = execute_step(next_mol, screen_charges_enabled=screen_charges_enabled)

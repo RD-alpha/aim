@@ -118,7 +118,7 @@ def identify_source(mol, rules = "all"):
                     bond.SetIntProp('source_bond_atom', atoms[0].GetIdx())
                     bond.SetIntProp('source_other_atom',atoms[1].GetIdx())
 
-def identify_sink(mol, rules = "all"):
+def identify_sink(mol, rules = "all", hypervalent_enabled = True):
    
     # Look for vacant orbitals
     for atom in mol.GetAtoms():
@@ -135,10 +135,11 @@ def identify_sink(mol, rules = "all"):
             atom.SetProp('sink', 'empty AO')
 
         # The second row p block expansion pack
-        if atom.GetAtomicNum() < 17 and atom.GetAtomicNum() > 13 and atom.GetFormalCharge() >= 0 and atom.GetTotalValence() < 6:
-            if atom.HasProp('sink') and atom.GetProp('sink') == 'proton':
-                continue
-            atom.SetProp('sink', 'hypervalent')
+        if hypervalent_enabled:
+            if atom.GetAtomicNum() < 17 and atom.GetAtomicNum() > 13 and atom.GetFormalCharge() >= 0 and atom.GetTotalValence() < 6:
+                if atom.HasProp('sink') and atom.GetProp('sink') == 'proton':
+                    continue
+                atom.SetProp('sink', 'hypervalent')
 
     for bond in mol.GetBonds():
         # Conditional on all rules being swtiched on
@@ -208,9 +209,9 @@ def identify_acidic_CH(mol):
                         atom.SetProp('sink', 'CH')
                         break
 
-def prepare_molecule(mol):
+def prepare_molecule(mol, hypervalent_enabled = True):
     identify_acidic_CH(mol)
-    identify_sink(mol)
+    identify_sink(mol, hypervalent_enabled=hypervalent_enabled)
     identify_source(mol)
     return None
 
@@ -374,7 +375,7 @@ def carbocat(mol, sink_idx, connected_mols, mechanisms):
     mechanisms.append([10, None, j, None, l])
     return (mechanisms, connected_mols)
 
-def run_next_step(smiles, kekulise = False, cleanup = True, chain_mol = None, screen_charges_enabled = True):
+def run_next_step(smiles, kekulise = False, cleanup = True, chain_mol = None, screen_charges_enabled = True, hypervalent_enabled = True):
     if chain_mol is not None:
         mol_inp = chain_mol
         for a in mol_inp.GetAtoms():
@@ -397,7 +398,7 @@ def run_next_step(smiles, kekulise = False, cleanup = True, chain_mol = None, sc
         if kekulise:
             Chem.Kekulize(mol_inp, clearAromaticFlags=True)
         
-    prepare_molecule(mol_inp)
+    prepare_molecule(mol_inp, hypervalent_enabled=hypervalent_enabled)
     connected_mols, mechanisms, mol_inp = execute_step(mol_inp, kekulise, cleanup, screen_charges_enabled)
     return (connected_mols, mechanisms, mol_inp)
 

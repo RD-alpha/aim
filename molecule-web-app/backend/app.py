@@ -75,6 +75,7 @@ def process_molecule():
     kekulise = data.get('kekulise')
     id = data.get('id')
     screen_charges_enabled = data.get('screen_charges_enabled', True)
+    hypervalent_enabled = data.get('hypervalent_enabled', True)
 
     if not smiles:
         return jsonify({'error': 'No SMILES string provided'}), 400
@@ -90,9 +91,9 @@ def process_molecule():
     if id != -1:
         with open('chain/mol_' + str(id) + '.pkl', 'rb') as f:
             chain_mol = pickle.load(f)
-        mols, mechs, inp_mol = run_next_step(smiles, kekulise, cleanup, chain_mol, screen_charges_enabled)
+        mols, mechs, inp_mol = run_next_step(smiles, kekulise, cleanup, chain_mol, screen_charges_enabled, hypervalent_enabled)
     else:
-        mols, mechs, inp_mol = run_next_step(smiles, kekulise, cleanup, None, screen_charges_enabled)
+        mols, mechs, inp_mol = run_next_step(smiles, kekulise, cleanup, None, screen_charges_enabled, hypervalent_enabled)
     
     predictions = []
     follow_on_mols = []
@@ -104,7 +105,7 @@ def process_molecule():
         if y_pred[0]:
            # print(mechs[i])
            # print(fp)
-            f_mols, f_smiles = follow_on(mol, mechs[i], clf, screen_charges_enabled)
+            f_mols, f_smiles = follow_on(mol, mechs[i], clf, screen_charges_enabled, hypervalent_enabled)
             follow_on_mols = follow_on_mols + f_mols
             follow_on_smiles = follow_on_smiles + f_smiles
     
