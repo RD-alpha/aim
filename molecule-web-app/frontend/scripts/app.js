@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', function() {
    // });
 
 
-    function callProcessMolecule(smiles, cleanup, kekulise, screenChargesEnabled) {
+    function callProcessMolecule(smiles, cleanup, kekulise, screenChargesEnabled, hypervalentEnabled) {
             fetch('/process_molecule', {
                 method: 'POST',
                 headers: {
@@ -50,6 +50,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     cleanup: cleanup,
                     kekulise: kekulise,
                     screen_charges_enabled: screenChargesEnabled,
+                    hypervalent_enabled: hypervalentEnabled,
                     id: id
                  })
             })
@@ -78,8 +79,9 @@ document.addEventListener('DOMContentLoaded', function() {
         const cleanup = document.getElementById('cleanup-checkbox').checked;
         const kekulise = document.getElementById('kekulise-checkbox').checked;
         const screenChargesEnabled = document.getElementById('screen-charges-checkbox').checked;
+        const hypervalentEnabled = document.getElementById('hypervalent-checkbox').checked;
         if (smiles) {
-            callProcessMolecule(smiles, cleanup, kekulise, screenChargesEnabled);
+            callProcessMolecule(smiles, cleanup, kekulise, screenChargesEnabled, hypervalentEnabled);
     }
     });
 
@@ -88,10 +90,11 @@ document.addEventListener('DOMContentLoaded', function() {
         const cleanup = document.getElementById('cleanup-checkbox').checked;
         const kekulise = document.getElementById('kekulise-checkbox').checked;
         const screenChargesEnabled = document.getElementById('screen-charges-checkbox').checked;
+        const hypervalentEnabled = document.getElementById('hypervalent-checkbox').checked;
         if (id != -1) {
             /* debug statement */
             console.log("id: " + id);
-           callProcessMolecule(smiles, cleanup, kekulise, screenChargesEnabled);
+           callProcessMolecule(smiles, cleanup, kekulise, screenChargesEnabled, hypervalentEnabled);
         }
     });
 
@@ -104,6 +107,7 @@ document.addEventListener('DOMContentLoaded', function() {
         resultsContainer.innerHTML = '';
         saveMech = false;
         const imageChoices = {}; // Object to store user choices for each image
+        const imageElements = {}; // Track image elements by molId for bulk actions
          // Sort molecules so those with predicted == 1 appear first
         const sortedMolecules = Object.values(molecules).sort((a, b) => b.predicted - a.predicted);
 
@@ -116,6 +120,7 @@ document.addEventListener('DOMContentLoaded', function() {
             img.classList.add('result-image');
             const molId = molecule.image.match(/mol_(\d+)\.png/)[1];
             img.dataset.molID = molId;
+            imageElements[molId] = img;
             // Preselect based on prediction
             if (molecule.predicted === 1) {
                 img.style.border = '3px solid green';
@@ -189,11 +194,24 @@ document.addEventListener('DOMContentLoaded', function() {
 		        followOnImg.style.border = "3px solid blue";
                 imgContainer.appendChild(followOnImg);
                 resultsContainer.appendChild(imgContainer);
-                followOnImg.addEventListener('click', function() {
-                    smilesInput.value = followOn.smiles;
-                    id = molId;
+            followOnImg.addEventListener('click', function() {
+                smilesInput.value = followOn.smiles;
+                id = molId;
+        });
+        });
+
+        const deselectAllButton = document.createElement('button');
+        deselectAllButton.textContent = 'Mark all as not save';
+        deselectAllButton.classList.add('bulk-grey-button');
+        deselectAllButton.addEventListener('click', () => {
+            Object.keys(imageChoices).forEach(molId => {
+                imageChoices[molId] = {mechanism: imageChoices[molId].mechanism, probable: null};
+                if (imageElements[molId]) {
+                    imageElements[molId].style.border = 'none';
+                }
             });
-            });
+        });
+        resultsContainer.appendChild(deselectAllButton);
 
         // Add submit button
         const submitButton = document.createElement('button');

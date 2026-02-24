@@ -228,6 +228,22 @@ footer {
     background: #2980b9;
 }
 
+.bulk-grey-button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    font-size: 1rem;
+    background: darkgrey;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.bulk-grey-button:hover {
+    background: grey;
+}
+
 /* Modal styles */
 .modal {
     display: none; /* Hidden by default */
