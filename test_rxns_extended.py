@@ -5,7 +5,8 @@ from run_parallel_no_duplicates import run_parallel
 import numpy as np
 
 
-line_nums = [3489, 4594, 8818, 22661]
+line_nums = [13512, 8572, 10096, 495, 20516, 2442, 837]
+
 
 
 with open("mech-USPTO-31k.csv", 'r') as f:

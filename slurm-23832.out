@@ -22,3 +22,15 @@ step no 1
 step no 2
 step no 3
 step no 4
+[Checkpoint] Tree saved to /scratch/rd611/23832/23832
+step no 5
+Found the target molecule!
+search is over
+Layer 1 took 0.76 seconds
+Layer 2 took 53.51 seconds
+Layer 3 took 1125.37 seconds
+Layer 4 took 35614.55 seconds
+Terminating safely
+Total time taken: 84058.54 seconds
+Unique mechanisms found: 942950
+Test set mechanisms found: 234514

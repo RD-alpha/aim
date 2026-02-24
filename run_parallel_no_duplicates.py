@@ -254,7 +254,7 @@ def run_parallel(r_smiles, p_smiles, job_name):
     # +
     # Parameters
     force_depth = False
-    depth_limit = 6
+    depth_limit = 7
     force_correct_last_step = True
     aromatic = True
     follow_on_enabled = True
