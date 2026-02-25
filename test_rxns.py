@@ -1,7 +1,6 @@
 import csv
-from rdkit import Chem
-from rdkit.Chem import rdMolDescriptors
-from run_parallel_no_duplicates import run_parallel
+
+from run_parallel import run_parallel
 import numpy as np
 
 

@@ -34,7 +34,6 @@ def product_subset(reactant, product):
             return False
     return True
 
-sm_node = None
 
 
 # filename = "local_results"
@@ -63,13 +62,16 @@ def save_tree(signum, frame, job_name, product_nodes):
 
 
 def next_nodes(packed):
+    unique_mech_count_local = 0
+    test_set_mech_count_local = 0
+    inchi_set_local = set()
     local_id_counter = itertools.count()
     args, found_event = packed
-    smiles, name, aromatic, inchi2, force_depth, force_correct_last_step, follow_on_enabled, fragment = args
+    smiles, name, aromatic, inchi2, force_depth, force_correct_last_step, follow_on_enabled, fragment, no_duplicates = args
     results = []
     found_target = False
     if (found_event.is_set() and not force_depth):
-        return []
+        return (results, (unique_mech_count_local, test_set_mech_count_local, inchi_set_local))
     mol = Chem.MolFromSmiles(smiles)
     
     idx_to_mapnum = {}
@@ -82,18 +84,24 @@ def next_nodes(packed):
         idx_to_mapnum[i] = m
     try:
         product_mols, mechs, mol_inp = run_next_step(
-            smiles, aromatic, True, None
+            smiles, aromatic, True, None, False, False
         )
         #print(len(product_mols), "products generated")
     except Exception:
         print("Error in rule application")
-        return results
+        return (results, (unique_mech_count_local, test_set_mech_count_local, inchi_set_local))
     for i, product in enumerate(product_mols):
         fp = np.array(make_fingerprint(mol_inp, mechs[i]))
         pred = clf.predict(fp.reshape(1, -1))[0]
         found_frag = False
+        try:
+            inchi1 = Chem.MolToInchi(product, options='/FixedH')
+            if no_duplicates and inchi1 in inchis_set:
+                continue
+        except Exception as e:
+            print(f'Error processing product {i}: {e}')
+            continue
         if fragment:
-            inchi1 = ""
             for m_frag in Chem.GetMolFrags(product, asMols=True):
                 try:
                     inchi_frag = Chem.MolToInchi(m_frag, options='/FixedH')
@@ -103,13 +111,9 @@ def next_nodes(packed):
                 if inchi_frag == inchi2:
                     found_frag = True
                     print(f"fragment inchi: {inchi_frag}")
-        else:
-            try:
-                inchi1 = Chem.MolToInchi(product, options='/FixedH')
-            except Exception as e:
-                print(f'Error processing product {i}: {e}')
-                continue
-                # Atom-map + SMILES for storage
+
+            
+         # Atom-map + SMILES for storage
         for j, atom in enumerate(product.GetAtoms()):  # <<< NEW
             atom.SetAtomMapNum(idx_to_mapnum[j])
         prod_smiles = Chem.MolToSmiles(product, canonical=False)  # <<< NEW
@@ -134,6 +138,13 @@ def next_nodes(packed):
             
             
         elif pred == 1:
+            if no_duplicates:
+                inchi_set_local.add(inchi1)
+            if tuple(fp) in unique_bitvectors:
+                test_set_mech_count_local += 1
+            else:
+                unique_mech_count_local += 1
+
             prod_id = next(local_id_counter)
             results.append({
                 "parent_id": None,
@@ -148,16 +159,29 @@ def next_nodes(packed):
             if follow_on_enabled:
                 #print(prod_smiles, mechs[i])
                 try:
-                    f_mols, f_mechs = follow_on(product, mechs[i], clf)
+                    f_mols, f_mechs, f_fps = follow_on(product, mechs[i], clf)
                 except Exception as e:
                     print(e)
                     continue
 
                 for j, fm in enumerate(f_mols):
                     found_frag = False
+                    if tuple(f_fps[j]) in unique_bitvectors:
+                        test_set_mech_count_local += 1
+                    else:
+                        unique_mech_count_local += 1
+                    try:
+                        inchi_f = Chem.MolToInchi(fm, options='/FixedH')
+                        if no_duplicates and inchi_f in inchis_set:
+                            continue
+                        else:
+                            if no_duplicates:
+                                inchi_set_local.add(inchi_f)
+                    except Exception:
+                        print("No Inchi")
+                        continue
                     if fragment:
-                        inchi_f = ""
-                        for m_frag in Chem.GetMolFrags(product, asMols=True):
+                        for m_frag in Chem.GetMolFrags(fm, asMols=True):
                             try:
                                 inchi_frag = Chem.MolToInchi(m_frag, options='/FixedH')
                             except Exception:
@@ -166,12 +190,8 @@ def next_nodes(packed):
                             if inchi_frag == inchi2:
                                 found_frag = True
                                 # print(f"fragment inchi: {inchi_frag}")
-                    else:
-                        try:
-                            inchi_f = Chem.MolToInchi(fm, options='/FixedH')
-                        except Exception:
-                            print("No Inchi")
-                            continue
+                    
+                    
 
                     for k, atom in enumerate(fm.GetAtoms()):
                         atom.SetAtomMapNum(idx_to_mapnum[k])
@@ -179,6 +199,8 @@ def next_nodes(packed):
 
 
                     if inchi_f == inchi2 or found_frag:
+                        if no_duplicates:
+                            inchi_set_local.remove(inchi_f)
                         follow_on_id = next(local_id_counter)
                         found_target = True
                         found_event.set()
@@ -208,22 +230,34 @@ def next_nodes(packed):
         if found_target and not force_depth:
             break
     # del mol
-    return results
+    global_var_updates = (unique_mech_count_local, test_set_mech_count_local, inchi_set_local)
+    
+    return (results, global_var_updates)
 
 
 
 
 
-def run_parallel(r_smiles, p_smiles, job_name):
+def run_parallel(r_smiles, p_smiles, job_name, no_duplicates=False, force_depth= False, depth_limit=3, follow_on_enabled=True, aromatic=True, screen_charges_enabled=False, hypervalent_enabled=False):
+
+    # Set up
+    sm_node = None
+    global inchis_set
+    inchis_set = set()
+    global unique_bitvectors
+    unique_bitvectors = set()
+    unique_mech_count = 0
+    test_set_mech_count = 0
+    start_time_total = time.time()
+
+    with open("unique_positive_bitvectors.txt", "r") as f:
+        for line in f:
+            unique_bitvectors.add(tuple(np.int64(x) for x in line.strip().split(',')))
 
     # +
     # Parameters
-    force_depth = False
-    depth_limit = 3
+    # Now featured as arguments
     force_correct_last_step = True
-    aromatic = True
-    follow_on_enabled = True
-
     # Initialise variables
     step_no = 0
     product_nodes = []
@@ -232,6 +266,7 @@ def run_parallel(r_smiles, p_smiles, job_name):
     unique_id = 0
     last_save = time.time()
     fragment = False
+
 
     # --- Initial molecules ---
     sm_smiles = r_smiles
@@ -278,13 +313,13 @@ def run_parallel(r_smiles, p_smiles, job_name):
     def init_worker():
         global clf
         clf = xgboost.XGBClassifier()
-        clf.load_model('models/v63/xg_model.json')
+        clf.load_model('models/v81/xg_model.json')
         RDLogger.DisableLog("rdApp.*")
 
 
 
     while step_no < depth_limit:
-        product_count = 0
+
         start_t = time.time()
         print(f'step no {step_no + 1}')
         
@@ -297,7 +332,8 @@ def run_parallel(r_smiles, p_smiles, job_name):
                 force_depth,
                 force_correct_last_step,
                 follow_on_enabled, 
-                fragment
+                fragment,
+                no_duplicates
             )
             for int_node in nodes
             if not hasattr(int_node, "product")
@@ -306,7 +342,10 @@ def run_parallel(r_smiles, p_smiles, job_name):
         with Manager() as manager:
             found_event = manager.Event()
             with Pool(processes=cpu_count(), initializer=init_worker) as pool:
-                outputs = pool.map(next_nodes, [(task, found_event) for task in tasks])
+                all_outputs = pool.map(next_nodes, [(task, found_event) for task in tasks])
+        
+        outputs = [a[0] for a in all_outputs]
+        gbl_updates = [a[1] for a in all_outputs]
 
 
 
@@ -365,6 +404,12 @@ def run_parallel(r_smiles, p_smiles, job_name):
                     if not force_depth:
                         signal_break = True
 
+        for update in gbl_updates:
+            unique_mech_count += update[0]
+            test_set_mech_count += update[1]
+            for inchi_u in update[2]:
+                inchis_set.add(inchi_u)
+
         if signal_break:
             break
         
@@ -404,7 +449,11 @@ def run_parallel(r_smiles, p_smiles, job_name):
             for pre, fill, node in RenderTree(sm_node):
                 f.write(f"{pre}{node.name} - {node.smiles} \n")  # <<< CHANGED
                 if hasattr(node, "mech"):
-                    f.write(f" {pre}Mechanism: {node.mech}\n")
+                    f.write(f"{pre}Mechanism: {node.mech}\n")
 
     save_tree(None, None, job_name, product_nodes)
+    print(f"Total time taken: {time.time() - start_time_total:.2f} seconds")
+    print(f"Unique mechanisms found: {unique_mech_count}")
+    print(f"Test set mechanisms found: {test_set_mech_count}")
+
     return None
