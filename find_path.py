@@ -7,10 +7,10 @@ import joblib
 import sys
 import time
 from anytree import Node, RenderTree
-from rules import run_next_step
-from next_step import follow_on
+from shared.rules import run_next_step
+from shared.next_step import follow_on
 import helper
-from ml_helper import make_fingerprint
+from shared.ml_helper import make_fingerprint
 import xgboost
 import os
 import pickle

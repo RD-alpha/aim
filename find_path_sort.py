@@ -21,9 +21,8 @@ import joblib
 import sys
 import time
 from anytree import Node, RenderTree
-from rules import execute_step
+from shared.ml_helper import make_fingerprint
 import helper
-from ml_helper import make_fingerprint
 import xgboost
 import signal
 import pickle

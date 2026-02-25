@@ -6,9 +6,9 @@ import sys
 import time
 from anytree import Node, RenderTree
 from anytree.search import find
-from rules import run_next_step
-from next_step import follow_on
-from ml_helper import make_fingerprint
+from shared.rules import run_next_step
+from shared.next_step import follow_on
+from shared.ml_helper import make_fingerprint
 import xgboost
 import os
 import pickle
@@ -84,7 +84,7 @@ def next_nodes(packed):
         idx_to_mapnum[i] = m
     try:
         product_mols, mechs, mol_inp = run_next_step(
-            smiles, aromatic, True, None
+            smiles, aromatic, True, None, False, False
         )
         #print(len(product_mols), "products generated")
     except Exception:
@@ -253,11 +253,11 @@ def run_parallel(r_smiles, p_smiles, job_name):
 
     # +
     # Parameters
-    force_depth = False
-    depth_limit = 7
+    force_depth = True
+    depth_limit = 2
     force_correct_last_step = True
     aromatic = True
-    follow_on_enabled = True
+    follow_on_enabled = False
 
     # Initialise variables
     step_no = 0
