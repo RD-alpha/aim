@@ -46,6 +46,10 @@ SCRATCH=/scratch/$USER/$SLURM_JOB_ID
 mkdir -p $SCRATCH
 export SCRATCH
 
+
+export OPENBLAS_NUM_THREADS=1
+export OMP_NUM_THREADS=1
+
 # Ensure a submission-side slurm output directory exists (helpful if submitting from shared filesystem)
 mkdir -p "$SLURM_SUBMIT_DIR"/slurm_out 2>/dev/null || true
 

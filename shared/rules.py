@@ -52,7 +52,6 @@ def screen_charges(list_mol, mechanisms, charge = 0):
                 updated_mech.append(mechanisms[idx])
         return (clean_list, updated_mech)
     else:
-        print('No screening')
         return (list_mol, mechanisms)
 
 
@@ -212,6 +211,8 @@ def prepare_molecule(mol, hypervalent_enabled = True):
     identify_acidic_CH(mol)
     identify_sink(mol, hypervalent_enabled=hypervalent_enabled)
     identify_source(mol)
+    for a in mol.GetAtoms():
+        a.SetNoImplicit(False)
     return None
 
 def b_to_a(mol, i, j):
@@ -264,7 +265,6 @@ def transfer_proton(mol, j, i):
             a.SetNoImplicit(True)
     a2 = p_mol.GetAtomWithIdx(i)
     a2.SetFormalCharge(a2.GetFormalCharge() + 1)
-    print(a2.GetNoImplicit())
     if a2.GetNumExplicitHs() > 0 or a2.GetFormalCharge() == 0:
         a2.SetNumExplicitHs(a2.GetNumExplicitHs() + 1)
     return p_mol

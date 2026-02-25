@@ -64,7 +64,7 @@ def prepare_atoms(atom, hypervalent_enabled = True):
                 break
     return None
 
-def follow_on(next_mol, mech, model, screen_charges_enabled = True, hypervalent_enabled = True):
+def follow_on(next_mol, mech, model, screen_charges_enabled = False, hypervalent_enabled = True):
     clf = model
     smiles_list = []
     accepted_follow_on = []

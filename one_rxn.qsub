@@ -7,7 +7,7 @@
 
 #! sbatch directives begin here ###############################
 #! Name of the job:
-#SBATCH -J Extended_reactions
+#SBATCH -J Netizescu
 #! Which project should be charged:
 #SBATCH -p CLUSTER
 #! How many whole nodes should be allocated?

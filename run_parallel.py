@@ -84,7 +84,7 @@ def next_nodes(packed):
         idx_to_mapnum[i] = m
     try:
         product_mols, mechs, mol_inp = run_next_step(
-            smiles, aromatic, True, None, False, False
+            smiles, aromatic, True, None, False, True
         )
         #print(len(product_mols), "products generated")
     except Exception:
