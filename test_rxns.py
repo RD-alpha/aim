@@ -3,7 +3,7 @@ import csv
 from run_parallel import run_parallel
 import numpy as np
 
-no_duplicates = False
+no_duplicates = True
 force_depth = False
 depth_limit = 3
 follow_on_enabled = True
@@ -14,11 +14,11 @@ hypervalent_enabled = False
 
 total_rxns = 31364
 
-num_sample = 10
+num_sample = 25
 
 line_nums = np.sort(np.random.choice(np.arange(1,total_rxns+1), size=num_sample, replace=False)+1)
 
-# line_nums = [5295]
+# line_nums = [495, 837, 2442, 2779, 4057, 4918, 5777, 6864, 8572, 8932, 9037, 10096, 13512, 20516, 26179]
 
 with open("mech-USPTO-31k.csv", 'r') as f:
 	reader = csv.reader(f)

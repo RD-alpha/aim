@@ -313,7 +313,7 @@ def run_parallel(r_smiles, p_smiles, job_name, no_duplicates=False, force_depth=
     def init_worker():
         global clf
         clf = xgboost.XGBClassifier()
-        clf.load_model('models/v81/xg_model.json')
+        clf.load_model('models/v81f2/xg_model.json')
         RDLogger.DisableLog("rdApp.*")
 
 

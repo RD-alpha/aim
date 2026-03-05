@@ -13,7 +13,6 @@ electronegativity_dict = electronegativity()
 
 
 def prepare_atoms(atom, hypervalent_enabled = True):
-
     # Look for hydrides - M-H bond
     if electronegativity_dict[atom.GetAtomicNum()] < 2.05 and atom.GetFormalCharge() < 0 and atom.GetTotalNumHs() > 0:
         atom.SetNumExplicitHs(atom.GetTotalNumHs())
@@ -64,11 +63,11 @@ def prepare_atoms(atom, hypervalent_enabled = True):
                 break
     return None
 
-def follow_on(next_mol, mech, model, screen_charges_enabled = False, hypervalent_enabled = True):
+def follow_on(next_mol, mech, model, screen_charges_enabled = True, hypervalent_enabled = True):
+    fp_list = []
     clf = model
     smiles_list = []
     accepted_follow_on = []
-    fp_list = []
     for a in next_mol.GetAtoms():
         a.ClearProp('source')
         a.ClearProp('sink')
@@ -95,7 +94,7 @@ def follow_on(next_mol, mech, model, screen_charges_enabled = False, hypervalent
         if pred:
             accepted_follow_on.append(product)
             smiles_list.append(Chem.MolToSmiles(product))
+            fp_list.append(fp)
         #print(f'Product {i}, predicted: {pred}')
-        fp_list.append(fp)
     
     return (accepted_follow_on, smiles_list, fp_list)

@@ -1,8 +1,9 @@
 from rdkit import Chem # pyright: ignore[reportMissingImports]
 from datetime import datetime
+import sys
 ptable = Chem.GetPeriodicTable()
 from .electronegativity import electronegativity
-from rdkit.Chem import Draw
+
 electronegativity_dict = electronegativity()
 
 
@@ -52,6 +53,7 @@ def screen_charges(list_mol, mechanisms, charge = 0):
                 updated_mech.append(mechanisms[idx])
         return (clean_list, updated_mech)
     else:
+        # print('No screening')
         return (list_mol, mechanisms)
 
 
@@ -208,11 +210,11 @@ def identify_acidic_CH(mol):
                         break
 
 def prepare_molecule(mol, hypervalent_enabled = True):
+    for a in mol.GetAtoms():
+        a.SetNoImplicit(False)
     identify_acidic_CH(mol)
     identify_sink(mol, hypervalent_enabled=hypervalent_enabled)
     identify_source(mol)
-    for a in mol.GetAtoms():
-        a.SetNoImplicit(False)
     return None
 
 def b_to_a(mol, i, j):
@@ -402,7 +404,7 @@ def run_next_step(smiles, kekulise = False, cleanup = True, chain_mol = None, sc
     connected_mols, mechanisms, mol_inp = execute_step(mol_inp, kekulise, cleanup, screen_charges_enabled)
     return (connected_mols, mechanisms, mol_inp)
 
-def execute_step(mol_inp, kekulise = False, cleanup = False, screen_charges_enabled = False):
+def execute_step(mol_inp, kekulise = False, cleanup = False, screen_charges_enabled = True):
 
 
     connected_mols = []
@@ -595,20 +597,31 @@ def execute_step(mol_inp, kekulise = False, cleanup = False, screen_charges_enab
 
     if cleanup:
         connected_mols, mechanisms = clean_mol(connected_mols, mechanisms, mol_inp)
- 
+#   inchi = Chem.MolToInchi(mol_inp)
+#   charge = 0
+#   q = 0
+#   p = 0
+#    print(inchi)
+#    if '/q' in inchi:
+#        q_layer = inchi.split('/q')[1].split('/')[0].split(';')
+#        q = sum([int(q) if q!='' else 0 for q in q_layer])
+#        print(q_layer)
+#    if '/p' in inchi:
+#        p_layer = inchi.split('/p')[1].split('/')[0]
+#        p = int(p)
+#        print(p_layer)
+#    charge = q + p
     if screen_charges_enabled:
         charge = 0
         for atom in mol_inp.GetAtoms():
             charge += atom.GetFormalCharge()
         connected_mols, mechanisms = screen_charges(connected_mols, mechanisms, charge)
     idx = 0
- 
     for mol in connected_mols:
         try:
             Chem.SanitizeMol(mol)
         except:
             print('There was a sanitisation error')
-            print(f'The input molecule was: {Chem.MolToSmiles(mol_inp)}')
             timestamp = datetime.now().strftime("%d_%H%M%S")
             opts = Chem.Draw.rdMolDraw2D.MolDrawOptions()
             opts.addAtomIndices = True
