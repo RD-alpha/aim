@@ -5,7 +5,7 @@ import numpy as np
 
 no_duplicates = True
 force_depth = False
-depth_limit = 3
+depth_limit = 6
 follow_on_enabled = True
 aromatic = True
 screen_charges_enabled = False
@@ -18,7 +18,7 @@ num_sample = 25
 
 line_nums = np.sort(np.random.choice(np.arange(1,total_rxns+1), size=num_sample, replace=False)+1)
 
-# line_nums = [495, 837, 2442, 2779, 4057, 4918, 5777, 6864, 8572, 8932, 9037, 10096, 13512, 20516, 26179]
+line_nums = [10309, 15309, 16703, 16855, 17732]
 
 with open("mech-USPTO-31k.csv", 'r') as f:
 	reader = csv.reader(f)

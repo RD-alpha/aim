@@ -7,7 +7,7 @@
 
 #! sbatch directives begin here ###############################
 #! Name of the job:
-#SBATCH -J Acetal
+#SBATCH -J Extended
 #! Which project should be charged:
 #SBATCH -p CLUSTER
 #! How many whole nodes should be allocated?
@@ -17,7 +17,7 @@
 #! 3410 MiB of memory per CPU.
 #SBATCH --cpus-per-task=16
 #! How much wallclock time will be required?
-#SBATCH --time=12:50:00
+#SBATCH --time=30:50:00
 #! What types of email messages do you wish to receive?
 #SBATCH --mail-type=ALL
 #! Uncomment this to prevent the job from being requeued (e.g. if
