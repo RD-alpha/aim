@@ -3,10 +3,9 @@ from rdkit import Chem
 """
 Bitstring Representation:
 
-1. Charge Bitstring (3 bits):
+1. Charge Bitstring (2 bits):
    - [0]: Atom has a negative formal charge.
-   - [1]: Atom has a neutral formal charge.
-   - [2]: Atom has a positive formal charge.
+   - [1]: Atom has a positive formal charge.
 
 2. Hydrogen Count Bitstring (4 bits):
    - [0]: Atom has 0 hydrogens.
@@ -73,9 +72,9 @@ ___________________________________
 - Aromaticity Bitstring: 2 bits
 - Adjacency Bitstring: 9 bits
 _________________________________
-Atom Fingerprint Total: 36 bits
+Atom Fingerprint Total: 35 bits
 _________________________________
-36*4 = 144 bits for atoms
+35*4 = 140 bits for atoms
 - Bond Type Bitstring: 3 bits
 - Bond Fingerprint Total: 6 bits
 __________________________________
@@ -136,16 +135,14 @@ electronegativity_dict = {1: 2.2,
 
 def make_atom_fingerprint(atom, other_atom_idx=None):
     if atom is None:
-        return [0] * 36
+        return [0] * 35
 
     # Charge bitstring
-    charge_bitstring = [0] * 3
+    charge_bitstring = [0] * 2
     if atom.GetFormalCharge() < 0:
         charge_bitstring[0] = 1
-    elif atom.GetFormalCharge() == 0:
-        charge_bitstring[1] = 1
     elif atom.GetFormalCharge() > 0:
-        charge_bitstring[2] = 1
+        charge_bitstring[1] = 1
 
     # H bitstring
     h_number_bitstring = [0] * 4
