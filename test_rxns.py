@@ -4,10 +4,10 @@ from run_parallel import run_parallel
 import numpy as np
 
 no_duplicates = True
-force_depth = False
-depth_limit = 6
+force_depth = True
+depth_limit = 5
 follow_on_enabled = True
-aromatic = True
+aromatic = False
 screen_charges_enabled = False
 hypervalent_enabled = False
 
@@ -17,8 +17,12 @@ total_rxns = 31364
 num_sample = 25
 
 line_nums = np.sort(np.random.choice(np.arange(1,total_rxns+1), size=num_sample, replace=False)+1)
+# 10309 - Paal Knoor time out
+# line_nums = [10309]
 
-line_nums = [10309, 15309, 16703, 16855, 17732]
+# line_nums = [1494, 9080, 15309, 16703]
+
+line_nums = [15205, 23156]
 
 with open("mech-USPTO-31k.csv", 'r') as f:
 	reader = csv.reader(f)

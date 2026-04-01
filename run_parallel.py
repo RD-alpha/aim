@@ -94,6 +94,8 @@ def next_nodes(packed):
         fp = np.array(make_fingerprint(mol_inp, mechs[i]))
         pred = clf.predict(fp.reshape(1, -1))[0]
         found_frag = False
+        if force_correct_last_step and pred == 0:
+            continue
         try:
             inchi1 = Chem.MolToInchi(product, options='/FixedH')
             if no_duplicates and inchi1 in inchis_set:
