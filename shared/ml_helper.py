@@ -1,4 +1,5 @@
 from rdkit import Chem
+import numpy as np
 
 """
 Bitstring Representation:
@@ -135,7 +136,7 @@ electronegativity_dict = {1: 2.2,
 
 def make_atom_fingerprint(atom, other_atom_idx=None):
     if atom is None:
-        return [0] * 36
+        return [np.nan] * 36
 
     # Charge bitstring
     charge_bitstring = [0] * 2
@@ -253,12 +254,12 @@ def make_bond_fingerprint(bond):
 
 def new_bond_fingerprint(mol, a1_idx, a2_idx):
     if a1_idx == None or a2_idx is None:
-        return [0] * 5
+        return [np.nan] * 5
     a1 = mol.GetAtomWithIdx(a1_idx)
     a2 = mol.GetAtomWithIdx(a2_idx)
     # ring size bitstring
     # [3, 4, 5, 6, 7+]
-    ring_size_bitstring = [0] * 5
+    ring_size_bitstring = [np.nan] * 5
     fragments = Chem.GetMolFrags(mol)
     for f in fragments:
         if a1.GetIdx() in f and a2.GetIdx() in f:
@@ -283,7 +284,7 @@ def new_bond_fingerprint(mol, a1_idx, a2_idx):
 
 
 def make_fingerprint(sm, mech):
-    mech_type = [0] * 11
+    mech_type = [np.nan] * 11
     mech_type[mech[0]] = 1
     atom_fps = []
     for i in range(1, 5):
@@ -299,11 +300,11 @@ def make_fingerprint(sm, mech):
     if mech[3] and mech[1]:
         b1 = make_bond_fingerprint(sm.GetBondBetweenAtoms(mech[1], mech[3]))
     else:
-        b1 = [0] * 4
+        b1 = [np.nan] * 4
     if mech[4] and mech[2]:
         b2 = make_bond_fingerprint(sm.GetBondBetweenAtoms(mech[2], mech[4]))
     else:
-        b2 = [0] * 4
+        b2 = [np.nan] * 4
     r = new_bond_fingerprint(sm, mech[1], mech[2])
     sum_finger_print = mech_type + atom_fps[0] + atom_fps[1] + atom_fps[2] + atom_fps[3] + b1 + b2 + r
     return sum_finger_print
