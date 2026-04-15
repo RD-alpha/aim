@@ -135,7 +135,7 @@ electronegativity_dict = {1: 2.2,
 
 def make_atom_fingerprint(atom, other_atom_idx=None):
     if atom is None:
-        return [0] * 35
+        return [0] * 36
 
     # Charge bitstring
     charge_bitstring = [0] * 2
@@ -226,9 +226,14 @@ def make_atom_fingerprint(atom, other_atom_idx=None):
             adjecency_bitstring[5] = 1
         elif electronegativity_dict[a.GetAtomicNum()] < 2.05:
             adjecency_bitstring[6] = 1
+
+    three_membered_ring_bitstring = [0] * 1
+    if atom.IsInRingSize(3):
+        three_membered_ring_bitstring[0] = 1
+
  
 
-    total_bit_string = charge_bitstring + h_number_bitstring + hybridization_bitstring + element_bitstring + aromatic_bits + adjecency_bitstring
+    total_bit_string = charge_bitstring + h_number_bitstring + hybridization_bitstring + element_bitstring + aromatic_bits + adjecency_bitstring + three_membered_ring_bitstring
     return total_bit_string
 
 def make_bond_fingerprint(bond):
