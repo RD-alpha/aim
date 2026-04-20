@@ -4,7 +4,7 @@ from run_parallel import run_parallel
 
 no_duplicates = True
 force_depth = False
-depth_limit = 10
+depth_limit = 6
 follow_on_enabled = True
 aromatic = False
 screen_charges_enabled = True
@@ -30,8 +30,11 @@ hypervalent_enabled = False
 # end_smiles = "C=C1CCC(C(C)C)C2=CC(C)CCC12.[OH3+]"
 
 # Biginelli
-sm_smiles = "[OH3+].NC(N)=O.O=CC1=CC=CC=C1.CCOC(=O)CC(C)=O"
-end_smiles = "CCOC(=O)C1=C(C)NC(=O)NC1c1ccccc1.O.O.[OH3+]"
+# sm_smiles = "[OH3+].NC(N)=O.O=CC1=CC=CC=C1.CCOC(=O)CC(C)=O"
+# end_smiles = "CCOC(=O)C1=C(C)NC(=O)NC1c1ccccc1.O.O.[OH3+]"
+
+sm_smiles ="[OH3+].CC=O.C=CC(=O)C1=CC=CC=C1"
+end_smiles = "O=CCCCC(=O)C1=CC=CC=C1"
 
 print("Starting SMILES:", sm_smiles)
 print("Ending SMILES:", end_smiles)

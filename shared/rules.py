@@ -26,7 +26,6 @@ def clean_mol(list_mol, mechanisms, original_mol = None):
 def screen_charges(list_mol, mechanisms, charge = 0):
     if charge == -1: # base mediated reaction will not have cationic intermediates
         clean_list = []
-        updated_mech = []
         for idx in range(len(list_mol)):
             mol = list_mol[idx]
             keep = True
@@ -35,12 +34,10 @@ def screen_charges(list_mol, mechanisms, charge = 0):
                     keep = False
                     break
             if keep:
-                clean_list.append(mol)
-                updated_mech.append(mechanisms[idx])
-        return (clean_list, updated_mech)
+                clean_list.append(idx)
+        return clean_list
     elif charge == 1: # acid mediated reaction will not have anionic intermediates
         clean_list = []
-        updated_mech = []
         for idx in range(len(list_mol)):
             mol = list_mol[idx]
             keep = True
@@ -49,9 +46,8 @@ def screen_charges(list_mol, mechanisms, charge = 0):
                     keep = False
                     break
             if keep:
-                clean_list.append(mol)
-                updated_mech.append(mechanisms[idx])
-        return (clean_list, updated_mech)
+                clean_list.append(idx)
+        return clean_list
     else:
         # print('No screening')
         return (list_mol, mechanisms)
@@ -401,8 +397,8 @@ def run_next_step(smiles, kekulise = False, cleanup = True, chain_mol = None, sc
             Chem.Kekulize(mol_inp, clearAromaticFlags=True)
         
     prepare_molecule(mol_inp, hypervalent_enabled=hypervalent_enabled)
-    connected_mols, mechanisms, mol_inp = execute_step(mol_inp, kekulise, cleanup, screen_charges_enabled)
-    return (connected_mols, mechanisms, mol_inp)
+    connected_mols, mechanisms, mol_inp, clean_list= execute_step(mol_inp, kekulise, cleanup, screen_charges_enabled)
+    return (connected_mols, mechanisms, mol_inp, clean_list)
 
 def execute_step(mol_inp, kekulise = False, cleanup = False, screen_charges_enabled = True):
 
@@ -611,11 +607,14 @@ def execute_step(mol_inp, kekulise = False, cleanup = False, screen_charges_enab
 #        p = int(p)
 #        print(p_layer)
 #    charge = q + p
+    
     if screen_charges_enabled:
         charge = 0
         for atom in mol_inp.GetAtoms():
             charge += atom.GetFormalCharge()
-        connected_mols, mechanisms = screen_charges(connected_mols, mechanisms, charge)
+        clean_list = screen_charges(connected_mols, mechanisms, charge)
+    else:
+        clean_list = list(range(len(connected_mols)))
     idx = 0
     for mol in connected_mols:
         try:
@@ -633,4 +632,4 @@ def execute_step(mol_inp, kekulise = False, cleanup = False, screen_charges_enab
             Chem.Kekulize(mol, clearAromaticFlags=True)
         idx += 1
     
-    return (connected_mols, mechanisms, mol_inp)
+    return (connected_mols, mechanisms, mol_inp, clean_list)

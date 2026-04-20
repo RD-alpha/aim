@@ -73,7 +73,16 @@ except:
                     node = line.split(":")[-1].split('.')[0].strip()
                     break
     except:
-        print("Could not find slurm output")
+        try:
+            with open(f'slurm-{slurm_id}.out', 'r') as f:
+                lines = f.readlines()
+                for line in lines:
+                    if "Running on master node:" in line:
+                        node = line.split(":")[-1].split('.')[0].strip()
+                        break
+        except:
+            print("Could not find slurm output")
+
 
 node_dir = f"/nodescratch/{node}/rd611"  # Adjust the node directory path if necessary
 save_dir = "./images"  # Directory to save the PNG image

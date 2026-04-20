@@ -83,12 +83,13 @@ def next_nodes(packed):
         i = atom.GetIdx()
         idx_to_mapnum[i] = m
     try:
-        product_mols, mechs, mol_inp = run_next_step(
-            smiles, aromatic, True, None, False, True
+        product_mols, mechs, mol_inp, clean_list = run_next_step(
+            smiles, aromatic, True, None, True, True
         )
         #print(len(product_mols), "products generated")
-    except Exception:
+    except Exception as e:
         print("Error in rule application")
+        print(e)
         return (results, (unique_mech_count_local, test_set_mech_count_local, inchi_set_local))
     for i, product in enumerate(product_mols):
         fp = np.array(make_fingerprint(mol_inp, mechs[i]))
@@ -136,7 +137,8 @@ def next_nodes(packed):
                     "parent":name,
                     "smiles":prod_smiles,               # <<< CHANGED
                     "mech":mechs[i],
-                    "product":True})
+                    "product":True
+                    })
             
             
         elif pred == 1:
@@ -146,17 +148,18 @@ def next_nodes(packed):
                 test_set_mech_count_local += 1
             else:
                 unique_mech_count_local += 1
-
+            
             prod_id = next(local_id_counter)
+            clean = i in clean_list
             results.append({
                 "parent_id": None,
                 "node_id": prod_id,
                 "parent": name,
                 "smiles": prod_smiles,
                 "mech": mechs[i],
-                "product": False
+                "product": False,
+                "pass_charge_screen": clean
             })
-            
 
             if follow_on_enabled:
                 #print(prod_smiles, mechs[i])
@@ -370,20 +373,23 @@ def run_parallel(r_smiles, p_smiles, job_name, no_duplicates=False, force_depth=
             for res in results:
                 node = temp_nodes[res["node_id"]]
 
-                if res["parent_id"] is None:
-                    parent_node = parent_node_master
-                else:
+                if res["parent_id"] is not None:
                     parent_node = temp_nodes[res["parent_id"]]
                     nodes_with_children[res["parent_id"]] = temp_nodes[res["parent_id"]]
-
-                node.parent = parent_node
+                    node.parent = parent_node
 
                 if res["product"]:
                     node.product = True
                     product_nodes.append(node)
                     if not force_depth:
                         signal_break = True
-            
+
+            for res in results:
+                if res["node_id"] in nodes_with_children or res["product"]:
+                    if "pass_charge_screen" in res and not res["pass_charge_screen"]:
+                        node = temp_nodes[res["node_id"]]
+                        node.parent = parent_node_master
+
             for res in results:
                 node = temp_nodes[res["node_id"]]
                 if res["parent_id"] is None:
@@ -405,6 +411,9 @@ def run_parallel(r_smiles, p_smiles, job_name, no_duplicates=False, force_depth=
                     product_nodes.append(node)
                     if not force_depth:
                         signal_break = True
+            
+            
+
 
         for update in gbl_updates:
             unique_mech_count += update[0]
