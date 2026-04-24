@@ -7,7 +7,7 @@
 
 #! sbatch directives begin here ###############################
 #! Name of the job:
-#SBATCH -J Biginelli
+#SBATCH -J Hantszch
 #! Which project should be charged:
 #SBATCH -p LONG
 #! How many whole nodes should be allocated?
@@ -68,6 +68,7 @@ echo -e "Changed directory to `pwd`.\n"
 JOBID=$SLURM_JOB_ID
 
 echo -e "JobID: $JOBID\n======"
+echo -e "Job name: $SLURM_JOB_NAME\n======"
 echo "Time: `date`"
 echo "Running on master node: `hostname`"
 echo "Current directory: `pwd`"

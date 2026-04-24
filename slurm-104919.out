@@ -1,0 +1,174 @@
+Changed directory to /home/rd611/aim.
+
+JobID: 104919
+======
+Time: Mon 20 Apr 18:16:43 BST 2026
+Running on master node: node-0-4.ziggy.ch.private.cam.ac.uk
+Current directory: /home/rd611/aim
+Scratch directory: /scratch/rd611/104919
+
+Executing command:
+==================
+python -u test_rxn.py
+
+/home/rd611/.conda/envs/venv/lib/python3.13/site-packages/xgboost/core.py:377: FutureWarning: Your system has an old version of glibc (< 2.28). We will stop supporting Linux distros with glibc older than 2.28 after **May 31, 2025**. Please upgrade to a recent Linux distro (with glibc >= 2.28) to use future versions of XGBoost.
+Note: You have installed the 'manylinux2014' variant of XGBoost. Certain features such as GPU algorithms or federated learning are not available. To use these features, please upgrade to a recent Linux distro with glibc 2.28+, and install the 'manylinux_2_28' variant.
+  warnings.warn(
+Starting SMILES: [OH3+].NC(N)=O.O=CC1=CC=CC=C1.CCOC(=O)CC(C)=O
+Ending SMILES: CCOC(=O)C1=C(C)NC(=O)NC1c1ccccc1.O.O.[OH3+]
+step no 1
+[18:16:45] WARNING: Omitted undefined stereo; Proton(s) added/removed
+
+step no 2
+step no 3
+step no 4
+[Checkpoint] Tree saved to /scratch/rd611/104919/104919
+step no 5
+There was a sanitisation error
+module 'rdkit.Chem' has no attribute 'Draw'
+cannot access local variable 'connected_mols' where it is not associated with a value
+There was a sanitisation error
+module 'rdkit.Chem' has no attribute 'Draw'
+cannot access local variable 'connected_mols' where it is not associated with a value
+There was a sanitisation error
+module 'rdkit.Chem' has no attribute 'Draw'
+cannot access local variable 'connected_mols' where it is not associated with a value
+There was a sanitisation error
+module 'rdkit.Chem' has no attribute 'Draw'
+cannot access local variable 'connected_mols' where it is not associated with a value
+There was a sanitisation error
+module 'rdkit.Chem' has no attribute 'Draw'
+cannot access local variable 'connected_mols' where it is not associated with a value
+There was a sanitisation error
+module 'rdkit.Chem' has no attribute 'Draw'
+cannot access local variable 'connected_mols' where it is not associated with a value
+There was a sanitisation error
+module 'rdkit.Chem' has no attribute 'Draw'
+cannot access local variable 'connected_mols' where it is not associated with a value
+There was a sanitisation error
+module 'rdkit.Chem' has no attribute 'Draw'
+cannot access local variable 'connected_mols' where it is not associated with a value
+There was a sanitisation error
+module 'rdkit.Chem' has no attribute 'Draw'
+cannot access local variable 'connected_mols' where it is not associated with a value
+There was a sanitisation error
+module 'rdkit.Chem' has no attribute 'Draw'
+cannot access local variable 'connected_mols' where it is not associated with a value
+There was a sanitisation error
+module 'rdkit.Chem' has no attribute 'Draw'
+cannot access local variable 'connected_mols' where it is not associated with a value
+There was a sanitisation error
+module 'rdkit.Chem' has no attribute 'Draw'
+cannot access local variable 'connected_mols' where it is not associated with a value
+There was a sanitisation error
+module 'rdkit.Chem' has no attribute 'Draw'
+cannot access local variable 'connected_mols' where it is not associated with a value
+There was a sanitisation error
+module 'rdkit.Chem' has no attribute 'Draw'
+cannot access local variable 'connected_mols' where it is not associated with a value
+There was a sanitisation error
+module 'rdkit.Chem' has no attribute 'Draw'
+cannot access local variable 'connected_mols' where it is not associated with a value
+There was a sanitisation error
+module 'rdkit.Chem' has no attribute 'Draw'
+cannot access local variable 'connected_mols' where it is not associated with a value
+There was a sanitisation error
+module 'rdkit.Chem' has no attribute 'Draw'
+cannot access local variable 'connected_mols' where it is not associated with a value
+There was a sanitisation error
+module 'rdkit.Chem' has no attribute 'Draw'
+cannot access local variable 'connected_mols' where it is not associated with a value
+There was a sanitisation error
+module 'rdkit.Chem' has no attribute 'Draw'
+cannot access local variable 'connected_mols' where it is not associated with a value
+There was a sanitisation error
+module 'rdkit.Chem' has no attribute 'Draw'
+cannot access local variable 'connected_mols' where it is not associated with a value
+There was a sanitisation error
+module 'rdkit.Chem' has no attribute 'Draw'
+cannot access local variable 'connected_mols' where it is not associated with a value
+There was a sanitisation error
+module 'rdkit.Chem' has no attribute 'Draw'
+cannot access local variable 'connected_mols' where it is not associated with a value
+There was a sanitisation error
+module 'rdkit.Chem' has no attribute 'Draw'
+cannot access local variable 'connected_mols' where it is not associated with a value
+There was a sanitisation error
+module 'rdkit.Chem' has no attribute 'Draw'
+cannot access local variable 'connected_mols' where it is not associated with a value
+There was a sanitisation error
+module 'rdkit.Chem' has no attribute 'Draw'
+cannot access local variable 'connected_mols' where it is not associated with a value
+There was a sanitisation error
+module 'rdkit.Chem' has no attribute 'Draw'
+cannot access local variable 'connected_mols' where it is not associated with a value
+There was a sanitisation error
+module 'rdkit.Chem' has no attribute 'Draw'
+cannot access local variable 'connected_mols' where it is not associated with a value
+There was a sanitisation error
+module 'rdkit.Chem' has no attribute 'Draw'
+cannot access local variable 'connected_mols' where it is not associated with a value
+There was a sanitisation error
+module 'rdkit.Chem' has no attribute 'Draw'
+cannot access local variable 'connected_mols' where it is not associated with a value
+There was a sanitisation error
+module 'rdkit.Chem' has no attribute 'Draw'
+cannot access local variable 'connected_mols' where it is not associated with a value
+There was a sanitisation error
+module 'rdkit.Chem' has no attribute 'Draw'
+cannot access local variable 'connected_mols' where it is not associated with a value
+There was a sanitisation error
+module 'rdkit.Chem' has no attribute 'Draw'
+cannot access local variable 'connected_mols' where it is not associated with a value
+There was a sanitisation error
+module 'rdkit.Chem' has no attribute 'Draw'
+cannot access local variable 'connected_mols' where it is not associated with a value
+There was a sanitisation error
+module 'rdkit.Chem' has no attribute 'Draw'
+cannot access local variable 'connected_mols' where it is not associated with a value
+There was a sanitisation error
+module 'rdkit.Chem' has no attribute 'Draw'
+cannot access local variable 'connected_mols' where it is not associated with a value
+There was a sanitisation error
+module 'rdkit.Chem' has no attribute 'Draw'
+cannot access local variable 'connected_mols' where it is not associated with a value
+There was a sanitisation error
+module 'rdkit.Chem' has no attribute 'Draw'
+cannot access local variable 'connected_mols' where it is not associated with a value
+There was a sanitisation error
+module 'rdkit.Chem' has no attribute 'Draw'
+cannot access local variable 'connected_mols' where it is not associated with a value
+There was a sanitisation error
+module 'rdkit.Chem' has no attribute 'Draw'
+cannot access local variable 'connected_mols' where it is not associated with a value
+There was a sanitisation error
+module 'rdkit.Chem' has no attribute 'Draw'
+cannot access local variable 'connected_mols' where it is not associated with a value
+There was a sanitisation error
+module 'rdkit.Chem' has no attribute 'Draw'
+cannot access local variable 'connected_mols' where it is not associated with a value
+There was a sanitisation error
+module 'rdkit.Chem' has no attribute 'Draw'
+cannot access local variable 'connected_mols' where it is not associated with a value
+There was a sanitisation error
+module 'rdkit.Chem' has no attribute 'Draw'
+cannot access local variable 'connected_mols' where it is not associated with a value
+There was a sanitisation error
+module 'rdkit.Chem' has no attribute 'Draw'
+cannot access local variable 'connected_mols' where it is not associated with a value
+There was a sanitisation error
+module 'rdkit.Chem' has no attribute 'Draw'
+cannot access local variable 'connected_mols' where it is not associated with a value
+There was a sanitisation error
+module 'rdkit.Chem' has no attribute 'Draw'
+cannot access local variable 'connected_mols' where it is not associated with a value
+There was a sanitisation error
+module 'rdkit.Chem' has no attribute 'Draw'
+cannot access local variable 'connected_mols' where it is not associated with a value
+There was a sanitisation error
+module 'rdkit.Chem' has no attribute 'Draw'
+cannot access local variable 'connected_mols' where it is not associated with a value
+Found the target molecule!
+srun: Job step aborted: Waiting up to 32 seconds for job step to finish.
+[2026-04-21T14:00:59.807] error: *** STEP 104919.0 ON node-0-4 CANCELLED AT 2026-04-21T14:00:59 DUE to SIGNAL Terminated ***
+[2026-04-21T14:00:59.807] error: *** JOB 104919 ON node-0-4 CANCELLED AT 2026-04-21T14:00:59 DUE to SIGNAL Terminated ***

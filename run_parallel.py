@@ -463,6 +463,7 @@ def run_parallel(r_smiles, p_smiles, job_name, no_duplicates=False, force_depth=
                     f.write(f"{pre}Mechanism: {node.mech}\n")
 
     save_tree(None, None, job_name, product_nodes)
+    save_tree(None, None, job_name+"total", [sm_node])
     print(f"Total time taken: {time.time() - start_time_total:.2f} seconds")
     print(f"Unique mechanisms found: {unique_mech_count}")
     print(f"Test set mechanisms found: {test_set_mech_count}")
