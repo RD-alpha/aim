@@ -4,7 +4,7 @@ from run_parallel import run_parallel
 
 no_duplicates = False
 force_depth = True
-depth_limit = 5
+depth_limit = 6
 follow_on_enabled = True
 aromatic = False
 screen_charges_enabled = True
@@ -46,6 +46,10 @@ hypervalent_enabled = False
 # Aldol
 sm_smiles = "CC(=O)CC(=O)OC.O=Cc1ccccc1.[OH3+]"
 end_smiles = "COC(=O)C(=Cc1ccccc1)C(C)=O.O.[OH3+]"
+
+# Aldol
+# sm_smiles = "CC(O)=CC(=O)OC.[OH3+].O=Cc1ccccc1"
+# end_smiles = "COC(=O)C(=Cc1ccccc1)C(C)=O.O.[OH3+]"
 
 print("Starting SMILES:", sm_smiles)
 print("Ending SMILES:", end_smiles)

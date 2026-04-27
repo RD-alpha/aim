@@ -149,7 +149,7 @@ def prepare_atoms(atom_i, hypervalent_enabled = True):
             atom.SetProp('sink', 'empty AO')
     return None
 
-def follow_on(next_mol, mech, model, screen_charges_enabled = True, hypervalent_enabled = True):
+def follow_on(next_mol, mech, model, screen_charges_enabled = True, hypervalent_enabled = True, clean_parent = True):
     fp_list = []
     clf = model
     smiles_list = []
@@ -170,7 +170,7 @@ def follow_on(next_mol, mech, model, screen_charges_enabled = True, hypervalent_
     for a in mech[1:]:
         if a is not None:
             prepare_atoms(next_mol.GetAtomWithIdx(a), hypervalent_enabled=hypervalent_enabled)
-    
+    connected_mols = []
     try:
         connected_mols, mechanism, mol_inp, clean_list = execute_step(next_mol, screen_charges_enabled=screen_charges_enabled)
     except Exception as e:
@@ -179,6 +179,15 @@ def follow_on(next_mol, mech, model, screen_charges_enabled = True, hypervalent_
         fp = np.array(make_fingerprint(mol_inp, mechanism[i]))
         pred = clf.predict(fp.reshape(1,-1))[0]
         if pred and i in clean_list:
+            # If we are relying on the follow-on reaction to satisfy charges, it should only be balanced
+            # by resonance arrows, not by 'reaction arrows'
+            if not clean_parent:
+               # print(mechanism[i])
+                if mechanism[i][0] not in [0, 1, 2, 3]:
+                    continue
+                if mechanism[i][2] not in [n_atom.GetIdx() for n_atom in mol_inp.GetAtomWithIdx(mechanism[i][1]).GetNeighbors()]:
+                    continue
+               # print("The above mechanism survived")
             accepted_follow_on.append(product)
             mechs_list.append(mechanism[i])
             smiles_list.append(Chem.MolToSmiles(product))

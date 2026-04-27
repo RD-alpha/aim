@@ -164,7 +164,7 @@ def next_nodes(packed):
             if follow_on_enabled:
                 #print(prod_smiles, mechs[i])
                 try:
-                    f_mols, f_mechs, f_fps = follow_on(product, mechs[i], clf)
+                    f_mols, f_mechs, f_fps = follow_on(product, mechs[i], clf, clean_parent=clean)
                 except Exception as e:
                     print(e)
                     continue
