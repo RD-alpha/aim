@@ -1,9 +1,8 @@
 from rdkit import Chem
 from .rules import execute_step
 from .ml_helper import make_fingerprint
-import xgboost
+from .rules_proton import run_next_step
 import numpy as np
-import os
 ptable = Chem.GetPeriodicTable()
 from .electronegativity import electronegativity
 
@@ -79,8 +78,7 @@ def prepare_atoms(atom_i, hypervalent_enabled = True):
    
 
     for atom in atom_list:
-        if electronegativity_dict[atom.GetAtomicNum()] > 2.55 and atom.GetTotalNumHs() > 0 and atom.GetFormalCharge() >= 0:
-            atom.SetProp('sink', 'proton')
+
         valence_electrons = ptable.GetNOuterElecs(atom.GetAtomicNum())
         lone_electrons = valence_electrons - atom.GetTotalValence() - atom.GetFormalCharge()
         num_bond_electrons = atom.GetTotalValence()*2
@@ -175,6 +173,28 @@ def follow_on(next_mol, mech, model, screen_charges_enabled = True, hypervalent_
         connected_mols, mechanism, mol_inp, clean_list = execute_step(next_mol, screen_charges_enabled=screen_charges_enabled)
     except Exception as e:
         print(e)
+
+
+    for a in next_mol.GetAtoms():
+        a.ClearProp('source')
+        a.ClearProp('sink')
+        if a.GetFormalCharge() == 0:
+            a.SetNoImplicit(False)
+    for b in next_mol.GetBonds():
+        b.ClearProp('source')
+        b.ClearProp('sink')
+        b.ClearProp('source_bond_atom')
+        b.ClearProp('sink_bond_atom')
+        b.ClearProp('source_other_atom')
+
+    try:
+        connected_mols_p, mechanism_p, _, clean_list_p = run_next_step(None, chain_mol = next_mol, screen_charges_enabled=screen_charges_enabled, hypervalent_enabled=hypervalent_enabled)
+        connected_mols = connected_mols + connected_mols_p
+        mechanism = mechanism + mechanism_p
+        clean_list = clean_list + clean_list_p
+    except Exception as e:
+        print(e)
+    
     for i, product in enumerate(connected_mols):
         fp = np.array(make_fingerprint(mol_inp, mechanism[i]))
         pred = clf.predict(fp.reshape(1,-1))[0]
