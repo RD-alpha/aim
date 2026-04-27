@@ -1,0 +1,437 @@
+Changed directory to /home/rd611/aim.
+
+JobID: 104976
+======
+Job name: Hantszch_aldol
+======
+Time: Mon 27 Apr 14:54:20 BST 2026
+Running on master node: node-0-3.ziggy.ch.private.cam.ac.uk
+Current directory: /home/rd611/aim
+Scratch directory: /scratch/rd611/104976
+
+Executing command:
+==================
+python -u test_rxn.py
+
+/home/rd611/.conda/envs/venv/lib/python3.13/site-packages/xgboost/core.py:377: FutureWarning: Your system has an old version of glibc (< 2.28). We will stop supporting Linux distros with glibc older than 2.28 after **May 31, 2025**. Please upgrade to a recent Linux distro (with glibc >= 2.28) to use future versions of XGBoost.
+Note: You have installed the 'manylinux2014' variant of XGBoost. Certain features such as GPU algorithms or federated learning are not available. To use these features, please upgrade to a recent Linux distro with glibc 2.28+, and install the 'manylinux_2_28' variant.
+  warnings.warn(
+Starting SMILES: CC(=O)CC(=O)OC.O=Cc1ccccc1.[OH3+]
+Ending SMILES: COC(=O)C(=Cc1ccccc1)C(C)=O.O.[OH3+]
+step no 1
+[14:54:22] WARNING: Omitted undefined stereo; Proton(s) added/removed
+
+step no 2
+step no 3
+step no 4
+step no 5
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Node('/SM/Mol 1/Mol 3/Mol 53/Mol 57/Mol 730/Mol 731/Mol 7535/Mol 7536/Mol 81170', mech=[8, 16, 3, 8, 9], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH2:9].[OH3+:17]')
+Node('/SM/Mol 1/Mol 3/Mol 53/Mol 57/Mol 730/Mol 731/Mol 7540/Mol 7541/Mol 81195', mech=[9, 15, 3, 8, None], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH3+:9].[OH2:17]')
+Node('/SM/Mol 1/Mol 3/Mol 53/Mol 57/Mol 730/Mol 731/Mol 7540/Mol 7541/Mol 81196', mech=[9, 16, 3, 8, None], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH2:9].[OH3+:17]')
+Node('/SM/Mol 1/Mol 3/Mol 53/Mol 57/Mol 730/Mol 731/Mol 7568/Mol 81207', mech=[8, 16, 3, 8, 9], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH2:9].[OH3+:17]')
+Node('/SM/Mol 1/Mol 3/Mol 53/Mol 57/Mol 730/Mol 731/Mol 7552/Mol 7554/Mol 81290', mech=[8, 16, 3, 8, 9], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH2:9].[OH3+:17]')
+Node('/SM/Mol 1/Mol 3/Mol 53/Mol 57/Mol 730/Mol 732/Mol 7572/Mol 7573/Mol 81335', mech=[8, 16, 3, 8, 9], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH2:9].[OH3+:17]')
+Node('/SM/Mol 1/Mol 4/Mol 78/Mol 79/Mol 881/Mol 882/Mol 9374/Mol 9375/Mol 96411', mech=[8, 16, 3, 8, 9], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH2:9].[OH3+:17]')
+Node('/SM/Mol 1/Mol 4/Mol 78/Mol 80/Mol 933/Mol 934/Mol 10589/Mol 10590/Mol 109863', mech=[8, 16, 3, 8, 9], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH2:9].[OH3+:17]')
+Node('/SM/Mol 1/Mol 4/Mol 78/Mol 81/Mol 979/Mol 980/Mol 11345/Mol 11346/Mol 117364', mech=[8, 16, 3, 8, 9], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH2:9].[OH3+:17]')
+Node('/SM/Mol 1/Mol 4/Mol 78/Mol 82/Mol 1002/Mol 1003/Mol 11498/Mol 11499/Mol 118298', mech=[8, 16, 3, 8, 9], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH2:9].[OH3+:17]')
+Node('/SM/Mol 1/Mol 4/Mol 78/Mol 83/Mol 1030/Mol 1031/Mol 12022/Mol 12023/Mol 123428', mech=[8, 16, 3, 8, 9], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH2:9].[OH3+:17]')
+Node('/SM/Mol 1/Mol 4/Mol 78/Mol 83/Mol 1034/Mol 12036/Mol 12037/Mol 123503', mech=[8, 16, 3, 8, 9], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH2:9].[OH3+:17]')
+Node('/SM/Mol 1/Mol 4/Mol 92/Mol 1044/Mol 1045/Mol 12129/Mol 12130/Mol 124042', mech=[8, 16, 3, 8, 9], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH2:9].[OH3+:17]')
+Node('/SM/Mol 1/Mol 5/Mol 99/Mol 101/Mol 1164/Mol 1165/Mol 13493/Mol 13494/Mol 134743', mech=[8, 16, 3, 8, 9], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH2:9].[OH3+:17]')
+Node('/SM/Mol 1/Mol 5/Mol 99/Mol 101/Mol 1164/Mol 1165/Mol 13504/Mol 13505/Mol 134870', mech=[9, 15, 3, 8, None], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH3+:9].[OH2:17]')
+Node('/SM/Mol 1/Mol 5/Mol 99/Mol 101/Mol 1164/Mol 1165/Mol 13504/Mol 13505/Mol 134871', mech=[9, 16, 3, 8, None], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH2:9].[OH3+:17]')
+Node('/SM/Mol 1/Mol 5/Mol 99/Mol 101/Mol 1164/Mol 1165/Mol 13534/Mol 134882', mech=[8, 16, 3, 8, 9], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH2:9].[OH3+:17]')
+Node('/SM/Mol 1/Mol 5/Mol 99/Mol 101/Mol 1164/Mol 1165/Mol 13513/Mol 13515/Mol 134965', mech=[8, 16, 3, 8, 9], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH2:9].[OH3+:17]')
+Node('/SM/Mol 1/Mol 5/Mol 102/Mol 104/Mol 1194/Mol 1195/Mol 13853/Mol 13854/Mol 137178', mech=[8, 16, 3, 8, 9], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH2:9].[OH3+:17]')
+Node('/SM/Mol 1/Mol 5/Mol 102/Mol 104/Mol 1194/Mol 1195/Mol 13858/Mol 13859/Mol 137203', mech=[9, 15, 3, 8, None], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH3+:9].[OH2:17]')
+Node('/SM/Mol 1/Mol 5/Mol 102/Mol 104/Mol 1194/Mol 1195/Mol 13858/Mol 13859/Mol 137204', mech=[9, 16, 3, 8, None], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH2:9].[OH3+:17]')
+Node('/SM/Mol 1/Mol 5/Mol 102/Mol 104/Mol 1194/Mol 1195/Mol 13886/Mol 137215', mech=[8, 16, 3, 8, 9], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH2:9].[OH3+:17]')
+Node('/SM/Mol 1/Mol 5/Mol 102/Mol 104/Mol 1194/Mol 1195/Mol 13870/Mol 13872/Mol 137298', mech=[8, 16, 3, 8, 9], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH2:9].[OH3+:17]')
+Node('/SM/Mol 1/Mol 5/Mol 102/Mol 104/Mol 1194/Mol 1196/Mol 13890/Mol 13891/Mol 137343', mech=[8, 16, 3, 8, 9], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH2:9].[OH3+:17]')
+Node('/SM/Mol 24/Mol 120/Mol 124/Mol 1424/Mol 1425/Mol 16954/Mol 16955/Mol 163891', mech=[8, 16, 3, 8, 9], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH2:9].[OH3+:17]')
+Node('/SM/Mol 24/Mol 120/Mol 124/Mol 1424/Mol 1425/Mol 16965/Mol 16966/Mol 164018', mech=[9, 15, 3, 8, None], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH3+:9].[OH2:17]')
+Node('/SM/Mol 24/Mol 120/Mol 124/Mol 1424/Mol 1425/Mol 16965/Mol 16966/Mol 164019', mech=[9, 16, 3, 8, None], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH2:9].[OH3+:17]')
+Node('/SM/Mol 24/Mol 120/Mol 124/Mol 1424/Mol 1425/Mol 16995/Mol 164030', mech=[8, 16, 3, 8, 9], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH2:9].[OH3+:17]')
+Node('/SM/Mol 24/Mol 120/Mol 124/Mol 1424/Mol 1425/Mol 16974/Mol 16976/Mol 164113', mech=[8, 16, 3, 8, 9], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH2:9].[OH3+:17]')
+Node('/SM/Mol 7/Mol 9/Mol 164/Mol 168/Mol 1887/Mol 1888/Mol 22600/Mol 22601/Mol 204956', mech=[8, 16, 3, 8, 9], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH2:9].[OH3+:17]')
+Node('/SM/Mol 7/Mol 9/Mol 164/Mol 168/Mol 1887/Mol 1888/Mol 22611/Mol 22612/Mol 205083', mech=[9, 15, 3, 8, None], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH3+:9].[OH2:17]')
+Node('/SM/Mol 7/Mol 9/Mol 164/Mol 168/Mol 1887/Mol 1888/Mol 22611/Mol 22612/Mol 205084', mech=[9, 16, 3, 8, None], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH2:9].[OH3+:17]')
+Node('/SM/Mol 7/Mol 9/Mol 164/Mol 168/Mol 1887/Mol 1888/Mol 22641/Mol 205095', mech=[8, 16, 3, 8, 9], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH2:9].[OH3+:17]')
+Node('/SM/Mol 7/Mol 9/Mol 164/Mol 168/Mol 1887/Mol 1888/Mol 22620/Mol 22622/Mol 205178', mech=[8, 16, 3, 8, 9], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH2:9].[OH3+:17]')
+Node('/SM/Mol 7/Mol 10/Mol 192/Mol 193/Mol 2116/Mol 2117/Mol 25593/Mol 25594/Mol 227050', mech=[8, 16, 3, 8, 9], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH2:9].[OH3+:17]')
+Node('/SM/Mol 7/Mol 10/Mol 192/Mol 194/Mol 2168/Mol 2169/Mol 26808/Mol 26809/Mol 240502', mech=[8, 16, 3, 8, 9], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH2:9].[OH3+:17]')
+Node('/SM/Mol 7/Mol 10/Mol 192/Mol 195/Mol 2214/Mol 2215/Mol 27564/Mol 27565/Mol 248003', mech=[8, 16, 3, 8, 9], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH2:9].[OH3+:17]')
+Node('/SM/Mol 7/Mol 10/Mol 192/Mol 196/Mol 2237/Mol 2238/Mol 27717/Mol 27718/Mol 248937', mech=[8, 16, 3, 8, 9], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH2:9].[OH3+:17]')
+Node('/SM/Mol 7/Mol 10/Mol 192/Mol 197/Mol 2265/Mol 2266/Mol 28241/Mol 28242/Mol 254067', mech=[8, 16, 3, 8, 9], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH2:9].[OH3+:17]')
+Node('/SM/Mol 7/Mol 10/Mol 192/Mol 197/Mol 2269/Mol 28255/Mol 28256/Mol 254142', mech=[8, 16, 3, 8, 9], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH2:9].[OH3+:17]')
+Node('/SM/Mol 7/Mol 10/Mol 206/Mol 2279/Mol 2280/Mol 28348/Mol 28349/Mol 254681', mech=[8, 16, 3, 8, 9], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH2:9].[OH3+:17]')
+Node('/SM/Mol 7/Mol 11/Mol 213/Mol 215/Mol 2399/Mol 2400/Mol 29712/Mol 29713/Mol 265382', mech=[8, 16, 3, 8, 9], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH2:9].[OH3+:17]')
+Node('/SM/Mol 7/Mol 11/Mol 213/Mol 215/Mol 2399/Mol 2400/Mol 29723/Mol 29724/Mol 265509', mech=[9, 15, 3, 8, None], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH3+:9].[OH2:17]')
+Node('/SM/Mol 7/Mol 11/Mol 213/Mol 215/Mol 2399/Mol 2400/Mol 29723/Mol 29724/Mol 265510', mech=[9, 16, 3, 8, None], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH2:9].[OH3+:17]')
+Node('/SM/Mol 7/Mol 11/Mol 213/Mol 215/Mol 2399/Mol 2400/Mol 29753/Mol 265521', mech=[8, 16, 3, 8, 9], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH2:9].[OH3+:17]')
+Node('/SM/Mol 7/Mol 11/Mol 213/Mol 215/Mol 2399/Mol 2400/Mol 29732/Mol 29734/Mol 265604', mech=[8, 16, 3, 8, 9], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH2:9].[OH3+:17]')
+Node('/SM/Mol 7/Mol 11/Mol 216/Mol 218/Mol 2429/Mol 2430/Mol 30072/Mol 30073/Mol 267817', mech=[8, 16, 3, 8, 9], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH2:9].[OH3+:17]')
+Node('/SM/Mol 7/Mol 11/Mol 216/Mol 218/Mol 2429/Mol 2430/Mol 30077/Mol 30078/Mol 267842', mech=[9, 15, 3, 8, None], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH3+:9].[OH2:17]')
+Node('/SM/Mol 7/Mol 11/Mol 216/Mol 218/Mol 2429/Mol 2430/Mol 30077/Mol 30078/Mol 267843', mech=[9, 16, 3, 8, None], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH2:9].[OH3+:17]')
+Node('/SM/Mol 7/Mol 11/Mol 216/Mol 218/Mol 2429/Mol 2430/Mol 30105/Mol 267854', mech=[8, 16, 3, 8, 9], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH2:9].[OH3+:17]')
+Node('/SM/Mol 7/Mol 11/Mol 216/Mol 218/Mol 2429/Mol 2430/Mol 30089/Mol 30091/Mol 267937', mech=[8, 16, 3, 8, 9], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH2:9].[OH3+:17]')
+Node('/SM/Mol 7/Mol 11/Mol 216/Mol 218/Mol 2429/Mol 2431/Mol 30109/Mol 30110/Mol 267982', mech=[8, 16, 3, 8, 9], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH2:9].[OH3+:17]')
+Node('/SM/Mol 25/Mol 234/Mol 238/Mol 2607/Mol 2608/Mol 32264/Mol 32265/Mol 283888', mech=[8, 16, 3, 8, 9], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH2:9].[OH3+:17]')
+Node('/SM/Mol 25/Mol 234/Mol 238/Mol 2607/Mol 2608/Mol 32269/Mol 32270/Mol 283913', mech=[9, 15, 3, 8, None], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH3+:9].[OH2:17]')
+Node('/SM/Mol 25/Mol 234/Mol 238/Mol 2607/Mol 2608/Mol 32269/Mol 32270/Mol 283914', mech=[9, 16, 3, 8, None], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH2:9].[OH3+:17]')
+Node('/SM/Mol 25/Mol 234/Mol 238/Mol 2607/Mol 2608/Mol 32297/Mol 283925', mech=[8, 16, 3, 8, 9], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH2:9].[OH3+:17]')
+Node('/SM/Mol 25/Mol 234/Mol 238/Mol 2607/Mol 2608/Mol 32281/Mol 32283/Mol 284008', mech=[8, 16, 3, 8, 9], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH2:9].[OH3+:17]')
+Node('/SM/Mol 25/Mol 234/Mol 238/Mol 2607/Mol 2609/Mol 32301/Mol 32302/Mol 284053', mech=[8, 16, 3, 8, 9], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH2:9].[OH3+:17]')
+Node('/SM/Mol 13/Mol 14/Mol 256/Mol 260/Mol 2875/Mol 2876/Mol 35820/Mol 35821/Mol 314294', mech=[8, 16, 3, 8, 9], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH2:9].[OH3+:17]')
+Node('/SM/Mol 13/Mol 14/Mol 256/Mol 260/Mol 2875/Mol 2876/Mol 35831/Mol 35832/Mol 314421', mech=[9, 15, 3, 8, None], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH3+:9].[OH2:17]')
+Node('/SM/Mol 13/Mol 14/Mol 256/Mol 260/Mol 2875/Mol 2876/Mol 35831/Mol 35832/Mol 314422', mech=[9, 16, 3, 8, None], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH2:9].[OH3+:17]')
+Node('/SM/Mol 13/Mol 14/Mol 256/Mol 260/Mol 2875/Mol 2876/Mol 35861/Mol 314433', mech=[8, 16, 3, 8, 9], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH2:9].[OH3+:17]')
+Node('/SM/Mol 13/Mol 14/Mol 256/Mol 260/Mol 2875/Mol 2876/Mol 35840/Mol 35842/Mol 314516', mech=[8, 16, 3, 8, 9], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH2:9].[OH3+:17]')
+Node('/SM/Mol 13/Mol 15/Mol 281/Mol 285/Mol 3169/Mol 3170/Mol 39621/Mol 39622/Mol 340911', mech=[8, 16, 3, 8, 9], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH2:9].[OH3+:17]')
+Node('/SM/Mol 13/Mol 15/Mol 281/Mol 285/Mol 3169/Mol 3170/Mol 39626/Mol 39627/Mol 340936', mech=[9, 15, 3, 8, None], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH3+:9].[OH2:17]')
+Node('/SM/Mol 13/Mol 15/Mol 281/Mol 285/Mol 3169/Mol 3170/Mol 39626/Mol 39627/Mol 340937', mech=[9, 16, 3, 8, None], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH2:9].[OH3+:17]')
+Node('/SM/Mol 13/Mol 15/Mol 281/Mol 285/Mol 3169/Mol 3170/Mol 39654/Mol 340948', mech=[8, 16, 3, 8, 9], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH2:9].[OH3+:17]')
+Node('/SM/Mol 13/Mol 15/Mol 281/Mol 285/Mol 3169/Mol 3170/Mol 39638/Mol 39640/Mol 341031', mech=[8, 16, 3, 8, 9], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH2:9].[OH3+:17]')
+Node('/SM/Mol 13/Mol 15/Mol 281/Mol 285/Mol 3169/Mol 3171/Mol 39658/Mol 39659/Mol 341076', mech=[8, 16, 3, 8, 9], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH2:9].[OH3+:17]')
+Node('/SM/Mol 13/Mol 16/Mol 300/Mol 302/Mol 3282/Mol 3283/Mol 41038/Mol 41039/Mol 352296', mech=[8, 16, 3, 8, 9], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH2:9].[OH3+:17]')
+Node('/SM/Mol 13/Mol 16/Mol 300/Mol 302/Mol 3282/Mol 3283/Mol 41049/Mol 41050/Mol 352423', mech=[9, 15, 3, 8, None], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH3+:9].[OH2:17]')
+Node('/SM/Mol 13/Mol 16/Mol 300/Mol 302/Mol 3282/Mol 3283/Mol 41049/Mol 41050/Mol 352424', mech=[9, 16, 3, 8, None], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH2:9].[OH3+:17]')
+Node('/SM/Mol 13/Mol 16/Mol 300/Mol 302/Mol 3282/Mol 3283/Mol 41079/Mol 352435', mech=[8, 16, 3, 8, 9], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH2:9].[OH3+:17]')
+Node('/SM/Mol 13/Mol 16/Mol 300/Mol 302/Mol 3282/Mol 3283/Mol 41058/Mol 41060/Mol 352518', mech=[8, 16, 3, 8, 9], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH2:9].[OH3+:17]')
+Node('/SM/Mol 13/Mol 16/Mol 303/Mol 305/Mol 3312/Mol 3313/Mol 41398/Mol 41399/Mol 354731', mech=[8, 16, 3, 8, 9], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH2:9].[OH3+:17]')
+Node('/SM/Mol 13/Mol 16/Mol 303/Mol 305/Mol 3312/Mol 3313/Mol 41403/Mol 41404/Mol 354756', mech=[9, 15, 3, 8, None], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH3+:9].[OH2:17]')
+Node('/SM/Mol 13/Mol 16/Mol 303/Mol 305/Mol 3312/Mol 3313/Mol 41403/Mol 41404/Mol 354757', mech=[9, 16, 3, 8, None], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH2:9].[OH3+:17]')
+Node('/SM/Mol 13/Mol 16/Mol 303/Mol 305/Mol 3312/Mol 3313/Mol 41431/Mol 354768', mech=[8, 16, 3, 8, 9], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH2:9].[OH3+:17]')
+Node('/SM/Mol 13/Mol 16/Mol 303/Mol 305/Mol 3312/Mol 3313/Mol 41415/Mol 41417/Mol 354851', mech=[8, 16, 3, 8, 9], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH2:9].[OH3+:17]')
+Node('/SM/Mol 13/Mol 16/Mol 303/Mol 305/Mol 3312/Mol 3314/Mol 41435/Mol 41436/Mol 354896', mech=[8, 16, 3, 8, 9], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH2:9].[OH3+:17]')
+Node('/SM/Mol 26/Mol 324/Mol 325/Mol 3425/Mol 3426/Mol 42782/Mol 42783/Mol 366279', mech=[8, 16, 3, 8, 9], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH2:9].[OH3+:17]')
+Node('/SM/Mol 26/Mol 324/Mol 326/Mol 3477/Mol 3478/Mol 43997/Mol 43998/Mol 379731', mech=[8, 16, 3, 8, 9], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH2:9].[OH3+:17]')
+Node('/SM/Mol 26/Mol 324/Mol 327/Mol 3523/Mol 3524/Mol 44753/Mol 44754/Mol 387232', mech=[8, 16, 3, 8, 9], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH2:9].[OH3+:17]')
+Node('/SM/Mol 26/Mol 324/Mol 328/Mol 3546/Mol 3547/Mol 44906/Mol 44907/Mol 388166', mech=[8, 16, 3, 8, 9], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH2:9].[OH3+:17]')
+Node('/SM/Mol 26/Mol 324/Mol 329/Mol 3574/Mol 3575/Mol 45430/Mol 45431/Mol 393296', mech=[8, 16, 3, 8, 9], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH2:9].[OH3+:17]')
+Node('/SM/Mol 26/Mol 324/Mol 329/Mol 3578/Mol 45444/Mol 45445/Mol 393371', mech=[8, 16, 3, 8, 9], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH2:9].[OH3+:17]')
+Node('/SM/Mol 26/Mol 338/Mol 3588/Mol 3589/Mol 45537/Mol 45538/Mol 393910', mech=[8, 16, 3, 8, 9], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH2:9].[OH3+:17]')
+Node('/SM/Mol 18/Mol 20/Mol 377/Mol 381/Mol 4346/Mol 4347/Mol 54914/Mol 54915/Mol 465088', mech=[8, 16, 3, 8, 9], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH2:9].[OH3+:17]')
+Node('/SM/Mol 18/Mol 20/Mol 377/Mol 381/Mol 4346/Mol 4347/Mol 54925/Mol 54926/Mol 465215', mech=[9, 15, 3, 8, None], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH3+:9].[OH2:17]')
+Node('/SM/Mol 18/Mol 20/Mol 377/Mol 381/Mol 4346/Mol 4347/Mol 54925/Mol 54926/Mol 465216', mech=[9, 16, 3, 8, None], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH2:9].[OH3+:17]')
+Node('/SM/Mol 18/Mol 20/Mol 377/Mol 381/Mol 4346/Mol 4347/Mol 54955/Mol 465227', mech=[8, 16, 3, 8, 9], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH2:9].[OH3+:17]')
+Node('/SM/Mol 18/Mol 20/Mol 377/Mol 381/Mol 4346/Mol 4347/Mol 54934/Mol 54936/Mol 465310', mech=[8, 16, 3, 8, 9], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH2:9].[OH3+:17]')
+Node('/SM/Mol 18/Mol 21/Mol 402/Mol 406/Mol 4640/Mol 4641/Mol 58715/Mol 58716/Mol 491705', mech=[8, 16, 3, 8, 9], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH2:9].[OH3+:17]')
+Node('/SM/Mol 18/Mol 21/Mol 402/Mol 406/Mol 4640/Mol 4641/Mol 58720/Mol 58721/Mol 491730', mech=[9, 15, 3, 8, None], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH3+:9].[OH2:17]')
+Node('/SM/Mol 18/Mol 21/Mol 402/Mol 406/Mol 4640/Mol 4641/Mol 58720/Mol 58721/Mol 491731', mech=[9, 16, 3, 8, None], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH2:9].[OH3+:17]')
+Node('/SM/Mol 18/Mol 21/Mol 402/Mol 406/Mol 4640/Mol 4641/Mol 58748/Mol 491742', mech=[8, 16, 3, 8, 9], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH2:9].[OH3+:17]')
+Node('/SM/Mol 18/Mol 21/Mol 402/Mol 406/Mol 4640/Mol 4641/Mol 58732/Mol 58734/Mol 491825', mech=[8, 16, 3, 8, 9], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH2:9].[OH3+:17]')
+Node('/SM/Mol 18/Mol 21/Mol 402/Mol 406/Mol 4640/Mol 4642/Mol 58752/Mol 58753/Mol 491870', mech=[8, 16, 3, 8, 9], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH2:9].[OH3+:17]')
+Node('/SM/Mol 18/Mol 22/Mol 427/Mol 428/Mol 4791/Mol 4792/Mol 60554/Mol 60555/Mol 506946', mech=[8, 16, 3, 8, 9], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH2:9].[OH3+:17]')
+Node('/SM/Mol 18/Mol 22/Mol 427/Mol 429/Mol 4843/Mol 4844/Mol 61769/Mol 61770/Mol 520398', mech=[8, 16, 3, 8, 9], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH2:9].[OH3+:17]')
+Node('/SM/Mol 18/Mol 22/Mol 427/Mol 430/Mol 4889/Mol 4890/Mol 62525/Mol 62526/Mol 527899', mech=[8, 16, 3, 8, 9], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH2:9].[OH3+:17]')
+Node('/SM/Mol 18/Mol 22/Mol 427/Mol 431/Mol 4912/Mol 4913/Mol 62678/Mol 62679/Mol 528833', mech=[8, 16, 3, 8, 9], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH2:9].[OH3+:17]')
+Node('/SM/Mol 18/Mol 22/Mol 427/Mol 432/Mol 4940/Mol 4941/Mol 63202/Mol 63203/Mol 533963', mech=[8, 16, 3, 8, 9], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH2:9].[OH3+:17]')
+Node('/SM/Mol 18/Mol 22/Mol 427/Mol 432/Mol 4944/Mol 63216/Mol 63217/Mol 534038', mech=[8, 16, 3, 8, 9], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH2:9].[OH3+:17]')
+Node('/SM/Mol 18/Mol 22/Mol 441/Mol 4954/Mol 4955/Mol 63309/Mol 63310/Mol 534577', mech=[8, 16, 3, 8, 9], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH2:9].[OH3+:17]')
+Node('/SM/Mol 27/Mol 448/Mol 450/Mol 5074/Mol 5075/Mol 64673/Mol 64674/Mol 545278', mech=[8, 16, 3, 8, 9], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH2:9].[OH3+:17]')
+Node('/SM/Mol 27/Mol 448/Mol 450/Mol 5074/Mol 5075/Mol 64684/Mol 64685/Mol 545405', mech=[9, 15, 3, 8, None], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH3+:9].[OH2:17]')
+Node('/SM/Mol 27/Mol 448/Mol 450/Mol 5074/Mol 5075/Mol 64684/Mol 64685/Mol 545406', mech=[9, 16, 3, 8, None], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH2:9].[OH3+:17]')
+Node('/SM/Mol 27/Mol 448/Mol 450/Mol 5074/Mol 5075/Mol 64714/Mol 545417', mech=[8, 16, 3, 8, 9], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH2:9].[OH3+:17]')
+Node('/SM/Mol 27/Mol 448/Mol 450/Mol 5074/Mol 5075/Mol 64693/Mol 64695/Mol 545500', mech=[8, 16, 3, 8, 9], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH2:9].[OH3+:17]')
+Node('/SM/Mol 27/Mol 451/Mol 453/Mol 5104/Mol 5105/Mol 65033/Mol 65034/Mol 547713', mech=[8, 16, 3, 8, 9], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH2:9].[OH3+:17]')
+Node('/SM/Mol 27/Mol 451/Mol 453/Mol 5104/Mol 5105/Mol 65038/Mol 65039/Mol 547738', mech=[9, 15, 3, 8, None], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH3+:9].[OH2:17]')
+Node('/SM/Mol 27/Mol 451/Mol 453/Mol 5104/Mol 5105/Mol 65038/Mol 65039/Mol 547739', mech=[9, 16, 3, 8, None], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH2:9].[OH3+:17]')
+Node('/SM/Mol 27/Mol 451/Mol 453/Mol 5104/Mol 5105/Mol 65066/Mol 547750', mech=[8, 16, 3, 8, 9], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH2:9].[OH3+:17]')
+Node('/SM/Mol 27/Mol 451/Mol 453/Mol 5104/Mol 5105/Mol 65050/Mol 65052/Mol 547833', mech=[8, 16, 3, 8, 9], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH2:9].[OH3+:17]')
+Node('/SM/Mol 27/Mol 451/Mol 453/Mol 5104/Mol 5106/Mol 65070/Mol 65071/Mol 547878', mech=[8, 16, 3, 8, 9], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH2:9].[OH3+:17]')
+[Checkpoint] Tree saved to /scratch/rd611/104976/104976
+step no 6
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Can't kekulize mol.  Unkekulized atoms: 0 1 2 3 6
+cannot access local variable 'connected_mols_p' where it is not associated with a value
+Can't kekulize mol.  Unkekulized atoms: 0 1 2 3 6
+cannot access local variable 'connected_mols_p' where it is not associated with a value
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Can't kekulize mol.  Unkekulized atoms: 0 1 2 3 6
+cannot access local variable 'connected_mols_p' where it is not associated with a value
+Can't kekulize mol.  Unkekulized atoms: 0 1 2 3 6
+cannot access local variable 'connected_mols_p' where it is not associated with a value
+Found the target molecule!
+Found the target molecule!
+Can't kekulize mol.  Unkekulized atoms: 0 1 2 3 6
+cannot access local variable 'connected_mols_p' where it is not associated with a value
+Can't kekulize mol.  Unkekulized atoms: 0 1 2 3 6
+cannot access local variable 'connected_mols_p' where it is not associated with a value
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Can't kekulize mol.  Unkekulized atoms: 0 1 2 3 6
+cannot access local variable 'connected_mols_p' where it is not associated with a value
+Can't kekulize mol.  Unkekulized atoms: 0 1 2 3 6
+cannot access local variable 'connected_mols_p' where it is not associated with a value
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Can't kekulize mol.  Unkekulized atoms: 0 1 2 3 6
+cannot access local variable 'connected_mols_p' where it is not associated with a value
+Can't kekulize mol.  Unkekulized atoms: 0 1 2 3 6
+cannot access local variable 'connected_mols_p' where it is not associated with a value
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Can't kekulize mol.  Unkekulized atoms: 0 1 2 3 6
+cannot access local variable 'connected_mols_p' where it is not associated with a value
+Can't kekulize mol.  Unkekulized atoms: 0 1 2 3 6
+cannot access local variable 'connected_mols_p' where it is not associated with a value
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!

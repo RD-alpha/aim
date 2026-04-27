@@ -174,27 +174,6 @@ def follow_on(next_mol, mech, model, screen_charges_enabled = True, hypervalent_
     except Exception as e:
         print(e)
 
-
-    for a in next_mol.GetAtoms():
-        a.ClearProp('source')
-        a.ClearProp('sink')
-        if a.GetFormalCharge() == 0:
-            a.SetNoImplicit(False)
-    for b in next_mol.GetBonds():
-        b.ClearProp('source')
-        b.ClearProp('sink')
-        b.ClearProp('source_bond_atom')
-        b.ClearProp('sink_bond_atom')
-        b.ClearProp('source_other_atom')
-
-    try:
-        connected_mols_p, mechanism_p, _, clean_list_p = run_next_step(None, chain_mol = next_mol, screen_charges_enabled=screen_charges_enabled, hypervalent_enabled=hypervalent_enabled)
-        connected_mols = connected_mols + connected_mols_p
-        mechanism = mechanism + mechanism_p
-        clean_list = clean_list + clean_list_p
-    except Exception as e:
-        print(e)
-    
     for i, product in enumerate(connected_mols):
         fp = np.array(make_fingerprint(mol_inp, mechanism[i]))
         pred = clf.predict(fp.reshape(1,-1))[0]
@@ -212,6 +191,22 @@ def follow_on(next_mol, mech, model, screen_charges_enabled = True, hypervalent_
             mechs_list.append(mechanism[i])
             smiles_list.append(Chem.MolToSmiles(product))
             fp_list.append(fp)
-        #print(f'Product {i}, predicted: {pred}')
+    
+    if clean_parent:
+        connected_mols_p = []
+
+        try:
+            connected_mols_p, mechanism_p, _ = run_next_step(None, chain_mol = next_mol, screen_charges_enabled=screen_charges_enabled, hypervalent_enabled=hypervalent_enabled)
+        except Exception as e:
+            print(e)
+        
+        for i, product in enumerate(connected_mols_p):
+            fp = np.array(make_fingerprint(mol_inp, mechanism_p[i]))
+            pred = clf.predict(fp.reshape(1,-1))[0]
+            if pred:
+                accepted_follow_on.append(product)
+                mechs_list.append(mechanism_p[i])
+                smiles_list.append(Chem.MolToSmiles(product))
+                fp_list.append(fp)
     
     return (accepted_follow_on, mechs_list, fp_list)

@@ -23,8 +23,9 @@ def clean_mol(list_mol, mechanisms, original_mol = None):
     return (clean_list, updated_mech)
 
 def screen_charges(list_mol, mechanisms, charge = 0):
+    new_mols = []
+    new_mechs = []
     if charge == -1: # base mediated reaction will not have cationic intermediates
-        clean_list = []
         for idx in range(len(list_mol)):
             mol = list_mol[idx]
             keep = True
@@ -33,10 +34,10 @@ def screen_charges(list_mol, mechanisms, charge = 0):
                     keep = False
                     break
             if keep:
-                clean_list.append(idx)
-        return clean_list
+                new_mols.append(list_mol[idx])
+                new_mechs.append(mechanisms[idx])
+        return (new_mols, new_mechs)
     elif charge == 1: # acid mediated reaction will not have anionic intermediates
-        clean_list = []
         for idx in range(len(list_mol)):
             mol = list_mol[idx]
             keep = True
@@ -45,11 +46,11 @@ def screen_charges(list_mol, mechanisms, charge = 0):
                     keep = False
                     break
             if keep:
-                clean_list.append(idx)
-        return clean_list
-    else:
-        # print('No screening')
-        return (list_mol, mechanisms)
+                new_mols.append(list_mol[idx])
+                new_mechs.append(mechanisms[idx])
+        return (new_mols, new_mechs)
+
+
 
 
 def identify_source(mol, rules = "all"):
@@ -234,32 +235,6 @@ def break_bond_sink(new_mol, order, a, b1, b2, mechanisms, connected_mols):
     return (mechanisms, connected_mols)
 
 
-def run_next_step(smiles, kekulise = False, cleanup = True, chain_mol = None, screen_charges_enabled = True, hypervalent_enabled = True):
-    if chain_mol is not None:
-        mol_inp = chain_mol
-        for a in mol_inp.GetAtoms():
-            a.ClearProp('source')
-            a.ClearProp('sink')
-            if a.GetFormalCharge() == 0:
-                a.SetNoImplicit(False)
-        for b in mol_inp.GetBonds():
-            b.ClearProp('source')
-            b.ClearProp('sink')
-            b.ClearProp('source_bond_atom')
-            b.ClearProp('sink_bond_atom')
-            b.ClearProp('source_other_atom')
-            b.ClearProp('sink_other_atom')
-    else:
-        mol_inp = Chem.MolFromSmiles(smiles)
-        Chem.SanitizeMol(mol_inp)
-        if mol_inp is None:
-            raise ValueError("Invalid SMILES string")
-        if kekulise:
-            Chem.Kekulize(mol_inp, clearAromaticFlags=True)
-        
-    prepare_molecule(mol_inp, hypervalent_enabled=hypervalent_enabled)
-    connected_mols, mechanisms, mol_inp, clean_list= execute_step(mol_inp, kekulise, cleanup, screen_charges_enabled)
-    return (connected_mols, mechanisms, mol_inp, clean_list)
 
 def execute_step(mol_inp, kekulise = False, cleanup = False, screen_charges_enabled = True):
 
@@ -338,9 +313,8 @@ def execute_step(mol_inp, kekulise = False, cleanup = False, screen_charges_enab
         charge = 0
         for atom in mol_inp.GetAtoms():
             charge += atom.GetFormalCharge()
-        clean_list = screen_charges(connected_mols, mechanisms, charge)
-    else:
-        clean_list = list(range(len(connected_mols)))
+        connected_mols, mechanisms = screen_charges(connected_mols, mechanisms, charge)
+    
     idx = 0
     for mol in connected_mols:
         try:
@@ -358,4 +332,32 @@ def execute_step(mol_inp, kekulise = False, cleanup = False, screen_charges_enab
             Chem.Kekulize(mol, clearAromaticFlags=True)
         idx += 1
     
-    return (connected_mols, mechanisms, mol_inp, clean_list)
+    return (connected_mols, mechanisms, mol_inp)
+
+
+def run_next_step(smiles, kekulise = False, cleanup = True, chain_mol = None, screen_charges_enabled = True, hypervalent_enabled = True):
+    if chain_mol is not None:
+        mol_inp = chain_mol
+        for a in mol_inp.GetAtoms():
+            a.ClearProp('source')
+            a.ClearProp('sink')
+            if a.GetFormalCharge() == 0:
+                a.SetNoImplicit(False)
+        for b in mol_inp.GetBonds():
+            b.ClearProp('source')
+            b.ClearProp('sink')
+            b.ClearProp('source_bond_atom')
+            b.ClearProp('sink_bond_atom')
+            b.ClearProp('source_other_atom')
+            b.ClearProp('sink_other_atom')
+    else:
+        mol_inp = Chem.MolFromSmiles(smiles)
+        Chem.SanitizeMol(mol_inp)
+        if mol_inp is None:
+            raise ValueError("Invalid SMILES string")
+        if kekulise:
+            Chem.Kekulize(mol_inp, clearAromaticFlags=True)
+        
+    prepare_molecule(mol_inp, hypervalent_enabled=hypervalent_enabled)
+    connected_mols, mechanisms, mol_inp = execute_step(mol_inp, kekulise, cleanup, screen_charges_enabled)
+    return (connected_mols, mechanisms, mol_inp)
