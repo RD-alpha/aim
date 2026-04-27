@@ -2,7 +2,7 @@ from run_parallel import run_parallel
 
 #Arguments are r_smiles, p_smiles, job_name, no_duplicates=False, force_depth= False, depth_limit=3, follow_on_enabled=True, aromatic=True, screen_charges_enabled=False, hypervalent_enabled=False
 
-no_duplicates = True
+no_duplicates = False
 force_depth = True
 depth_limit = 5
 follow_on_enabled = True
@@ -40,12 +40,12 @@ hypervalent_enabled = False
 # end_smiles = "O=CCCCC(=O)C1=CC=CC=C1"
 
 # Hantszch
-sm_smiles = "COC(=O)C=C(N)C.COC(=O)C(C(=O)C)=Cc1ccccc1.[OH3+]"
-end_smiles = "COC(=O)C1=C(C)NC(C)=C(C(=O)OC)C1c1ccccc1.O.[OH3+]"
+# sm_smiles = "COC(=O)C=C(N)C.COC(=O)C(C(=O)C)=Cc1ccccc1.[OH3+]"
+# end_smiles = "COC(=O)C1=C(C)NC(C)=C(C(=O)OC)C1c1ccccc1.O.[OH3+]"
 
 # Aldol
-# sm_smiles = "CC(=O)CC(=O)OC.O=Cc1ccccc1.[OH3+]"
-# end_smiles = "COC(=O)C(=Cc1ccccc1)C(C)=O.O.[OH3+]"
+sm_smiles = "CC(=O)CC(=O)OC.O=Cc1ccccc1.[OH3+]"
+end_smiles = "COC(=O)C(=Cc1ccccc1)C(C)=O.O.[OH3+]"
 
 print("Starting SMILES:", sm_smiles)
 print("Ending SMILES:", end_smiles)

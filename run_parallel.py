@@ -359,7 +359,9 @@ def run_parallel(r_smiles, p_smiles, job_name, no_duplicates=False, force_depth=
                 continue
             temp_nodes = {}
             nodes_with_children = {}
+            # node to which all new entries will be attached to
             parent_node_master = find(sm_node, lambda n: n.name == results[0]["parent"])
+            # Save each new entry as a standalone node
             for res in results:
                 unique_id += 1
 
@@ -372,45 +374,50 @@ def run_parallel(r_smiles, p_smiles, job_name, no_duplicates=False, force_depth=
             
             for res in results:
                 node = temp_nodes[res["node_id"]]
-
+                # Attach all follow on products to their respective parent
                 if res["parent_id"] is not None:
                     parent_node = temp_nodes[res["parent_id"]]
                     nodes_with_children[res["parent_id"]] = temp_nodes[res["parent_id"]]
                     node.parent = parent_node
-
-                if res["product"]:
-                    node.product = True
-                    product_nodes.append(node)
-                    if not force_depth:
-                        signal_break = True
+                # Terminate early if product is found and force_depth = False
+                    if "product" in res and res["product"]:
+                        node.product = True
+                        print(node)
+                        product_nodes.append(node)
+                        if not force_depth:
+                            signal_break = True
 
             for res in results:
-                if res["node_id"] in nodes_with_children or res["product"]:
-                    if "pass_charge_screen" in res and not res["pass_charge_screen"]:
+                # Look at all top level nodes
+                if res["parent_id"] is None:
+                    # add the 2-level trees
+                    if res["node_id"] in nodes_with_children:
                         node = temp_nodes[res["node_id"]]
                         node.parent = parent_node_master
-
-            for res in results:
-                node = temp_nodes[res["node_id"]]
-                if res["parent_id"] is None:
-                    if res["node_id"] in nodes_with_children:
+                    # add the top level nodes if they pass the charge screen, so they are leaf nodes
+                    if "pass_charge_screen" in res and res["pass_charge_screen"]:
+                        node = temp_nodes[res["node_id"]]
                         unique_id += 1
-                        tmp_node = Node(f"Mol {unique_id}",
-                        smiles=res["smiles"], 
-                        mech=res["mech"],
-                        parent=parent_node_master)
-
-                    parent_node = parent_node_master
-                else:
-                    parent_node = temp_nodes[res["parent_id"]]
-
-                node.parent = parent_node
-
-                if res["product"]:
-                    node.product = True
-                    product_nodes.append(node)
-                    if not force_depth:
-                        signal_break = True
+                        duplicate_node = Node(
+                            f"Mol {unique_id}",
+                            smiles=res["smiles"],
+                            mech=res["mech"],
+                            parent=parent_node_master
+                        )
+                    if "product" in res and res["product"]:
+                        node = temp_nodes[res["node_id"]]
+                        unique_id += 1
+                        duplicate_node = Node(
+                            f"Mol {unique_id}",
+                            smiles=res["smiles"],
+                            mech=res["mech"],
+                            parent=parent_node_master,
+                            product=True
+                        )
+                        print(duplicate_node)
+                        product_nodes.append(duplicate_node)
+                        if not force_depth:
+                            signal_break = True
             
             
 
@@ -462,8 +469,11 @@ def run_parallel(r_smiles, p_smiles, job_name, no_duplicates=False, force_depth=
                 if hasattr(node, "mech"):
                     f.write(f"{pre}Mechanism: {node.mech}\n")
 
+    for n in product_nodes:
+        print(n)
+
     save_tree(None, None, job_name, product_nodes)
-    save_tree(None, None, job_name+"total", [sm_node])
+    # save_tree(None, None, str(job_name) + "total", [sm_node])
     print(f"Total time taken: {time.time() - start_time_total:.2f} seconds")
     print(f"Unique mechanisms found: {unique_mech_count}")
     print(f"Test set mechanisms found: {test_set_mech_count}")

@@ -1,0 +1,77 @@
+Changed directory to /home/rd611/aim.
+
+JobID: 104961
+======
+Job name: Hantszch_aldol
+======
+Time: Fri 24 Apr 15:48:21 BST 2026
+Running on master node: node-0-4.ziggy.ch.private.cam.ac.uk
+Current directory: /home/rd611/aim
+Scratch directory: /scratch/rd611/104961
+
+Executing command:
+==================
+python -u test_rxn.py
+
+/home/rd611/.conda/envs/venv/lib/python3.13/site-packages/xgboost/core.py:377: FutureWarning: Your system has an old version of glibc (< 2.28). We will stop supporting Linux distros with glibc older than 2.28 after **May 31, 2025**. Please upgrade to a recent Linux distro (with glibc >= 2.28) to use future versions of XGBoost.
+Note: You have installed the 'manylinux2014' variant of XGBoost. Certain features such as GPU algorithms or federated learning are not available. To use these features, please upgrade to a recent Linux distro with glibc 2.28+, and install the 'manylinux_2_28' variant.
+  warnings.warn(
+Starting SMILES: CC(=O)CC(=O)OC.O=Cc1ccccc1.[OH3+]
+Ending SMILES: COC(=O)C(=Cc1ccccc1)C(C)=O.O.[OH3+]
+step no 1
+[15:48:23] WARNING: Omitted undefined stereo; Proton(s) added/removed
+
+step no 2
+step no 3
+step no 4
+step no 5
+There was a sanitisation error
+module 'rdkit.Chem' has no attribute 'Draw'
+cannot access local variable 'connected_mols' where it is not associated with a value
+There was a sanitisation error
+module 'rdkit.Chem' has no attribute 'Draw'
+cannot access local variable 'connected_mols' where it is not associated with a value
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+search is over
+Layer 1 took 0.20 seconds
+Layer 2 took 0.31 seconds
+Layer 3 took 1.30 seconds
+Layer 4 took 13.32 seconds
+Layer 5 took 155.68 seconds
+Node('/Mol 19558', mech=[8, 16, 2, 7, 8], product=True, smiles='[CH3:1][C:2]([C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1)=[O:9].[OH2:3].[OH3+:17]')
+Node('/Mol 19568', mech=[9, 15, 2, 7, None], product=True, smiles='[CH3:1][C:2]([C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1)=[O:9].[OH3+:3].[OH2:17]')
+Node('/Mol 19571', mech=[9, 16, 2, 7, None], product=True, smiles='[CH3:1][C:2]([C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1)=[O:9].[OH2:3].[OH3+:17]')
+Node('/Mol 19589', mech=[8, 15, 10, 3, 2], product=True, smiles='[CH3:1][C:2](=[O:9])[C:4](=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1)[C:5](=[O:6])[O:7][CH3:8].[OH3+:3].[OH2:17]')
+Node('/Mol 19591', mech=[8, 16, 10, 3, 2], product=True, smiles='[CH3:1][C:2](=[O:9])[C:4](=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1)[C:5](=[O:6])[O:7][CH3:8].[OH2:3].[OH3+:17]')
+Node('/Mol 30653', mech=[8, 16, 3, 8, 9], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5]([O:7][CH3:8])=[O:9])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH2:6].[OH3+:17]')
+Node('/Mol 30663', mech=[9, 15, 3, 8, None], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5]([O:7][CH3:8])=[O:9])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH3+:6].[OH2:17]')
+Node('/Mol 30666', mech=[9, 16, 3, 8, None], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5]([O:7][CH3:8])=[O:9])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH2:6].[OH3+:17]')
+Node('/Mol 30680', mech=[8, 15, 3, 8, 7], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5]([O:7][CH3:8])=[O:9])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH3+:6].[OH2:17]')
+Node('/Mol 30684', mech=[8, 16, 3, 8, 7], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5]([O:7][CH3:8])=[O:9])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH2:6].[OH3+:17]')
+Node('/Mol 61812', mech=[9, 15, 3, 8, None], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH3+:9].[OH2:17]')
+Node('/Mol 61815', mech=[9, 16, 3, 8, None], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH2:9].[OH3+:17]')
+Node('/Mol 61828', mech=[8, 16, 3, 8, 9], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH2:9].[OH3+:17]')
+Node('/Mol 62227', mech=[9, 15, 3, 8, None], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH3+:9].[OH2:17]')
+Node('/Mol 62230', mech=[9, 16, 3, 8, None], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH2:9].[OH3+:17]')
+Node('/Mol 62243', mech=[8, 16, 3, 8, 9], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH2:9].[OH3+:17]')
+Node('/Mol 62316', mech=[8, 16, 3, 8, 9], product=True, smiles='[CH3:1][C:2](=[O:3])[C:4]([C:5](=[O:6])[O:7][CH3:8])=[CH:10][c:11]1[cH:12][cH:13][cH:14][cH:15][cH:16]1.[OH2:9].[OH3+:17]')
+Terminating safely
+Total time taken: 171.33 seconds
+Unique mechanisms found: 76997
+Test set mechanisms found: 12462
