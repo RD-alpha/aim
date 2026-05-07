@@ -4,7 +4,7 @@ from run_parallel import run_parallel
 import numpy as np
 
 no_duplicates = True
-force_depth = True
+force_depth = False
 depth_limit = 3
 follow_on_enabled = True
 aromatic = True

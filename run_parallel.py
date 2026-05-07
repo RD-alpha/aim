@@ -67,7 +67,7 @@ def next_nodes(packed):
     inchi_set_local = set()
     local_id_counter = itertools.count()
     args, found_event = packed
-    smiles, name, aromatic, inchi2, force_depth, force_correct_last_step, follow_on_enabled, fragment, no_duplicates = args
+    smiles, name, aromatic, inchi2, force_depth, force_correct_last_step, follow_on_enabled, fragment, no_duplicates, screen_charges_enabled = args
     results = []
     found_target = False
     if (found_event.is_set() and not force_depth):
@@ -84,7 +84,7 @@ def next_nodes(packed):
         idx_to_mapnum[i] = m
     try:
         product_mols, mechs, mol_inp, clean_list = run_next_step(
-            smiles, aromatic, True, None, True, True
+            smiles, aromatic, True, None, screen_charges_enabled, True
         )
         #print(len(product_mols), "products generated")
     except Exception as e:
@@ -164,7 +164,7 @@ def next_nodes(packed):
             if follow_on_enabled:
                 #print(prod_smiles, mechs[i])
                 try:
-                    f_mols, f_mechs, f_fps = follow_on(product, mechs[i], clf, clean_parent=clean)
+                    f_mols, f_mechs, f_fps = follow_on(product, mechs[i], clf, screen_charges_enabled=screen_charges_enabled, clean_parent=clean)
                 except Exception as e:
                     print(e)
                     continue
@@ -338,7 +338,8 @@ def run_parallel(r_smiles, p_smiles, job_name, no_duplicates=False, force_depth=
                 force_correct_last_step,
                 follow_on_enabled, 
                 fragment,
-                no_duplicates
+                no_duplicates,
+                screen_charges_enabled
             )
             for int_node in nodes
             if not hasattr(int_node, "product")
