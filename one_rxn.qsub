@@ -7,7 +7,7 @@
 
 #! sbatch directives begin here ###############################
 #! Name of the job:
-#SBATCH -J Hantszch_aldol
+#SBATCH -J Heterocycle
 #! Which project should be charged:
 #SBATCH -p LONG
 #! How many whole nodes should be allocated?

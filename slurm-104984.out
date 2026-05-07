@@ -1,0 +1,53 @@
+Changed directory to /home/rd611/aim.
+
+JobID: 104984
+======
+Job name: Hantszch_aldol
+======
+Time: Tue 28 Apr 13:58:44 BST 2026
+Running on master node: node-0-4.ziggy.ch.private.cam.ac.uk
+Current directory: /home/rd611/aim
+Scratch directory: /scratch/rd611/104984
+
+Executing command:
+==================
+python -u test_rxn.py
+
+/home/rd611/.conda/envs/venv/lib/python3.13/site-packages/xgboost/core.py:377: FutureWarning: Your system has an old version of glibc (< 2.28). We will stop supporting Linux distros with glibc older than 2.28 after **May 31, 2025**. Please upgrade to a recent Linux distro (with glibc >= 2.28) to use future versions of XGBoost.
+Note: You have installed the 'manylinux2014' variant of XGBoost. Certain features such as GPU algorithms or federated learning are not available. To use these features, please upgrade to a recent Linux distro with glibc 2.28+, and install the 'manylinux_2_28' variant.
+  warnings.warn(
+Starting SMILES: COC(=O)C=C(N)C.COC(=O)C(C(=[OH+])C)=Cc1ccccc1
+Ending SMILES: COC(=O)C1=C(C)NC(C)=C(C(=O)OC)C1c1ccccc1.[OH3+]
+step no 1
+[13:58:46] WARNING: Proton(s) added/removed
+
+step no 2
+step no 3
+step no 4
+Found the target molecule!
+Node('/SM/Mol 39/Mol 45/Mol 462/Mol 463/Mol 3772/Mol 36148', mech=[8, 22, 4, 5, 14], product=True, smiles='[CH3:1][O:2][C:3](=[O:4])[C:5]1=[C:6]([CH3:8])[NH:7][C:14]([CH3:16])=[C:13]([C:11]([O:10][CH3:9])=[O:12])[CH:17]1[C:18]1=[CH:19][CH:20]=[CH:21][CH:22]=[CH:23]1.[OH3+:15]')
+step no 5
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Node('/Mol 322187/Mol 322192', mech=[4, 22, 1, None, None], product=True, smiles='[CH3:1][O:2][C:3](=[O:4])[C:5]1=[C:6]([CH3:8])[NH:7][C:14]([CH3:16])=[C:13]([C:11]([O:10][CH3:9])=[O:12])[CH:17]1[c:18]1[cH:19][cH:20][cH:21][cH:22][cH:23]1.[OH3+:15]')
+Node('/Mol 353792/Mol 353797', mech=[4, 22, 21, None, None], product=True, smiles='[CH3:1][O:2][C:3]([C:5]1=[C:6]([CH3:8])[NH:7][C:14]([CH3:16])=[C:13]([C:11]([O:10][CH3:9])=[O:12])[CH:17]1[c:18]1[cH:19][cH:20][cH:21][cH:22][cH:23]1)=[O:4].[OH3+:15]')
+Node('/Mol 355667/Mol 355672', mech=[4, 22, 1, None, None], product=True, smiles='[CH3:1][O:2][C:3](=[O:4])[C:5]1=[C:6]([CH3:8])[NH:7][C:14]([CH3:16])=[C:13]([C:11]([O:10][CH3:9])=[O:12])[CH:17]1[c:18]1[cH:19][cH:20][cH:21][cH:22][cH:23]1.[OH3+:15]')
+Node('/Mol 356576/Mol 356581', mech=[4, 22, 3, None, None], product=True, smiles='[CH3:1][O:2][C:3](=[O:4])[C:5]1=[C:6]([CH3:8])[NH:7][C:14]([CH3:16])=[C:13]([C:11]([O:10][CH3:9])=[O:12])[CH:17]1[c:18]1[cH:19][cH:20][cH:21][cH:22][cH:23]1.[OH3+:15]')
+[Checkpoint] Tree saved to /scratch/rd611/104984/104984
+search is over
+Layer 1 took 1.04 seconds
+Layer 2 took 3.28 seconds
+Layer 3 took 16.27 seconds
+Layer 4 took 197.57 seconds
+Layer 5 took 5530.43 seconds
+Node('/SM/Mol 39/Mol 45/Mol 462/Mol 463/Mol 3772/Mol 36148', mech=[8, 22, 4, 5, 14], product=True, smiles='[CH3:1][O:2][C:3](=[O:4])[C:5]1=[C:6]([CH3:8])[NH:7][C:14]([CH3:16])=[C:13]([C:11]([O:10][CH3:9])=[O:12])[CH:17]1[C:18]1=[CH:19][CH:20]=[CH:21][CH:22]=[CH:23]1.[OH3+:15]')
+Node('/SM/Mol 39/Mol 41/Mol 413/Mol 415/Mol 3281/Mol 3287/Mol 31961/Mol 31962/Mol 322187/Mol 322192', mech=[4, 22, 1, None, None], product=True, smiles='[CH3:1][O:2][C:3](=[O:4])[C:5]1=[C:6]([CH3:8])[NH:7][C:14]([CH3:16])=[C:13]([C:11]([O:10][CH3:9])=[O:12])[CH:17]1[c:18]1[cH:19][cH:20][cH:21][cH:22][cH:23]1.[OH3+:15]')
+Node('/SM/Mol 39/Mol 45/Mol 464/Mol 3623/Mol 3625/Mol 35216/Mol 35217/Mol 353792/Mol 353797', mech=[4, 22, 21, None, None], product=True, smiles='[CH3:1][O:2][C:3]([C:5]1=[C:6]([CH3:8])[NH:7][C:14]([CH3:16])=[C:13]([C:11]([O:10][CH3:9])=[O:12])[CH:17]1[c:18]1[cH:19][cH:20][cH:21][cH:22][cH:23]1)=[O:4].[OH3+:15]')
+Node('/SM/Mol 39/Mol 45/Mol 455/Mol 456/Mol 3642/Mol 3646/Mol 35406/Mol 35407/Mol 355667/Mol 355672', mech=[4, 22, 1, None, None], product=True, smiles='[CH3:1][O:2][C:3](=[O:4])[C:5]1=[C:6]([CH3:8])[NH:7][C:14]([CH3:16])=[C:13]([C:11]([O:10][CH3:9])=[O:12])[CH:17]1[c:18]1[cH:19][cH:20][cH:21][cH:22][cH:23]1.[OH3+:15]')
+Node('/SM/Mol 39/Mol 45/Mol 455/Mol 457/Mol 3662/Mol 3665/Mol 35523/Mol 35524/Mol 356576/Mol 356581', mech=[4, 22, 3, None, None], product=True, smiles='[CH3:1][O:2][C:3](=[O:4])[C:5]1=[C:6]([CH3:8])[NH:7][C:14]([CH3:16])=[C:13]([C:11]([O:10][CH3:9])=[O:12])[CH:17]1[c:18]1[cH:19][cH:20][cH:21][cH:22][cH:23]1.[OH3+:15]')
+Terminating safely
+Total time taken: 5756.97 seconds
+Unique mechanisms found: 533119
+Test set mechanisms found: 67629

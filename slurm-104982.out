@@ -1,0 +1,39 @@
+Changed directory to /home/rd611/aim.
+
+JobID: 104982
+======
+Job name: Hantszch_aldol
+======
+Time: Tue 28 Apr 11:21:28 BST 2026
+Running on master node: node-0-4.ziggy.ch.private.cam.ac.uk
+Current directory: /home/rd611/aim
+Scratch directory: /scratch/rd611/104982
+
+Executing command:
+==================
+python -u test_rxn.py
+
+/home/rd611/.conda/envs/venv/lib/python3.13/site-packages/xgboost/core.py:377: FutureWarning: Your system has an old version of glibc (< 2.28). We will stop supporting Linux distros with glibc older than 2.28 after **May 31, 2025**. Please upgrade to a recent Linux distro (with glibc >= 2.28) to use future versions of XGBoost.
+Note: You have installed the 'manylinux2014' variant of XGBoost. Certain features such as GPU algorithms or federated learning are not available. To use these features, please upgrade to a recent Linux distro with glibc 2.28+, and install the 'manylinux_2_28' variant.
+  warnings.warn(
+Starting SMILES: COC(=O)C=C(N)C.COC(=O)C(C(=O)C)=Cc1ccccc1.[OH3+]
+Ending SMILES: COC(=O)C1=C(C)NC(C)=C(C(=O)OC)C1c1ccccc1.O.[OH3+]
+step no 1
+[11:21:30] WARNING: Proton(s) added/removed
+
+step no 2
+step no 3
+step no 4
+step no 5
+Found the target molecule!
+Node('/SM/Mol 1/Mol 6/Mol 208/Mol 209/Mol 3551/Mol 3553/Mol 56875/Mol 56878/Mol 376855', mech=[8, 23, 4, 5, 7], product=True, smiles='[CH3:1][O:2][C:3](=[O:4])[C:5]1=[C:6]([CH3:8])[NH:7][C:14]([CH3:16])=[C:13]([C:11]([O:10][CH3:9])=[O:12])[CH:17]1[C:18]1=[CH:19][CH:20]=[CH:21][CH:22]=[CH:23]1.[OH2:15].[OH3+:24]')
+search is over
+Layer 1 took 1.02 seconds
+Layer 2 took 3.56 seconds
+Layer 3 took 48.31 seconds
+Layer 4 took 1800.69 seconds
+Node('/SM/Mol 1/Mol 6/Mol 208/Mol 209/Mol 3551/Mol 3553/Mol 56875/Mol 56878/Mol 376855', mech=[8, 23, 4, 5, 7], product=True, smiles='[CH3:1][O:2][C:3](=[O:4])[C:5]1=[C:6]([CH3:8])[NH:7][C:14]([CH3:16])=[C:13]([C:11]([O:10][CH3:9])=[O:12])[CH:17]1[C:18]1=[CH:19][CH:20]=[CH:21][CH:22]=[CH:23]1.[OH2:15].[OH3+:24]')
+Terminating safely
+Total time taken: 1892.74 seconds
+Unique mechanisms found: 332804
+Test set mechanisms found: 94107

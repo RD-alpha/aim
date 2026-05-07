@@ -6,7 +6,7 @@ no_duplicates = True
 force_depth = True
 depth_limit = 5
 follow_on_enabled = True
-aromatic = True
+aromatic = False
 screen_charges_enabled = True
 hypervalent_enabled = False
 
@@ -42,6 +42,8 @@ hypervalent_enabled = False
 # Hantszch
 sm_smiles = "COC(=O)C=C(N)C.COC(=O)C(C(=O)C)=Cc1ccccc1.[OH3+]"
 end_smiles = "COC(=O)C1=C(C)NC(C)=C(C(=O)OC)C1c1ccccc1.O.[OH3+]"
+sm_smiles = "COC(=O)C=C(N)C.COC(=O)C(C(=[OH+])C)=Cc1ccccc1.O"
+end_smiles = "COC(=O)C1=C(C)NC(C)=C(C(=O)OC)C1c1ccccc1.[OH3+].O"
 
 # Aldol
 # sm_smiles = "CC(=O)CC(=O)OC.O=Cc1ccccc1.[OH3+]"
@@ -50,6 +52,12 @@ end_smiles = "COC(=O)C1=C(C)NC(C)=C(C(=O)OC)C1c1ccccc1.O.[OH3+]"
 # Aldol
 # sm_smiles = "CC(O)=CC(=O)OC.[OH3+].O=Cc1ccccc1"
 # end_smiles = "COC(=O)C(=Cc1ccccc1)C(C)=O.O.[OH3+]"
+
+
+# Heterocycle
+
+sm_smiles = "c1(C(C)(C)C#N)ccccc1C#N.O.[OH3+].O"
+end_smiles= "CC1(C)C(=[OH+])NC(=O)c2ccccc21.N.O"
 
 print("Starting SMILES:", sm_smiles)
 print("Ending SMILES:", end_smiles)

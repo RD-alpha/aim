@@ -23,3 +23,179 @@ Ending SMILES: COC(=O)C1=C(C)NC(C)=C(C(=O)OC)C1c1ccccc1.O.[OH3+]
 step no 1
 step no 2
 step no 3
+step no 4
+step no 5
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Found the target molecule!
+Node('/Mol 405193/Mol 405198', mech=[4, 22, 3, None, None], product=True, smiles='[CH3:1][O:2][C:3](=[O:4])[C:5]1=[C:6]([CH3:8])[NH:7][C:14]([CH3:16])=[C:13]([C:11]([O:10][CH3:9])=[O:12])[CH:17]1[c:18]1[cH:19][cH:20][cH:21][cH:22][cH:23]1.[OH3+:15].[OH2:24]')
+Node('/Mol 405193/Mol 405199', mech=[4, 23, 3, None, None], product=True, smiles='[CH3:1][O:2][C:3](=[O:4])[C:5]1=[C:6]([CH3:8])[NH:7][C:14]([CH3:16])=[C:13]([C:11]([O:10][CH3:9])=[O:12])[CH:17]1[c:18]1[cH:19][cH:20][cH:21][cH:22][cH:23]1.[OH2:15].[OH3+:24]')
+Node('/Mol 791471/Mol 791476', mech=[4, 22, 1, None, None], product=True, smiles='[CH3:1][O:2][C:3](=[O:4])[C:5]1=[C:6]([CH3:8])[NH:7][C:14]([CH3:16])=[C:13]([C:11]([O:10][CH3:9])=[O:12])[CH:17]1[c:18]1[cH:19][cH:20][cH:21][cH:22][cH:23]1.[OH3+:15].[OH2:24]')
+Node('/Mol 791471/Mol 791477', mech=[4, 23, 1, None, None], product=True, smiles='[CH3:1][O:2][C:3](=[O:4])[C:5]1=[C:6]([CH3:8])[NH:7][C:14]([CH3:16])=[C:13]([C:11]([O:10][CH3:9])=[O:12])[CH:17]1[c:18]1[cH:19][cH:20][cH:21][cH:22][cH:23]1.[OH2:15].[OH3+:24]')
+Node('/Mol 795969/Mol 795974', mech=[4, 22, 3, None, None], product=True, smiles='[CH3:1][O:2][C:3](=[O:4])[C:5]1=[C:6]([CH3:8])[NH:7][C:14]([CH3:16])=[C:13]([C:11]([O:10][CH3:9])=[O:12])[CH:17]1[c:18]1[cH:19][cH:20][cH:21][cH:22][cH:23]1.[OH3+:15].[OH2:24]')
+Node('/Mol 795969/Mol 795975', mech=[4, 23, 3, None, None], product=True, smiles='[CH3:1][O:2][C:3](=[O:4])[C:5]1=[C:6]([CH3:8])[NH:7][C:14]([CH3:16])=[C:13]([C:11]([O:10][CH3:9])=[O:12])[CH:17]1[c:18]1[cH:19][cH:20][cH:21][cH:22][cH:23]1.[OH2:15].[OH3+:24]')
+Node('/SM/Mol 1/Mol 6/Mol 190/Mol 195/Mol 3290/Mol 3291/Mol 53179/Mol 813567', mech=[8, 22, 4, 5, 14], product=True, smiles='[CH3:1][O:2][C:3](=[O:4])[C:5]1=[C:6]([CH3:8])[NH:7][C:14]([CH3:16])=[C:13]([C:11]([O:10][CH3:9])=[O:12])[CH:17]1[C:18]1=[CH:19][CH:20]=[CH:21][CH:22]=[CH:23]1.[OH3+:15].[OH2:24]')
+Node('/SM/Mol 1/Mol 6/Mol 190/Mol 195/Mol 3290/Mol 3291/Mol 53179/Mol 813569', mech=[8, 23, 4, 5, 14], product=True, smiles='[CH3:1][O:2][C:3](=[O:4])[C:5]1=[C:6]([CH3:8])[NH:7][C:14]([CH3:16])=[C:13]([C:11]([O:10][CH3:9])=[O:12])[CH:17]1[C:18]1=[CH:19][CH:20]=[CH:21][CH:22]=[CH:23]1.[OH2:15].[OH3+:24]')
+Node('/SM/Mol 1/Mol 6/Mol 190/Mol 195/Mol 3290/Mol 3291/Mol 53180/Mol 813742', mech=[8, 23, 4, 5, 7], product=True, smiles='[CH3:1][O:2][C:3](=[O:4])[C:5]1=[C:6]([CH3:8])[NH:7][C:14]([CH3:16])=[C:13]([C:11]([O:10][CH3:9])=[O:12])[CH:17]1[C:18]1=[CH:19][CH:20]=[CH:21][CH:22]=[CH:23]1.[OH2:15].[OH3+:24]')
+Node('/SM/Mol 1/Mol 6/Mol 190/Mol 195/Mol 3290/Mol 3291/Mol 53181/Mol 813912', mech=[8, 23, 4, 5, 7], product=True, smiles='[CH3:1][O:2][C:3](=[O:4])[C:5]1=[C:6]([CH3:8])[NH:7][C:14]([CH3:16])=[C:13]([C:11]([O:10][CH3:9])=[O:12])[CH:17]1[C:18]1=[CH:19][CH:20]=[CH:21][CH:22]=[CH:23]1.[OH2:24].[OH3+:15]')
+Node('/SM/Mol 1/Mol 6/Mol 208/Mol 209/Mol 3551/Mol 3553/Mol 56875/Mol 56878/Mol 862061', mech=[8, 23, 4, 5, 7], product=True, smiles='[CH3:1][O:2][C:3](=[O:4])[C:5]1=[C:6]([CH3:8])[NH:7][C:14]([CH3:16])=[C:13]([C:11]([O:10][CH3:9])=[O:12])[CH:17]1[C:18]1=[CH:19][CH:20]=[CH:21][CH:22]=[CH:23]1.[OH2:15].[OH3+:24]')
+Node('/Mol 981453/Mol 981458', mech=[4, 22, 1, None, None], product=True, smiles='[CH3:1][O:2][C:3](=[O:4])[C:5]1=[C:6]([CH3:8])[NH:7][C:14]([CH3:16])=[C:13]([C:11]([O:10][CH3:9])=[O:12])[CH:17]1[c:18]1[cH:19][cH:20][cH:21][cH:22][cH:23]1.[OH3+:15].[OH2:24]')
+Node('/Mol 981453/Mol 981459', mech=[4, 23, 1, None, None], product=True, smiles='[CH3:1][O:2][C:3](=[O:4])[C:5]1=[C:6]([CH3:8])[NH:7][C:14]([CH3:16])=[C:13]([C:11]([O:10][CH3:9])=[O:12])[CH:17]1[c:18]1[cH:19][cH:20][cH:21][cH:22][cH:23]1.[OH2:15].[OH3+:24]')
+Node('/Mol 1368695/Mol 1368700', mech=[4, 22, 1, None, None], product=True, smiles='[CH3:1][O:2][C:3](=[O:4])[C:5]1=[C:6]([CH3:8])[NH:7][C:14]([CH3:16])=[C:13]([C:11]([O:10][CH3:9])=[O:12])[CH:17]1[c:18]1[cH:19][cH:20][cH:21][cH:22][cH:23]1.[OH3+:15].[OH2:24]')
+Node('/Mol 1368695/Mol 1368701', mech=[4, 23, 1, None, None], product=True, smiles='[CH3:1][O:2][C:3](=[O:4])[C:5]1=[C:6]([CH3:8])[NH:7][C:14]([CH3:16])=[C:13]([C:11]([O:10][CH3:9])=[O:12])[CH:17]1[c:18]1[cH:19][cH:20][cH:21][cH:22][cH:23]1.[OH2:15].[OH3+:24]')
+Node('/Mol 1755074/Mol 1755079', mech=[4, 22, 1, None, None], product=True, smiles='[CH3:1][O:2][C:3](=[O:4])[C:5]1=[C:6]([CH3:8])[NH:7][C:14]([CH3:16])=[C:13]([C:11]([O:10][CH3:9])=[O:12])[CH:17]1[c:18]1[cH:19][cH:20][cH:21][cH:22][cH:23]1.[OH3+:15].[OH2:24]')
+Node('/Mol 1755074/Mol 1755080', mech=[4, 23, 1, None, None], product=True, smiles='[CH3:1][O:2][C:3](=[O:4])[C:5]1=[C:6]([CH3:8])[NH:7][C:14]([CH3:16])=[C:13]([C:11]([O:10][CH3:9])=[O:12])[CH:17]1[c:18]1[cH:19][cH:20][cH:21][cH:22][cH:23]1.[OH2:15].[OH3+:24]')
+Node('/Mol 1759572/Mol 1759577', mech=[4, 22, 3, None, None], product=True, smiles='[CH3:1][O:2][C:3](=[O:4])[C:5]1=[C:6]([CH3:8])[NH:7][C:14]([CH3:16])=[C:13]([C:11]([O:10][CH3:9])=[O:12])[CH:17]1[c:18]1[cH:19][cH:20][cH:21][cH:22][cH:23]1.[OH3+:15].[OH2:24]')
+Node('/Mol 1759572/Mol 1759578', mech=[4, 23, 3, None, None], product=True, smiles='[CH3:1][O:2][C:3](=[O:4])[C:5]1=[C:6]([CH3:8])[NH:7][C:14]([CH3:16])=[C:13]([C:11]([O:10][CH3:9])=[O:12])[CH:17]1[c:18]1[cH:19][cH:20][cH:21][cH:22][cH:23]1.[OH2:15].[OH3+:24]')
+Node('/SM/Mol 8/Mol 14/Mol 422/Mol 427/Mol 7236/Mol 7237/Mol 118460/Mol 1777170', mech=[8, 22, 4, 5, 14], product=True, smiles='[CH3:1][O:2][C:3](=[O:4])[C:5]1=[C:6]([CH3:8])[NH:7][C:14]([CH3:16])=[C:13]([C:11]([O:10][CH3:9])=[O:12])[CH:17]1[C:18]1=[CH:19][CH:20]=[CH:21][CH:22]=[CH:23]1.[OH3+:15].[OH2:24]')
+Node('/SM/Mol 8/Mol 14/Mol 422/Mol 427/Mol 7236/Mol 7237/Mol 118460/Mol 1777172', mech=[8, 23, 4, 5, 14], product=True, smiles='[CH3:1][O:2][C:3](=[O:4])[C:5]1=[C:6]([CH3:8])[NH:7][C:14]([CH3:16])=[C:13]([C:11]([O:10][CH3:9])=[O:12])[CH:17]1[C:18]1=[CH:19][CH:20]=[CH:21][CH:22]=[CH:23]1.[OH2:15].[OH3+:24]')
+Node('/SM/Mol 8/Mol 14/Mol 422/Mol 427/Mol 7236/Mol 7237/Mol 118461/Mol 1777345', mech=[8, 23, 4, 5, 7], product=True, smiles='[CH3:1][O:2][C:3](=[O:4])[C:5]1=[C:6]([CH3:8])[NH:7][C:14]([CH3:16])=[C:13]([C:11]([O:10][CH3:9])=[O:12])[CH:17]1[C:18]1=[CH:19][CH:20]=[CH:21][CH:22]=[CH:23]1.[OH2:15].[OH3+:24]')
+Node('/SM/Mol 8/Mol 14/Mol 422/Mol 427/Mol 7236/Mol 7237/Mol 118462/Mol 1777515', mech=[8, 23, 4, 5, 7], product=True, smiles='[CH3:1][O:2][C:3](=[O:4])[C:5]1=[C:6]([CH3:8])[NH:7][C:14]([CH3:16])=[C:13]([C:11]([O:10][CH3:9])=[O:12])[CH:17]1[C:18]1=[CH:19][CH:20]=[CH:21][CH:22]=[CH:23]1.[OH2:24].[OH3+:15]')
+Node('/SM/Mol 8/Mol 14/Mol 440/Mol 441/Mol 7497/Mol 7499/Mol 122156/Mol 122159/Mol 1825664', mech=[8, 23, 4, 5, 7], product=True, smiles='[CH3:1][O:2][C:3](=[O:4])[C:5]1=[C:6]([CH3:8])[NH:7][C:14]([CH3:16])=[C:13]([C:11]([O:10][CH3:9])=[O:12])[CH:17]1[C:18]1=[CH:19][CH:20]=[CH:21][CH:22]=[CH:23]1.[OH2:15].[OH3+:24]')
+Node('/Mol 1901261/Mol 1901266', mech=[4, 22, 3, None, None], product=True, smiles='[CH3:1][O:2][C:3](=[O:4])[C:5]1=[C:6]([CH3:8])[NH:7][C:14]([CH3:16])=[C:13]([C:11]([O:10][CH3:9])=[O:12])[CH:17]1[c:18]1[cH:19][cH:20][cH:21][cH:22][cH:23]1.[OH3+:15].[OH2:24]')
+Node('/Mol 1901261/Mol 1901267', mech=[4, 23, 3, None, None], product=True, smiles='[CH3:1][O:2][C:3](=[O:4])[C:5]1=[C:6]([CH3:8])[NH:7][C:14]([CH3:16])=[C:13]([C:11]([O:10][CH3:9])=[O:12])[CH:17]1[c:18]1[cH:19][cH:20][cH:21][cH:22][cH:23]1.[OH2:15].[OH3+:24]')
+Node('/Mol 1993486/Mol 1993491', mech=[4, 22, 1, None, None], product=True, smiles='[CH3:1][O:2][C:3](=[O:4])[C:5]1=[C:6]([CH3:8])[NH:7][C:14]([CH3:16])=[C:13]([C:11]([O:10][CH3:9])=[O:12])[CH:17]1[c:18]1[cH:19][cH:20][cH:21][cH:22][cH:23]1.[OH3+:15].[OH2:24]')
+Node('/Mol 1993486/Mol 1993492', mech=[4, 23, 1, None, None], product=True, smiles='[CH3:1][O:2][C:3](=[O:4])[C:5]1=[C:6]([CH3:8])[NH:7][C:14]([CH3:16])=[C:13]([C:11]([O:10][CH3:9])=[O:12])[CH:17]1[c:18]1[cH:19][cH:20][cH:21][cH:22][cH:23]1.[OH2:15].[OH3+:24]')
+Node('/Mol 2042017/Mol 2042022', mech=[4, 22, 3, None, None], product=True, smiles='[CH3:1][O:2][C:3](=[O:4])[C:5]1=[C:6]([CH3:8])[NH:7][C:14]([CH3:16])=[C:13]([C:11]([O:10][CH3:9])=[O:12])[CH:17]1[c:18]1[cH:19][cH:20][cH:21][cH:22][cH:23]1.[OH3+:15].[OH2:24]')
+Node('/Mol 2042017/Mol 2042023', mech=[4, 23, 3, None, None], product=True, smiles='[CH3:1][O:2][C:3](=[O:4])[C:5]1=[C:6]([CH3:8])[NH:7][C:14]([CH3:16])=[C:13]([C:11]([O:10][CH3:9])=[O:12])[CH:17]1[c:18]1[cH:19][cH:20][cH:21][cH:22][cH:23]1.[OH2:15].[OH3+:24]')
+Node('/Mol 2381397/Mol 2381402', mech=[4, 22, 1, None, None], product=True, smiles='[CH3:1][O:2][C:3](=[O:4])[C:5]1=[C:6]([CH3:8])[NH:7][C:14]([CH3:16])=[C:13]([C:11]([O:10][CH3:9])=[O:12])[CH:17]1[c:18]1[cH:19][cH:20][cH:21][cH:22][cH:23]1.[OH3+:15].[OH2:24]')
+Node('/Mol 2381397/Mol 2381403', mech=[4, 23, 1, None, None], product=True, smiles='[CH3:1][O:2][C:3](=[O:4])[C:5]1=[C:6]([CH3:8])[NH:7][C:14]([CH3:16])=[C:13]([C:11]([O:10][CH3:9])=[O:12])[CH:17]1[c:18]1[cH:19][cH:20][cH:21][cH:22][cH:23]1.[OH2:15].[OH3+:24]')
+Node('/Mol 2385895/Mol 2385900', mech=[4, 22, 3, None, None], product=True, smiles='[CH3:1][O:2][C:3](=[O:4])[C:5]1=[C:6]([CH3:8])[NH:7][C:14]([CH3:16])=[C:13]([C:11]([O:10][CH3:9])=[O:12])[CH:17]1[c:18]1[cH:19][cH:20][cH:21][cH:22][cH:23]1.[OH3+:15].[OH2:24]')
+Node('/Mol 2385895/Mol 2385901', mech=[4, 23, 3, None, None], product=True, smiles='[CH3:1][O:2][C:3](=[O:4])[C:5]1=[C:6]([CH3:8])[NH:7][C:14]([CH3:16])=[C:13]([C:11]([O:10][CH3:9])=[O:12])[CH:17]1[c:18]1[cH:19][cH:20][cH:21][cH:22][cH:23]1.[OH2:15].[OH3+:24]')
+Node('/SM/Mol 17/Mol 22/Mol 608/Mol 613/Mol 9888/Mol 9889/Mol 161093/Mol 2403493', mech=[8, 22, 4, 5, 14], product=True, smiles='[CH3:1][O:2][C:3](=[O:4])[C:5]1=[C:6]([CH3:8])[NH:7][C:14]([CH3:16])=[C:13]([C:11]([O:10][CH3:9])=[O:12])[CH:17]1[C:18]1=[CH:19][CH:20]=[CH:21][CH:22]=[CH:23]1.[OH3+:15].[OH2:24]')
+Node('/SM/Mol 17/Mol 22/Mol 608/Mol 613/Mol 9888/Mol 9889/Mol 161093/Mol 2403495', mech=[8, 23, 4, 5, 14], product=True, smiles='[CH3:1][O:2][C:3](=[O:4])[C:5]1=[C:6]([CH3:8])[NH:7][C:14]([CH3:16])=[C:13]([C:11]([O:10][CH3:9])=[O:12])[CH:17]1[C:18]1=[CH:19][CH:20]=[CH:21][CH:22]=[CH:23]1.[OH2:15].[OH3+:24]')
+Node('/SM/Mol 17/Mol 22/Mol 608/Mol 613/Mol 9888/Mol 9889/Mol 161094/Mol 2403668', mech=[8, 23, 4, 5, 7], product=True, smiles='[CH3:1][O:2][C:3](=[O:4])[C:5]1=[C:6]([CH3:8])[NH:7][C:14]([CH3:16])=[C:13]([C:11]([O:10][CH3:9])=[O:12])[CH:17]1[C:18]1=[CH:19][CH:20]=[CH:21][CH:22]=[CH:23]1.[OH2:15].[OH3+:24]')
+Node('/SM/Mol 17/Mol 22/Mol 608/Mol 613/Mol 9888/Mol 9889/Mol 161095/Mol 2403838', mech=[8, 23, 4, 5, 7], product=True, smiles='[CH3:1][O:2][C:3](=[O:4])[C:5]1=[C:6]([CH3:8])[NH:7][C:14]([CH3:16])=[C:13]([C:11]([O:10][CH3:9])=[O:12])[CH:17]1[C:18]1=[CH:19][CH:20]=[CH:21][CH:22]=[CH:23]1.[OH2:24].[OH3+:15]')
+Node('/SM/Mol 17/Mol 22/Mol 626/Mol 627/Mol 10149/Mol 10151/Mol 164789/Mol 164792/Mol 2451987', mech=[8, 23, 4, 5, 7], product=True, smiles='[CH3:1][O:2][C:3](=[O:4])[C:5]1=[C:6]([CH3:8])[NH:7][C:14]([CH3:16])=[C:13]([C:11]([O:10][CH3:9])=[O:12])[CH:17]1[C:18]1=[CH:19][CH:20]=[CH:21][CH:22]=[CH:23]1.[OH2:15].[OH3+:24]')
+Node('/Mol 2618277/Mol 2618282', mech=[4, 22, 1, None, None], product=True, smiles='[CH3:1][O:2][C:3](=[O:4])[C:5]1=[C:6]([CH3:8])[NH:7][C:14]([CH3:16])=[C:13]([C:11]([O:10][CH3:9])=[O:12])[CH:17]1[c:18]1[cH:19][cH:20][cH:21][cH:22][cH:23]1.[OH3+:15].[OH2:24]')
+Node('/Mol 2618277/Mol 2618283', mech=[4, 23, 1, None, None], product=True, smiles='[CH3:1][O:2][C:3](=[O:4])[C:5]1=[C:6]([CH3:8])[NH:7][C:14]([CH3:16])=[C:13]([C:11]([O:10][CH3:9])=[O:12])[CH:17]1[c:18]1[cH:19][cH:20][cH:21][cH:22][cH:23]1.[OH2:15].[OH3+:24]')
+Node('/Mol 2666808/Mol 2666813', mech=[4, 22, 3, None, None], product=True, smiles='[CH3:1][O:2][C:3](=[O:4])[C:5]1=[C:6]([CH3:8])[NH:7][C:14]([CH3:16])=[C:13]([C:11]([O:10][CH3:9])=[O:12])[CH:17]1[c:18]1[cH:19][cH:20][cH:21][cH:22][cH:23]1.[OH3+:15].[OH2:24]')
+Node('/Mol 2666808/Mol 2666814', mech=[4, 23, 3, None, None], product=True, smiles='[CH3:1][O:2][C:3](=[O:4])[C:5]1=[C:6]([CH3:8])[NH:7][C:14]([CH3:16])=[C:13]([C:11]([O:10][CH3:9])=[O:12])[CH:17]1[c:18]1[cH:19][cH:20][cH:21][cH:22][cH:23]1.[OH2:15].[OH3+:24]')
+Node('/Mol 2959680/Mol 2959685', mech=[4, 22, 1, None, None], product=True, smiles='[CH3:1][O:2][C:3](=[O:4])[C:5]1=[C:6]([CH3:8])[NH:7][C:14]([CH3:16])=[C:13]([C:11]([O:10][CH3:9])=[O:12])[CH:17]1[c:18]1[cH:19][cH:20][cH:21][cH:22][cH:23]1.[OH3+:15].[OH2:24]')
+Node('/Mol 2959680/Mol 2959686', mech=[4, 23, 1, None, None], product=True, smiles='[CH3:1][O:2][C:3](=[O:4])[C:5]1=[C:6]([CH3:8])[NH:7][C:14]([CH3:16])=[C:13]([C:11]([O:10][CH3:9])=[O:12])[CH:17]1[c:18]1[cH:19][cH:20][cH:21][cH:22][cH:23]1.[OH2:15].[OH3+:24]')
+Node('/Mol 2964178/Mol 2964183', mech=[4, 22, 3, None, None], product=True, smiles='[CH3:1][O:2][C:3](=[O:4])[C:5]1=[C:6]([CH3:8])[NH:7][C:14]([CH3:16])=[C:13]([C:11]([O:10][CH3:9])=[O:12])[CH:17]1[c:18]1[cH:19][cH:20][cH:21][cH:22][cH:23]1.[OH3+:15].[OH2:24]')
+Node('/Mol 2964178/Mol 2964184', mech=[4, 23, 3, None, None], product=True, smiles='[CH3:1][O:2][C:3](=[O:4])[C:5]1=[C:6]([CH3:8])[NH:7][C:14]([CH3:16])=[C:13]([C:11]([O:10][CH3:9])=[O:12])[CH:17]1[c:18]1[cH:19][cH:20][cH:21][cH:22][cH:23]1.[OH2:15].[OH3+:24]')
+Node('/SM/Mol 24/Mol 29/Mol 784/Mol 789/Mol 12384/Mol 12385/Mol 200119/Mol 2981776', mech=[8, 22, 4, 5, 14], product=True, smiles='[CH3:1][O:2][C:3](=[O:4])[C:5]1=[C:6]([CH3:8])[NH:7][C:14]([CH3:16])=[C:13]([C:11]([O:10][CH3:9])=[O:12])[CH:17]1[C:18]1=[CH:19][CH:20]=[CH:21][CH:22]=[CH:23]1.[OH3+:15].[OH2:24]')
+Node('/SM/Mol 24/Mol 29/Mol 784/Mol 789/Mol 12384/Mol 12385/Mol 200119/Mol 2981778', mech=[8, 23, 4, 5, 14], product=True, smiles='[CH3:1][O:2][C:3](=[O:4])[C:5]1=[C:6]([CH3:8])[NH:7][C:14]([CH3:16])=[C:13]([C:11]([O:10][CH3:9])=[O:12])[CH:17]1[C:18]1=[CH:19][CH:20]=[CH:21][CH:22]=[CH:23]1.[OH2:15].[OH3+:24]')
+Node('/SM/Mol 24/Mol 29/Mol 784/Mol 789/Mol 12384/Mol 12385/Mol 200120/Mol 2981951', mech=[8, 23, 4, 5, 7], product=True, smiles='[CH3:1][O:2][C:3](=[O:4])[C:5]1=[C:6]([CH3:8])[NH:7][C:14]([CH3:16])=[C:13]([C:11]([O:10][CH3:9])=[O:12])[CH:17]1[C:18]1=[CH:19][CH:20]=[CH:21][CH:22]=[CH:23]1.[OH2:15].[OH3+:24]')
+Node('/SM/Mol 24/Mol 29/Mol 784/Mol 789/Mol 12384/Mol 12385/Mol 200121/Mol 2982121', mech=[8, 23, 4, 5, 7], product=True, smiles='[CH3:1][O:2][C:3](=[O:4])[C:5]1=[C:6]([CH3:8])[NH:7][C:14]([CH3:16])=[C:13]([C:11]([O:10][CH3:9])=[O:12])[CH:17]1[C:18]1=[CH:19][CH:20]=[CH:21][CH:22]=[CH:23]1.[OH2:24].[OH3+:15]')
+Node('/SM/Mol 24/Mol 29/Mol 802/Mol 803/Mol 12645/Mol 12647/Mol 203815/Mol 203818/Mol 3030270', mech=[8, 23, 4, 5, 7], product=True, smiles='[CH3:1][O:2][C:3](=[O:4])[C:5]1=[C:6]([CH3:8])[NH:7][C:14]([CH3:16])=[C:13]([C:11]([O:10][CH3:9])=[O:12])[CH:17]1[C:18]1=[CH:19][CH:20]=[CH:21][CH:22]=[CH:23]1.[OH2:15].[OH3+:24]')
+Node('/Mol 3523093/Mol 3523098', mech=[4, 22, 1, None, None], product=True, smiles='[CH3:1][O:2][C:3](=[O:4])[C:5]1=[C:6]([CH3:8])[NH:7][C:14]([CH3:16])=[C:13]([C:11]([O:10][CH3:9])=[O:12])[CH:17]1[c:18]1[cH:19][cH:20][cH:21][cH:22][cH:23]1.[OH3+:15].[OH2:24]')
+Node('/Mol 3523093/Mol 3523099', mech=[4, 23, 1, None, None], product=True, smiles='[CH3:1][O:2][C:3](=[O:4])[C:5]1=[C:6]([CH3:8])[NH:7][C:14]([CH3:16])=[C:13]([C:11]([O:10][CH3:9])=[O:12])[CH:17]1[c:18]1[cH:19][cH:20][cH:21][cH:22][cH:23]1.[OH2:15].[OH3+:24]')
+Node('/Mol 3571624/Mol 3571629', mech=[4, 22, 3, None, None], product=True, smiles='[CH3:1][O:2][C:3](=[O:4])[C:5]1=[C:6]([CH3:8])[NH:7][C:14]([CH3:16])=[C:13]([C:11]([O:10][CH3:9])=[O:12])[CH:17]1[c:18]1[cH:19][cH:20][cH:21][cH:22][cH:23]1.[OH3+:15].[OH2:24]')
+Node('/Mol 3571624/Mol 3571630', mech=[4, 23, 3, None, None], product=True, smiles='[CH3:1][O:2][C:3](=[O:4])[C:5]1=[C:6]([CH3:8])[NH:7][C:14]([CH3:16])=[C:13]([C:11]([O:10][CH3:9])=[O:12])[CH:17]1[c:18]1[cH:19][cH:20][cH:21][cH:22][cH:23]1.[OH2:15].[OH3+:24]')
+Node('/Mol 3848499/Mol 3848504', mech=[4, 22, 1, None, None], product=True, smiles='[CH3:1][O:2][C:3](=[O:4])[C:5]1=[C:6]([CH3:8])[NH:7][C:14]([CH3:16])=[C:13]([C:11]([O:10][CH3:9])=[O:12])[CH:17]1[c:18]1[cH:19][cH:20][cH:21][cH:22][cH:23]1.[OH3+:15].[OH2:24]')
+Node('/Mol 3848499/Mol 3848505', mech=[4, 23, 1, None, None], product=True, smiles='[CH3:1][O:2][C:3](=[O:4])[C:5]1=[C:6]([CH3:8])[NH:7][C:14]([CH3:16])=[C:13]([C:11]([O:10][CH3:9])=[O:12])[CH:17]1[c:18]1[cH:19][cH:20][cH:21][cH:22][cH:23]1.[OH2:15].[OH3+:24]')
+Node('/Mol 3852997/Mol 3853002', mech=[4, 22, 3, None, None], product=True, smiles='[CH3:1][O:2][C:3](=[O:4])[C:5]1=[C:6]([CH3:8])[NH:7][C:14]([CH3:16])=[C:13]([C:11]([O:10][CH3:9])=[O:12])[CH:17]1[c:18]1[cH:19][cH:20][cH:21][cH:22][cH:23]1.[OH3+:15].[OH2:24]')
+Node('/Mol 3852997/Mol 3853003', mech=[4, 23, 3, None, None], product=True, smiles='[CH3:1][O:2][C:3](=[O:4])[C:5]1=[C:6]([CH3:8])[NH:7][C:14]([CH3:16])=[C:13]([C:11]([O:10][CH3:9])=[O:12])[CH:17]1[c:18]1[cH:19][cH:20][cH:21][cH:22][cH:23]1.[OH2:15].[OH3+:24]')
+Node('/SM/Mol 31/Mol 37/Mol 1018/Mol 1023/Mol 16187/Mol 16188/Mol 261502/Mol 3870595', mech=[8, 22, 4, 5, 14], product=True, smiles='[CH3:1][O:2][C:3](=[O:4])[C:5]1=[C:6]([CH3:8])[NH:7][C:14]([CH3:16])=[C:13]([C:11]([O:10][CH3:9])=[O:12])[CH:17]1[C:18]1=[CH:19][CH:20]=[CH:21][CH:22]=[CH:23]1.[OH3+:15].[OH2:24]')
+Node('/SM/Mol 31/Mol 37/Mol 1018/Mol 1023/Mol 16187/Mol 16188/Mol 261502/Mol 3870597', mech=[8, 23, 4, 5, 14], product=True, smiles='[CH3:1][O:2][C:3](=[O:4])[C:5]1=[C:6]([CH3:8])[NH:7][C:14]([CH3:16])=[C:13]([C:11]([O:10][CH3:9])=[O:12])[CH:17]1[C:18]1=[CH:19][CH:20]=[CH:21][CH:22]=[CH:23]1.[OH2:15].[OH3+:24]')
+Node('/SM/Mol 31/Mol 37/Mol 1018/Mol 1023/Mol 16187/Mol 16188/Mol 261503/Mol 3870770', mech=[8, 23, 4, 5, 7], product=True, smiles='[CH3:1][O:2][C:3](=[O:4])[C:5]1=[C:6]([CH3:8])[NH:7][C:14]([CH3:16])=[C:13]([C:11]([O:10][CH3:9])=[O:12])[CH:17]1[C:18]1=[CH:19][CH:20]=[CH:21][CH:22]=[CH:23]1.[OH2:15].[OH3+:24]')
+Node('/SM/Mol 31/Mol 37/Mol 1018/Mol 1023/Mol 16187/Mol 16188/Mol 261504/Mol 3870940', mech=[8, 23, 4, 5, 7], product=True, smiles='[CH3:1][O:2][C:3](=[O:4])[C:5]1=[C:6]([CH3:8])[NH:7][C:14]([CH3:16])=[C:13]([C:11]([O:10][CH3:9])=[O:12])[CH:17]1[C:18]1=[CH:19][CH:20]=[CH:21][CH:22]=[CH:23]1.[OH2:24].[OH3+:15]')
+Node('/SM/Mol 31/Mol 37/Mol 1036/Mol 1037/Mol 16448/Mol 16450/Mol 265198/Mol 265201/Mol 3919089', mech=[8, 23, 4, 5, 7], product=True, smiles='[CH3:1][O:2][C:3](=[O:4])[C:5]1=[C:6]([CH3:8])[NH:7][C:14]([CH3:16])=[C:13]([C:11]([O:10][CH3:9])=[O:12])[CH:17]1[C:18]1=[CH:19][CH:20]=[CH:21][CH:22]=[CH:23]1.[OH2:15].[OH3+:24]')
+Node('/Mol 4190331/Mol 4190336', mech=[4, 22, 1, None, None], product=True, smiles='[CH3:1][O:2][C:3](=[O:4])[C:5]1=[C:6]([CH3:8])[NH:7][C:14]([CH3:16])=[C:13]([C:11]([O:10][CH3:9])=[O:12])[CH:17]1[c:18]1[cH:19][cH:20][cH:21][cH:22][cH:23]1.[OH3+:15].[OH2:24]')
+Node('/Mol 4190331/Mol 4190337', mech=[4, 23, 1, None, None], product=True, smiles='[CH3:1][O:2][C:3](=[O:4])[C:5]1=[C:6]([CH3:8])[NH:7][C:14]([CH3:16])=[C:13]([C:11]([O:10][CH3:9])=[O:12])[CH:17]1[c:18]1[cH:19][cH:20][cH:21][cH:22][cH:23]1.[OH2:15].[OH3+:24]')
+Node('/Mol 4194829/Mol 4194834', mech=[4, 22, 3, None, None], product=True, smiles='[CH3:1][O:2][C:3](=[O:4])[C:5]1=[C:6]([CH3:8])[NH:7][C:14]([CH3:16])=[C:13]([C:11]([O:10][CH3:9])=[O:12])[CH:17]1[c:18]1[cH:19][cH:20][cH:21][cH:22][cH:23]1.[OH3+:15].[OH2:24]')
+Node('/Mol 4194829/Mol 4194835', mech=[4, 23, 3, None, None], product=True, smiles='[CH3:1][O:2][C:3](=[O:4])[C:5]1=[C:6]([CH3:8])[NH:7][C:14]([CH3:16])=[C:13]([C:11]([O:10][CH3:9])=[O:12])[CH:17]1[c:18]1[cH:19][cH:20][cH:21][cH:22][cH:23]1.[OH2:15].[OH3+:24]')
+Node('/SM/Mol 39/Mol 40/Mol 1111/Mol 1116/Mol 17925/Mol 17926/Mol 287051/Mol 4212427', mech=[8, 22, 4, 5, 14], product=True, smiles='[CH3:1][O:2][C:3](=[O:4])[C:5]1=[C:6]([CH3:8])[NH:7][C:14]([CH3:16])=[C:13]([C:11]([O:10][CH3:9])=[O:12])[CH:17]1[C:18]1=[CH:19][CH:20]=[CH:21][CH:22]=[CH:23]1.[OH3+:15].[OH2:24]')
+Node('/SM/Mol 39/Mol 40/Mol 1111/Mol 1116/Mol 17925/Mol 17926/Mol 287051/Mol 4212429', mech=[8, 23, 4, 5, 14], product=True, smiles='[CH3:1][O:2][C:3](=[O:4])[C:5]1=[C:6]([CH3:8])[NH:7][C:14]([CH3:16])=[C:13]([C:11]([O:10][CH3:9])=[O:12])[CH:17]1[C:18]1=[CH:19][CH:20]=[CH:21][CH:22]=[CH:23]1.[OH2:15].[OH3+:24]')
+Node('/SM/Mol 39/Mol 40/Mol 1111/Mol 1116/Mol 17925/Mol 17926/Mol 287052/Mol 4212602', mech=[8, 23, 4, 5, 7], product=True, smiles='[CH3:1][O:2][C:3](=[O:4])[C:5]1=[C:6]([CH3:8])[NH:7][C:14]([CH3:16])=[C:13]([C:11]([O:10][CH3:9])=[O:12])[CH:17]1[C:18]1=[CH:19][CH:20]=[CH:21][CH:22]=[CH:23]1.[OH2:15].[OH3+:24]')
+Node('/SM/Mol 39/Mol 40/Mol 1111/Mol 1116/Mol 17925/Mol 17926/Mol 287053/Mol 4212772', mech=[8, 23, 4, 5, 7], product=True, smiles='[CH3:1][O:2][C:3](=[O:4])[C:5]1=[C:6]([CH3:8])[NH:7][C:14]([CH3:16])=[C:13]([C:11]([O:10][CH3:9])=[O:12])[CH:17]1[C:18]1=[CH:19][CH:20]=[CH:21][CH:22]=[CH:23]1.[OH2:24].[OH3+:15]')
+Node('/SM/Mol 39/Mol 40/Mol 1122/Mol 1123/Mol 18041/Mol 18043/Mol 288724/Mol 288727/Mol 4234404', mech=[8, 23, 4, 5, 7], product=True, smiles='[CH3:1][O:2][C:3](=[O:4])[C:5]1=[C:6]([CH3:8])[NH:7][C:14]([CH3:16])=[C:13]([C:11]([O:10][CH3:9])=[O:12])[CH:17]1[C:18]1=[CH:19][CH:20]=[CH:21][CH:22]=[CH:23]1.[OH2:15].[OH3+:24]')
+Node('/Mol 4313446/Mol 4313451', mech=[4, 22, 1, None, None], product=True, smiles='[CH3:1][O:2][C:3](=[O:4])[C:5]1=[C:6]([CH3:8])[NH:7][C:14]([CH3:16])=[C:13]([C:11]([O:10][CH3:9])=[O:12])[CH:17]1[c:18]1[cH:19][cH:20][cH:21][cH:22][cH:23]1.[OH3+:15].[OH2:24]')
+Node('/Mol 4313446/Mol 4313452', mech=[4, 23, 1, None, None], product=True, smiles='[CH3:1][O:2][C:3](=[O:4])[C:5]1=[C:6]([CH3:8])[NH:7][C:14]([CH3:16])=[C:13]([C:11]([O:10][CH3:9])=[O:12])[CH:17]1[c:18]1[cH:19][cH:20][cH:21][cH:22][cH:23]1.[OH2:15].[OH3+:24]')
+Node('/Mol 4361977/Mol 4361982', mech=[4, 22, 3, None, None], product=True, smiles='[CH3:1][O:2][C:3](=[O:4])[C:5]1=[C:6]([CH3:8])[NH:7][C:14]([CH3:16])=[C:13]([C:11]([O:10][CH3:9])=[O:12])[CH:17]1[c:18]1[cH:19][cH:20][cH:21][cH:22][cH:23]1.[OH3+:15].[OH2:24]')
+Node('/Mol 4361977/Mol 4361983', mech=[4, 23, 3, None, None], product=True, smiles='[CH3:1][O:2][C:3](=[O:4])[C:5]1=[C:6]([CH3:8])[NH:7][C:14]([CH3:16])=[C:13]([C:11]([O:10][CH3:9])=[O:12])[CH:17]1[c:18]1[cH:19][cH:20][cH:21][cH:22][cH:23]1.[OH2:15].[OH3+:24]')
+Node('/Mol 4748255/Mol 4748260', mech=[4, 22, 1, None, None], product=True, smiles='[CH3:1][O:2][C:3](=[O:4])[C:5]1=[C:6]([CH3:8])[NH:7][C:14]([CH3:16])=[C:13]([C:11]([O:10][CH3:9])=[O:12])[CH:17]1[c:18]1[cH:19][cH:20][cH:21][cH:22][cH:23]1.[OH3+:15].[OH2:24]')
+Node('/Mol 4748255/Mol 4748261', mech=[4, 23, 1, None, None], product=True, smiles='[CH3:1][O:2][C:3](=[O:4])[C:5]1=[C:6]([CH3:8])[NH:7][C:14]([CH3:16])=[C:13]([C:11]([O:10][CH3:9])=[O:12])[CH:17]1[c:18]1[cH:19][cH:20][cH:21][cH:22][cH:23]1.[OH2:15].[OH3+:24]')
+Node('/Mol 4752753/Mol 4752758', mech=[4, 22, 3, None, None], product=True, smiles='[CH3:1][O:2][C:3](=[O:4])[C:5]1=[C:6]([CH3:8])[NH:7][C:14]([CH3:16])=[C:13]([C:11]([O:10][CH3:9])=[O:12])[CH:17]1[c:18]1[cH:19][cH:20][cH:21][cH:22][cH:23]1.[OH3+:15].[OH2:24]')
+Node('/Mol 4752753/Mol 4752759', mech=[4, 23, 3, None, None], product=True, smiles='[CH3:1][O:2][C:3](=[O:4])[C:5]1=[C:6]([CH3:8])[NH:7][C:14]([CH3:16])=[C:13]([C:11]([O:10][CH3:9])=[O:12])[CH:17]1[c:18]1[cH:19][cH:20][cH:21][cH:22][cH:23]1.[OH2:15].[OH3+:24]')
+Node('/SM/Mol 63/Mol 1284/Mol 1289/Mol 20271/Mol 20272/Mol 324817/Mol 4770351', mech=[8, 22, 4, 5, 14], product=True, smiles='[CH3:1][O:2][C:3](=[O:4])[C:5]1=[C:6]([CH3:8])[NH:7][C:14]([CH3:16])=[C:13]([C:11]([O:10][CH3:9])=[O:12])[CH:17]1[C:18]1=[CH:19][CH:20]=[CH:21][CH:22]=[CH:23]1.[OH3+:15].[OH2:24]')
+Node('/SM/Mol 63/Mol 1284/Mol 1289/Mol 20271/Mol 20272/Mol 324817/Mol 4770353', mech=[8, 23, 4, 5, 14], product=True, smiles='[CH3:1][O:2][C:3](=[O:4])[C:5]1=[C:6]([CH3:8])[NH:7][C:14]([CH3:16])=[C:13]([C:11]([O:10][CH3:9])=[O:12])[CH:17]1[C:18]1=[CH:19][CH:20]=[CH:21][CH:22]=[CH:23]1.[OH2:15].[OH3+:24]')
+Node('/SM/Mol 63/Mol 1284/Mol 1289/Mol 20271/Mol 20272/Mol 324818/Mol 4770526', mech=[8, 23, 4, 5, 7], product=True, smiles='[CH3:1][O:2][C:3](=[O:4])[C:5]1=[C:6]([CH3:8])[NH:7][C:14]([CH3:16])=[C:13]([C:11]([O:10][CH3:9])=[O:12])[CH:17]1[C:18]1=[CH:19][CH:20]=[CH:21][CH:22]=[CH:23]1.[OH2:15].[OH3+:24]')
+Node('/SM/Mol 63/Mol 1284/Mol 1289/Mol 20271/Mol 20272/Mol 324819/Mol 4770696', mech=[8, 23, 4, 5, 7], product=True, smiles='[CH3:1][O:2][C:3](=[O:4])[C:5]1=[C:6]([CH3:8])[NH:7][C:14]([CH3:16])=[C:13]([C:11]([O:10][CH3:9])=[O:12])[CH:17]1[C:18]1=[CH:19][CH:20]=[CH:21][CH:22]=[CH:23]1.[OH2:24].[OH3+:15]')
+Node('/SM/Mol 63/Mol 1302/Mol 1303/Mol 20532/Mol 20534/Mol 328513/Mol 328516/Mol 4818845', mech=[8, 23, 4, 5, 7], product=True, smiles='[CH3:1][O:2][C:3](=[O:4])[C:5]1=[C:6]([CH3:8])[NH:7][C:14]([CH3:16])=[C:13]([C:11]([O:10][CH3:9])=[O:12])[CH:17]1[C:18]1=[CH:19][CH:20]=[CH:21][CH:22]=[CH:23]1.[OH2:15].[OH3+:24]')
