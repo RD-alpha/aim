@@ -1,12 +1,12 @@
 from rdkit import Chem
+import numpy as np
 
 """
 Bitstring Representation:
 
-1. Charge Bitstring (3 bits):
+1. Charge Bitstring (2 bits):
    - [0]: Atom has a negative formal charge.
-   - [1]: Atom has a neutral formal charge.
-   - [2]: Atom has a positive formal charge.
+   - [1]: Atom has a positive formal charge.
 
 2. Hydrogen Count Bitstring (4 bits):
    - [0]: Atom has 0 hydrogens.
@@ -73,9 +73,9 @@ ___________________________________
 - Aromaticity Bitstring: 2 bits
 - Adjacency Bitstring: 9 bits
 _________________________________
-Atom Fingerprint Total: 36 bits
+Atom Fingerprint Total: 35 bits
 _________________________________
-36*4 = 144 bits for atoms
+35*4 = 140 bits for atoms
 - Bond Type Bitstring: 3 bits
 - Bond Fingerprint Total: 6 bits
 __________________________________
@@ -136,16 +136,14 @@ electronegativity_dict = {1: 2.2,
 
 def make_atom_fingerprint(atom, other_atom_idx=None):
     if atom is None:
-        return [0] * 36
+        return [np.nan] * 36
 
     # Charge bitstring
-    charge_bitstring = [0] * 3
+    charge_bitstring = [0] * 2
     if atom.GetFormalCharge() < 0:
         charge_bitstring[0] = 1
-    elif atom.GetFormalCharge() == 0:
-        charge_bitstring[1] = 1
     elif atom.GetFormalCharge() > 0:
-        charge_bitstring[2] = 1
+        charge_bitstring[1] = 1
 
     # H bitstring
     h_number_bitstring = [0] * 4
@@ -229,9 +227,14 @@ def make_atom_fingerprint(atom, other_atom_idx=None):
             adjecency_bitstring[5] = 1
         elif electronegativity_dict[a.GetAtomicNum()] < 2.05:
             adjecency_bitstring[6] = 1
+
+    three_membered_ring_bitstring = [0] * 1
+    if atom.IsInRingSize(3):
+        three_membered_ring_bitstring[0] = 1
+
  
 
-    total_bit_string = charge_bitstring + h_number_bitstring + hybridization_bitstring + element_bitstring + aromatic_bits + adjecency_bitstring
+    total_bit_string = charge_bitstring + h_number_bitstring + hybridization_bitstring + element_bitstring + aromatic_bits + adjecency_bitstring + three_membered_ring_bitstring
     return total_bit_string
 
 def make_bond_fingerprint(bond):
@@ -251,12 +254,12 @@ def make_bond_fingerprint(bond):
 
 def new_bond_fingerprint(mol, a1_idx, a2_idx):
     if a1_idx == None or a2_idx is None:
-        return [0] * 5
+        return [np.nan] * 5
     a1 = mol.GetAtomWithIdx(a1_idx)
     a2 = mol.GetAtomWithIdx(a2_idx)
     # ring size bitstring
     # [3, 4, 5, 6, 7+]
-    ring_size_bitstring = [0] * 5
+    ring_size_bitstring = [np.nan] * 5
     fragments = Chem.GetMolFrags(mol)
     for f in fragments:
         if a1.GetIdx() in f and a2.GetIdx() in f:
@@ -281,7 +284,7 @@ def new_bond_fingerprint(mol, a1_idx, a2_idx):
 
 
 def make_fingerprint(sm, mech):
-    mech_type = [0] * 11
+    mech_type = [np.nan] * 11
     mech_type[mech[0]] = 1
     atom_fps = []
     for i in range(1, 5):
@@ -294,14 +297,14 @@ def make_fingerprint(sm, mech):
                 atom_fps.append(make_atom_fingerprint(sm.GetAtomWithIdx(mech[i]), mech[i - 2]))
             else:
                 atom_fps.append(make_atom_fingerprint(sm.GetAtomWithIdx(mech[i])))
-    if mech[3]:
+    if mech[3] and mech[1]:
         b1 = make_bond_fingerprint(sm.GetBondBetweenAtoms(mech[1], mech[3]))
     else:
-        b1 = [0] * 4
-    if mech[4]:
+        b1 = [np.nan] * 4
+    if mech[4] and mech[2]:
         b2 = make_bond_fingerprint(sm.GetBondBetweenAtoms(mech[2], mech[4]))
     else:
-        b2 = [0] * 4
+        b2 = [np.nan] * 4
     r = new_bond_fingerprint(sm, mech[1], mech[2])
     sum_finger_print = mech_type + atom_fps[0] + atom_fps[1] + atom_fps[2] + atom_fps[3] + b1 + b2 + r
     return sum_finger_print
