@@ -26,6 +26,7 @@ def clean_mol(list_mol, mechanisms, original_mol = None):
 def screen_charges(list_mol, mechanisms, charge = 0):
     if charge == -1: # base mediated reaction will not have cationic intermediates
         clean_list = []
+        updated_mech = []
         for idx in range(len(list_mol)):
             mol = list_mol[idx]
             keep = True
@@ -34,10 +35,12 @@ def screen_charges(list_mol, mechanisms, charge = 0):
                     keep = False
                     break
             if keep:
-                clean_list.append(idx)
-        return clean_list
+                clean_list.append(mol)
+                updated_mech.append(mechanisms[idx])
+        return (clean_list, updated_mech)
     elif charge == 1: # acid mediated reaction will not have anionic intermediates
         clean_list = []
+        updated_mech = []
         for idx in range(len(list_mol)):
             mol = list_mol[idx]
             keep = True
@@ -46,10 +49,11 @@ def screen_charges(list_mol, mechanisms, charge = 0):
                     keep = False
                     break
             if keep:
-                clean_list.append(idx)
-        return clean_list
+                clean_list.append(mol)
+                updated_mech.append(mechanisms[idx])
+        return (clean_list, updated_mech)
     else:
-        # print('No screening')
+        print('No screening')
         return (list_mol, mechanisms)
 
 
@@ -206,8 +210,6 @@ def identify_acidic_CH(mol):
                         break
 
 def prepare_molecule(mol, hypervalent_enabled = True):
-    for a in mol.GetAtoms():
-        a.SetNoImplicit(False)
     identify_acidic_CH(mol)
     identify_sink(mol, hypervalent_enabled=hypervalent_enabled)
     identify_source(mol)
@@ -310,7 +312,7 @@ def bond_to_hydride(mol, i, j, l, mechanisms, connected_mols):
     m_mol.GetAtomWithIdx(j).SetNumExplicitHs(m_mol.GetAtomWithIdx(j).GetNumImplicitHs() + 1)
     m_mol.GetAtomWithIdx(j).SetFormalCharge(m_mol.GetAtomWithIdx(j).GetFormalCharge() - 1)
     connected_mols.append(m_mol)
-    mechanisms.append([7, i, j, None, l])
+    mechanisms.append([7, None, j, i, l])
     return (mechanisms, connected_mols)
 
 def break_bond_source(mol, b, a_list):
@@ -397,8 +399,8 @@ def run_next_step(smiles, kekulise = False, cleanup = True, chain_mol = None, sc
             Chem.Kekulize(mol_inp, clearAromaticFlags=True)
         
     prepare_molecule(mol_inp, hypervalent_enabled=hypervalent_enabled)
-    connected_mols, mechanisms, mol_inp, clean_list= execute_step(mol_inp, kekulise, cleanup, screen_charges_enabled)
-    return (connected_mols, mechanisms, mol_inp, clean_list)
+    connected_mols, mechanisms, mol_inp = execute_step(mol_inp, kekulise, cleanup, screen_charges_enabled)
+    return (connected_mols, mechanisms, mol_inp)
 
 def execute_step(mol_inp, kekulise = False, cleanup = False, screen_charges_enabled = True):
 
@@ -444,7 +446,7 @@ def execute_step(mol_inp, kekulise = False, cleanup = False, screen_charges_enab
 
             if sink_type == 'proton':
                 if hydride_flag:
-                    # print('There will be hydrogen but we will skip for now')
+                    print('There will be hydrogen but we will skip for now')
                     continue
 
                 p_mol = transfer_proton(mol_inp, j, i)
@@ -466,7 +468,7 @@ def execute_step(mol_inp, kekulise = False, cleanup = False, screen_charges_enab
                     m_mol.GetAtomWithIdx(j).SetNumExplicitHs(m_mol.GetAtomWithIdx(j).GetNumExplicitHs() + 1)
                 m_mol.GetAtomWithIdx(j).SetFormalCharge(m_mol.GetAtomWithIdx(j).GetFormalCharge() - 1)
                 connected_mols.append(m_mol)
-                mechanisms.append([6, i, j, None, None])
+                mechanisms.append([6, None, j, i, None])
                 continue
 
             new_mol = Chem.Mol(mol_inp)
@@ -607,14 +609,11 @@ def execute_step(mol_inp, kekulise = False, cleanup = False, screen_charges_enab
 #        p = int(p)
 #        print(p_layer)
 #    charge = q + p
-    
     if screen_charges_enabled:
         charge = 0
         for atom in mol_inp.GetAtoms():
             charge += atom.GetFormalCharge()
-        clean_list = screen_charges(connected_mols, mechanisms, charge)
-    else:
-        clean_list = list(range(len(connected_mols)))
+        connected_mols, mechanisms = screen_charges(connected_mols, mechanisms, charge)
     idx = 0
     for mol in connected_mols:
         try:
@@ -632,4 +631,4 @@ def execute_step(mol_inp, kekulise = False, cleanup = False, screen_charges_enab
             Chem.Kekulize(mol, clearAromaticFlags=True)
         idx += 1
     
-    return (connected_mols, mechanisms, mol_inp, clean_list)
+    return (connected_mols, mechanisms, mol_inp)
