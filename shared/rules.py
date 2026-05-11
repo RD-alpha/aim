@@ -310,7 +310,7 @@ def bond_to_hydride(mol, i, j, l, mechanisms, connected_mols):
     m_mol.GetAtomWithIdx(j).SetNumExplicitHs(m_mol.GetAtomWithIdx(j).GetNumImplicitHs() + 1)
     m_mol.GetAtomWithIdx(j).SetFormalCharge(m_mol.GetAtomWithIdx(j).GetFormalCharge() - 1)
     connected_mols.append(m_mol)
-    mechanisms.append([7, i, j, None, l])
+    mechanisms.append([7, None, j, i, l])
     return (mechanisms, connected_mols)
 
 def break_bond_source(mol, b, a_list):
@@ -466,7 +466,7 @@ def execute_step(mol_inp, kekulise = False, cleanup = False, screen_charges_enab
                     m_mol.GetAtomWithIdx(j).SetNumExplicitHs(m_mol.GetAtomWithIdx(j).GetNumExplicitHs() + 1)
                 m_mol.GetAtomWithIdx(j).SetFormalCharge(m_mol.GetAtomWithIdx(j).GetFormalCharge() - 1)
                 connected_mols.append(m_mol)
-                mechanisms.append([6, i, j, None, None])
+                mechanisms.append([6, None, j, i, None])
                 continue
 
             new_mol = Chem.Mol(mol_inp)
