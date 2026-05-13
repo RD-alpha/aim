@@ -2,7 +2,6 @@ from rdkit import Chem
 from rdkit import RDLogger
 from rdkit.Chem import rdMolDescriptors
 import numpy as np
-import sys
 import time
 from anytree import Node, RenderTree
 from anytree.search import find
@@ -15,7 +14,6 @@ import pickle
 from multiprocessing import Pool, cpu_count, Manager
 import itertools
 from collections import Counter
-import random
 
 # --- SLURM + scratch setup ---
 jobid = os.environ.get("SLURM_JOB_ID", "backup")
@@ -36,7 +34,6 @@ def product_subset(reactant, product):
 
 
 
-# filename = "local_results"
 
 last_save = time.time()
 save_interval = 3600
@@ -52,13 +49,6 @@ def save_tree(signum, frame, job_name, product_nodes):
         with open(f"{filename}_{job_name}_{i}.pkl", "wb") as f:
             pickle.dump(p_n, f)
     #sys.exit(0)
-
-# signal.signal(signal.SIGUSR1, save_tree)
-# signal.signal(signal.SIGTERM, save_tree)
-
-# Load the model
-# clf = xgboost.XGBClassifier()
-# clf.load_model('models/v51/xg_model.json')
 
 
 def next_nodes(packed):
@@ -86,7 +76,7 @@ def next_nodes(packed):
         product_mols, mechs, mol_inp, clean_list = run_next_step(
             smiles, aromatic, True, None, screen_charges_enabled, True
         )
-        #print(len(product_mols), "products generated")
+        # print(len(product_mols), "products generated")
     except Exception as e:
         print("Error in rule application")
         print(e)

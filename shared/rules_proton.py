@@ -275,7 +275,7 @@ def execute_step(mol_inp, kekulise = False, cleanup = False, screen_charges_enab
 
             if sink_type == 'proton':
                 if hydride_flag:
-                    # print('There will be hydrogen but we will skip for now')
+
                     continue
 
                 p_mol = transfer_proton(mol_inp, j, i)
