@@ -83,6 +83,12 @@ def next_nodes(packed):
         return (results, (unique_mech_count_local, test_set_mech_count_local, inchi_set_local))
     for i, product in enumerate(product_mols):
         fp = np.array(make_fingerprint(mol_inp, mechs[i]))
+        key = tuple(np.where(np.isnan(fp), None, fp))
+        if key in unique_bitvectors:
+            test_set_mech_count_local += 1
+        else:
+            unique_mech_count_local += 1
+            
         pred = clf.predict(fp.reshape(1, -1))[0]
         found_frag = False
         if force_correct_last_step and pred == 0:
@@ -134,10 +140,6 @@ def next_nodes(packed):
         elif pred == 1:
             if no_duplicates:
                 inchi_set_local.add(inchi1)
-            if tuple(fp) in unique_bitvectors:
-                test_set_mech_count_local += 1
-            else:
-                unique_mech_count_local += 1
             
             prod_id = next(local_id_counter)
             clean = i in clean_list
@@ -161,6 +163,7 @@ def next_nodes(packed):
 
                 for j, fm in enumerate(f_mols):
                     found_frag = False
+                    # TODO: check within the follow on loop so we can check all fps not just the positive ones filtered by follow_on
                     if tuple(f_fps[j]) in unique_bitvectors:
                         test_set_mech_count_local += 1
                     else:
@@ -245,9 +248,19 @@ def run_parallel(r_smiles, p_smiles, job_name, no_duplicates=False, force_depth=
     test_set_mech_count = 0
     start_time_total = time.time()
 
-    with open("unique_positive_bitvectors.txt", "r") as f:
+    with open("unique_bitvectors.txt", "r") as f:
         for line in f:
-            unique_bitvectors.add(tuple(np.int64(x) for x in line.strip().split(',')))
+            fp_elements = []
+            for x in line.strip().split(','):
+                if x == 'nan':
+                    fp_elements.append(None)
+                else:
+                    fp_elements.append(np.float64(x))
+                
+            unique_bitvectors.add(tuple(fp_elements))
+
+
+    
 
     # +
     # Parameters
@@ -308,7 +321,7 @@ def run_parallel(r_smiles, p_smiles, job_name, no_duplicates=False, force_depth=
     def init_worker():
         global clf
         clf = xgboost.XGBClassifier()
-        clf.load_model('models/v102f2/xg_model.json')
+        clf.load_model('models/v103f2/xg_model.json')
         RDLogger.DisableLog("rdApp.*")
 
 
