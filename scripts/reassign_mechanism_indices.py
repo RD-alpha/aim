@@ -84,8 +84,12 @@ def main() -> int:
     total_changed = 0
     total_files = 0
     for path in _iter_data_json(args.root):
-        total_files += 1
-        total_changed += process_file(path, args.dry_run)
+        try:
+            total_files += 1
+            total_changed += process_file(path, args.dry_run)
+        except Exception as e:
+            print(f"Error processing {path}: {e}")
+            total_changed -=1
 
     print(f"Scanned {total_files} data.json files")
     print(f"Updated {total_changed} mechanisms")
