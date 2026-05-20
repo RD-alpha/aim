@@ -2,7 +2,7 @@ from run_parallel import run_parallel
 
 #Arguments are r_smiles, p_smiles, job_name, no_duplicates=False, force_depth= False, depth_limit=3, follow_on_enabled=True, aromatic=True, screen_charges_enabled=False, hypervalent_enabled=False
 
-no_duplicates = True
+no_duplicates = False
 force_depth = True
 depth_limit = 5
 follow_on_enabled = True
@@ -56,8 +56,8 @@ end_smiles = "COC(=O)C1=C(C)NC(C)=C(C(=O)OC)C1c1ccccc1.[OH3+].O"
 
 # Heterocycle
 
-sm_smiles = "c1(C(C)(C)C#N)ccccc1C#N.O.[OH3+].O"
-end_smiles= "CC1(C)C(=[OH+])NC(=O)c2ccccc21.N.O"
+# sm_smiles = "c1(C(C)(C)C#N)ccccc1C#N.O.[OH3+].O"
+# end_smiles= "CC1(C)C(=[OH+])NC(=O)c2ccccc21.N.O"
 
 print("Starting SMILES:", sm_smiles)
 print("Ending SMILES:", end_smiles)

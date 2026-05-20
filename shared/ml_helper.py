@@ -202,6 +202,7 @@ def make_atom_fingerprint(atom, other_atom_idx=None):
     # TODO: add C(EN)3 for good leaving group
     # [C+, C-, CH0, CH, C-EN, C=EN, EN, EP]
 
+    # TODO: Reduce the size of this by one since bit 8 is not doing anything at the moment (supposed to be CH0 but this isn't encoded)
     adjecency_bitstring = [0] * 9
     for a in atom.GetNeighbors():
         if other_atom_idx != None and a.GetIdx() == other_atom_idx:
