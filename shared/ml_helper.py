@@ -234,7 +234,7 @@ def make_atom_fingerprint(atom, other_atom_idx=None):
 
  
 
-    total_bit_string = charge_bitstring + h_number_bitstring + hybridization_bitstring + element_bitstring + aromatic_bit + adjecency_bitstring + three_membered_ring_bitstring
+    total_bit_string = charge_bitstring + h_number_bitstring + hybridization_bitstring + element_bitstring + aromatic_bit + adjacency_bitstring + three_membered_ring_bitstring
     return total_bit_string
 
 def make_bond_fingerprint(bond):
