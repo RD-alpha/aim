@@ -46,10 +46,11 @@ ATOM_FEATURE_GROUPS: list[tuple[str, list[str]]] = [
             "adj=C(sp/sp2)",
         ],
     ),
+    ("relative_adjacency", ["atom1", "atom2", "atom3", "atom4"]),
     ("ring_membership", ["ring=3"]),
 ]
 
-BOND_FEATURE_LABELS = ["single", "double", "triple", "unused"]
+BOND_FEATURE_LABELS = ["single", "double", "triple"]
 RING_SIZE_FEATURE_LABELS = ["ring=3", "ring=4", "ring=5", "ring=6", "ring>=7"]
 
 
@@ -64,6 +65,24 @@ def fingerprint_size() -> int:
         + 2 * len(BOND_FEATURE_LABELS)
         + len(RING_SIZE_FEATURE_LABELS)
     )
+
+
+def build_section_layout() -> list[dict[str, int | str]]:
+    layout: list[dict[str, int | str]] = []
+    idx = 0
+
+    def add_section(name: str, size: int) -> None:
+        nonlocal idx
+        layout.append({"section": name, "start": idx, "size": size, "end": idx + size - 1})
+        idx += size
+
+    add_section("mechanism_type", len(MECHANISM_TYPE_LABELS))
+    for atom_num in range(1, 5):
+        add_section(f"atom{atom_num}", atom_feature_size())
+    add_section("bond1", len(BOND_FEATURE_LABELS))
+    add_section("bond2", len(BOND_FEATURE_LABELS))
+    add_section("new_bond_ring_size", len(RING_SIZE_FEATURE_LABELS))
+    return layout
 
 
 def build_feature_entries() -> list[dict[str, object]]:
@@ -142,6 +161,7 @@ def build_schema() -> dict[str, object]:
         ],
         "bond_feature_labels": BOND_FEATURE_LABELS,
         "new_bond_ring_labels": RING_SIZE_FEATURE_LABELS,
+        "section_layout": build_section_layout(),
         "entries": entries,
     }
 
@@ -192,6 +212,76 @@ def validate_schema_against_implementation() -> None:
             f"Total fingerprint width mismatch: schema={expected_total}, implementation={actual_total}"
         )
 
+    entries = build_feature_entries()
+    if len(entries) != expected_total:
+        raise ValueError(
+            f"Feature entry count mismatch: entries={len(entries)}, expected_total={expected_total}"
+        )
+
+    for expected_idx, entry in enumerate(entries):
+        if entry["index"] != expected_idx:
+            raise ValueError(
+                f"Feature index mismatch at position {expected_idx}: entry has index={entry['index']}"
+            )
+
+    section_layout = build_section_layout()
+    entries_by_section: dict[str, list[dict[str, object]]] = {}
+    for entry in entries:
+        entries_by_section.setdefault(str(entry["section"]), []).append(entry)
+
+    for section in section_layout:
+        name = str(section["section"])
+        start = int(section["start"])
+        size = int(section["size"])
+        end = int(section["end"])
+        section_entries = entries_by_section.get(name, [])
+
+        if len(section_entries) != size:
+            raise ValueError(
+                f"Section size mismatch for {name}: layout={size}, entries={len(section_entries)}"
+            )
+        if int(section_entries[0]["index"]) != start:
+            raise ValueError(
+                f"Section start mismatch for {name}: layout={start}, entries={section_entries[0]['index']}"
+            )
+        if int(section_entries[-1]["index"]) != end:
+            raise ValueError(
+                f"Section end mismatch for {name}: layout={end}, entries={section_entries[-1]['index']}"
+            )
+
+    # first_labels = {
+    #     "mechanism_type": "mechanism_type=0",
+    #     "atom1": "atom1.charge=neg",
+    #     "atom2": "atom2.charge=neg",
+    #     "atom3": "atom3.charge=neg",
+    #     "atom4": "atom4.charge=neg",
+    #     "bond1": "bond1=single",
+    #     "bond2": "bond2=single",
+    #     "new_bond_ring_size": "ring=3",
+    # }
+    # last_labels = {
+    #     "mechanism_type": "mechanism_type=10",
+    #     "atom1": "atom1.ring=3",
+    #     "atom2": "atom2.ring=3",
+    #     "atom3": "atom3.ring=3",
+    #     "atom4": "atom4.ring=3",
+    #     "bond1": "bond1=unused",
+    #     "bond2": "bond2=unused",
+    #     "new_bond_ring_size": "ring>=7",
+    # }
+
+    # for section in section_layout:
+    #     name = str(section["section"])
+    #     section_entries = entries_by_section[name]
+    #     if str(section_entries[0]["label"]) != first_labels[name]:
+    #         raise ValueError(
+    #             f"First label mismatch for {name}: expected={first_labels[name]}, actual={section_entries[0]['label']}"
+    #         )
+    #     if str(section_entries[-1]["label"]) != last_labels[name]:
+    #         raise ValueError(
+    #             f"Last label mismatch for {name}: expected={last_labels[name]}, actual={section_entries[-1]['label']}"
+    #         )
+
 
 __all__ = [
     "ATOM_FEATURE_GROUPS",
@@ -201,6 +291,7 @@ __all__ = [
     "atom_feature_size",
     "build_feature_entries",
     "build_feature_map",
+    "build_section_layout",
     "build_schema",
     "export_schema_json",
     "fingerprint_size",
