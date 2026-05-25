@@ -2,85 +2,26 @@ from rdkit import Chem
 import numpy as np
 
 """
-Bitstring Representation:
+Fingerprint layout notes
+------------------------
 
-1. Charge Bitstring (2 bits):
-   - [0]: Atom has a negative formal charge.
-   - [1]: Atom has a positive formal charge.
+The canonical feature layout lives in `shared.fingerprint_schema`.
+Use that module to:
 
-2. Hydrogen Count Bitstring (4 bits):
-   - [0]: Atom has 0 hydrogens.
-   - [1]: Atom has 1 hydrogen.
-   - [2]: Atom has 2 hydrogens.
-   - [3]: Atom has more than 2 hydrogens.
+- build the feature index map used by `explain_mech.ipynb`
+- validate that schema labels still match the implementation here
+- export `shared/fingerprint_schema.json`
 
-3. Hybridization Bitstring (3 bits):
-   - [0]: Atom is SP hybridized.
-   - [1]: Atom is SP2 hybridized.
-   - [2]: Atom is SP3 hybridized.
+Current implemented widths:
 
-4. Element Bitstring (15 bits):
-   - [0]: Alkali metals (e.g., Li, Na, K).
-   - [1]: Boron (B).
-   - [2]: Carbon (C).
-   - [3]: Nitrogen (N).
-   - [4]: Oxygen (O).
-   - [5]: Fluorine (F).
-   - [6]: Magnesium (Mg).
-   - [7]: Aluminium (Al).
-   - [8]: Silicon (Si).
-   - [9]: Phosphorus (P).
-   - [10]: Sulfur (S).
-   - [11]: Chlorine (Cl).
-   - [12]: Bromine (Br).
-   - [13]: Iodine (I).
-   - [14]: Transition metals (atomic numbers 20–30).
+- mechanism type: 11 bits
+- per-atom fingerprint: 34 bits
+- four atom blocks: 136 bits total
+- bond1 fingerprint: 4 bits
+- bond2 fingerprint: 4 bits
+- new-bond ring fingerprint: 5 bits
 
-5. Aromaticity Bitstring (2 bit):
-   - [0]: Atom is not aromatic.
-   - [1]: Atom is aromatic.
-
-6. Adjacency Bitstring (9 bits):
-   - [0]: Neighboring carbon has a positive formal charge (C+).
-   - [1]: Neighboring carbon has a negative formal charge (C-).
-   - [2]: Neighboring carbon has at least one hydrogen (CH).
-   - [3]: Neighboring carbon is bonded to an electronegative atom via a single bond (C-EN).
-   - [4]: Neighboring carbon is bonded to an electronegative atom via a double bond (C=EN).
-   - [5]: Neighboring atom is electronegative (EN).
-   - [6]: Neighboring atom is electropositive (EP).
-   - [7]: Neighboring carbon has no hydrogens (CH0).
-   - [8]: Neighbouring carbon is sp2 or sp hybridized
-
-7. Bond Type Bitstring (3 bits):
-   - [0]: Single bond.
-   - [1]: Double bond.
-   - [2]: Triple bond.
-
-8. Ring Size Bitstring (5 bits):
-   - [0]: Atom pair is part of a 3-membered ring.
-   - [1]: Atom pair is part of a 4-membered ring.
-   - [2]: Atom pair is part of a 5-membered ring.
-   - [3]: Atom pair is part of a 6-membered ring.
-   - [4]: Atom pair is part of a 7+ membered ring.
-
-Total Bitstring Length:
-- Mechanism Type Bitstring: 11 bits
-___________________________________
-- Charge Bitstring: 3 bits
-- Hydrogen Count Bitstring: 4 bits
-- Hybridization Bitstring: 3 bits
-- Element Bitstring: 15 bits
-- Aromaticity Bitstring: 2 bits
-- Adjacency Bitstring: 9 bits
-_________________________________
-Atom Fingerprint Total: 35 bits
-_________________________________
-35*4 = 140 bits for atoms
-- Bond Type Bitstring: 3 bits
-- Bond Fingerprint Total: 6 bits
-__________________________________
-- Ring Size Bitstring: 5 bits
-
+Total implemented fingerprint width: 160 bits
 """
 
 electronegativity_dict = {1: 2.2,
