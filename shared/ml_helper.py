@@ -75,9 +75,9 @@ electronegativity_dict = {1: 2.2,
  52: 2.1,
  53: 2.66}
 
-def make_atom_fingerprint(atom, other_atom_idx=None):
+def make_atom_fingerprint(atom, other_atom_idx=None, other_atoms=[]):
     if atom is None:
-        return [np.nan] * 34
+        return [np.nan] * 38
 
     # Charge bitstring
     charge_bitstring = [0] * 2
@@ -144,9 +144,12 @@ def make_atom_fingerprint(atom, other_atom_idx=None):
     # [C+, C-, CH0, CH, C-EN, C=EN, EN, EP]
 
     adjacency_bitstring = [0] * 8
+    relative_adjacency = [0] * 4
     for a in atom.GetNeighbors():
         if other_atom_idx != None and a.GetIdx() == other_atom_idx:
             continue
+        if a.GetIdx() in other_atoms:
+            relative_adjacency[other_atoms.index(a.GetIdx())] = 1
         if a.GetAtomicNum() == 6:
             if a.GetFormalCharge() > 0:
                 adjacency_bitstring[0] = 1
@@ -175,13 +178,13 @@ def make_atom_fingerprint(atom, other_atom_idx=None):
 
  
 
-    total_bit_string = charge_bitstring + h_number_bitstring + hybridization_bitstring + element_bitstring + aromatic_bit + adjacency_bitstring + three_membered_ring_bitstring
+    total_bit_string = charge_bitstring + h_number_bitstring + hybridization_bitstring + element_bitstring + aromatic_bit + adjacency_bitstring + relative_adjacency + three_membered_ring_bitstring
     return total_bit_string
 
 def make_bond_fingerprint(bond):
     # bond type bitstring
     # [single, double, triple]
-    bond_type_bitstring = [0] * 4
+    bond_type_bitstring = [0] * 3
     if not bond:
         return bond_type_bitstring
     if bond.GetBondTypeAsDouble() == 1:
@@ -230,22 +233,22 @@ def make_fingerprint(sm, mech):
     atom_fps = []
     for i in range(1, 5):
         if mech[i] is None:
-            atom_fps.append(make_atom_fingerprint(None))
+            atom_fps.append(make_atom_fingerprint(None, other_atoms=mech[1:]))
         else:
             if i in [1, 2]:
-                atom_fps.append(make_atom_fingerprint(sm.GetAtomWithIdx(mech[i]), mech[i + 2]))
+                atom_fps.append(make_atom_fingerprint(sm.GetAtomWithIdx(mech[i]), mech[i + 2], mech[1:]))
             elif i in [3, 4]:
-                atom_fps.append(make_atom_fingerprint(sm.GetAtomWithIdx(mech[i]), mech[i - 2]))
+                atom_fps.append(make_atom_fingerprint(sm.GetAtomWithIdx(mech[i]), mech[i - 2], mech[1:]))
             else:
-                atom_fps.append(make_atom_fingerprint(sm.GetAtomWithIdx(mech[i])))
+                atom_fps.append(make_atom_fingerprint(sm.GetAtomWithIdx(mech[i]), other_atoms=mech[1:]))
     if mech[3] and mech[1]:
         b1 = make_bond_fingerprint(sm.GetBondBetweenAtoms(mech[1], mech[3]))
     else:
-        b1 = [np.nan] * 4
+        b1 = [np.nan] * 3
     if mech[4] and mech[2]:
         b2 = make_bond_fingerprint(sm.GetBondBetweenAtoms(mech[2], mech[4]))
     else:
-        b2 = [np.nan] * 4
+        b2 = [np.nan] * 3
     r = new_bond_fingerprint(sm, mech[1], mech[2])
     sum_finger_print = mech_type + atom_fps[0] + atom_fps[1] + atom_fps[2] + atom_fps[3] + b1 + b2 + r
     return sum_finger_print
