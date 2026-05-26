@@ -237,11 +237,11 @@ def make_fingerprint(sm, mech):
                 atom_fps.append(make_atom_fingerprint(sm.GetAtomWithIdx(mech[i]), mech[i - 2], mech[1:]))
             else:
                 atom_fps.append(make_atom_fingerprint(sm.GetAtomWithIdx(mech[i]), other_atoms=mech[1:]))
-    if mech[3] and mech[1]:
+    if mech[3] is not None and mech[1] is not None:
         b1 = make_bond_fingerprint(sm.GetBondBetweenAtoms(mech[1], mech[3]))
     else:
         b1 = [np.nan] * 3
-    if mech[4] and mech[2]:
+    if mech[4] is not None and mech[2] is not None:
         b2 = make_bond_fingerprint(sm.GetBondBetweenAtoms(mech[2], mech[4]))
     else:
         b2 = [np.nan] * 3
