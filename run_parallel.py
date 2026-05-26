@@ -91,8 +91,6 @@ def next_nodes(packed):
             
         pred = clf.predict(fp.reshape(1, -1))[0]
         found_frag = False
-        if force_correct_last_step and pred == 0:
-            continue
         try:
             inchi1 = Chem.MolToInchi(product, options='/FixedH')
             if no_duplicates and inchi1 in inchis_set:
@@ -248,7 +246,7 @@ def run_parallel(r_smiles, p_smiles, job_name, no_duplicates=False, force_depth=
     test_set_mech_count = 0
     start_time_total = time.time()
 
-    model_name = "v108"
+    model_name = "v110"
     print("Using model ", model_name)
     
     with open("unique_bitvectors.txt", "r") as f:
@@ -324,9 +322,6 @@ def run_parallel(r_smiles, p_smiles, job_name, no_duplicates=False, force_depth=
     def init_worker():
         global clf
         clf = xgboost.XGBClassifier()
-
-        
-  
         clf.load_model(f'models/{model_name}/xg_model.json')
         RDLogger.DisableLog("rdApp.*")
 

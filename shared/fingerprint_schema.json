@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "total_features": 174,
+  "total_features": 182,
   "mechanism_type_bits": 11,
-  "atom_feature_bits": 38,
+  "atom_feature_bits": 40,
   "bond_feature_bits": 3,
   "new_bond_ring_bits": 5,
   "atom_feature_groups": [
@@ -59,14 +59,16 @@
     {
       "name": "adjacency",
       "labels": [
-        "adj=C+",
-        "adj=C-",
+        "adj=C",
         "adj=CH",
+        "adj=C(sp/sp2)",
+        "adj=C(aromatic)",
         "adj=C-EN",
         "adj=C=EN",
         "adj=EN",
         "adj=EP",
-        "adj=C(sp/sp2)"
+        "adj=positive",
+        "adj=negative"
       ]
     },
     {
@@ -107,44 +109,44 @@
     {
       "section": "atom1",
       "start": 11,
-      "size": 38,
-      "end": 48
+      "size": 40,
+      "end": 50
     },
     {
       "section": "atom2",
-      "start": 49,
-      "size": 38,
-      "end": 86
+      "start": 51,
+      "size": 40,
+      "end": 90
     },
     {
       "section": "atom3",
-      "start": 87,
-      "size": 38,
-      "end": 124
+      "start": 91,
+      "size": 40,
+      "end": 130
     },
     {
       "section": "atom4",
-      "start": 125,
-      "size": 38,
-      "end": 162
+      "start": 131,
+      "size": 40,
+      "end": 170
     },
     {
       "section": "bond1",
-      "start": 163,
+      "start": 171,
       "size": 3,
-      "end": 165
+      "end": 173
     },
     {
       "section": "bond2",
-      "start": 166,
+      "start": 174,
       "size": 3,
-      "end": 168
+      "end": 176
     },
     {
       "section": "new_bond_ring_size",
-      "start": 169,
+      "start": 177,
       "size": 5,
-      "end": 173
+      "end": 181
     }
   ],
   "entries": [
@@ -402,965 +404,1021 @@
     },
     {
       "index": 36,
-      "label": "atom1.adj=C+",
+      "label": "atom1.adj=C",
       "section": "atom1",
       "group": "adjacency",
       "slot": 0
     },
     {
       "index": 37,
-      "label": "atom1.adj=C-",
+      "label": "atom1.adj=CH",
       "section": "atom1",
       "group": "adjacency",
       "slot": 1
     },
     {
       "index": 38,
-      "label": "atom1.adj=CH",
+      "label": "atom1.adj=C(sp/sp2)",
       "section": "atom1",
       "group": "adjacency",
       "slot": 2
     },
     {
       "index": 39,
-      "label": "atom1.adj=C-EN",
+      "label": "atom1.adj=C(aromatic)",
       "section": "atom1",
       "group": "adjacency",
       "slot": 3
     },
     {
       "index": 40,
-      "label": "atom1.adj=C=EN",
+      "label": "atom1.adj=C-EN",
       "section": "atom1",
       "group": "adjacency",
       "slot": 4
     },
     {
       "index": 41,
-      "label": "atom1.adj=EN",
+      "label": "atom1.adj=C=EN",
       "section": "atom1",
       "group": "adjacency",
       "slot": 5
     },
     {
       "index": 42,
-      "label": "atom1.adj=EP",
+      "label": "atom1.adj=EN",
       "section": "atom1",
       "group": "adjacency",
       "slot": 6
     },
     {
       "index": 43,
-      "label": "atom1.adj=C(sp/sp2)",
+      "label": "atom1.adj=EP",
       "section": "atom1",
       "group": "adjacency",
       "slot": 7
     },
     {
       "index": 44,
+      "label": "atom1.adj=positive",
+      "section": "atom1",
+      "group": "adjacency",
+      "slot": 8
+    },
+    {
+      "index": 45,
+      "label": "atom1.adj=negative",
+      "section": "atom1",
+      "group": "adjacency",
+      "slot": 9
+    },
+    {
+      "index": 46,
       "label": "atom1.atom1",
       "section": "atom1",
       "group": "relative_adjacency",
       "slot": 0
     },
     {
-      "index": 45,
+      "index": 47,
       "label": "atom1.atom2",
       "section": "atom1",
       "group": "relative_adjacency",
       "slot": 1
     },
     {
-      "index": 46,
+      "index": 48,
       "label": "atom1.atom3",
       "section": "atom1",
       "group": "relative_adjacency",
       "slot": 2
     },
     {
-      "index": 47,
+      "index": 49,
       "label": "atom1.atom4",
       "section": "atom1",
       "group": "relative_adjacency",
       "slot": 3
     },
     {
-      "index": 48,
+      "index": 50,
       "label": "atom1.ring=3",
       "section": "atom1",
       "group": "ring_membership",
       "slot": 0
     },
     {
-      "index": 49,
+      "index": 51,
       "label": "atom2.charge=neg",
       "section": "atom2",
       "group": "charge",
       "slot": 0
     },
     {
-      "index": 50,
+      "index": 52,
       "label": "atom2.charge=pos",
       "section": "atom2",
       "group": "charge",
       "slot": 1
     },
     {
-      "index": 51,
+      "index": 53,
       "label": "atom2.H=0",
       "section": "atom2",
       "group": "hydrogen_count",
       "slot": 0
     },
     {
-      "index": 52,
+      "index": 54,
       "label": "atom2.H=1",
       "section": "atom2",
       "group": "hydrogen_count",
       "slot": 1
     },
     {
-      "index": 53,
+      "index": 55,
       "label": "atom2.H=2",
       "section": "atom2",
       "group": "hydrogen_count",
       "slot": 2
     },
     {
-      "index": 54,
+      "index": 56,
       "label": "atom2.H>2",
       "section": "atom2",
       "group": "hydrogen_count",
       "slot": 3
     },
     {
-      "index": 55,
+      "index": 57,
       "label": "atom2.hybrid=sp",
       "section": "atom2",
       "group": "hybridization",
       "slot": 0
     },
     {
-      "index": 56,
+      "index": 58,
       "label": "atom2.hybrid=sp2",
       "section": "atom2",
       "group": "hybridization",
       "slot": 1
     },
     {
-      "index": 57,
+      "index": 59,
       "label": "atom2.hybrid=sp3",
       "section": "atom2",
       "group": "hybridization",
       "slot": 2
     },
     {
-      "index": 58,
+      "index": 60,
       "label": "atom2.element=alkali",
       "section": "atom2",
       "group": "element",
       "slot": 0
     },
     {
-      "index": 59,
+      "index": 61,
       "label": "atom2.element=B",
       "section": "atom2",
       "group": "element",
       "slot": 1
     },
     {
-      "index": 60,
+      "index": 62,
       "label": "atom2.element=C",
       "section": "atom2",
       "group": "element",
       "slot": 2
     },
     {
-      "index": 61,
+      "index": 63,
       "label": "atom2.element=N",
       "section": "atom2",
       "group": "element",
       "slot": 3
     },
     {
-      "index": 62,
+      "index": 64,
       "label": "atom2.element=O",
       "section": "atom2",
       "group": "element",
       "slot": 4
     },
     {
-      "index": 63,
+      "index": 65,
       "label": "atom2.element=F",
       "section": "atom2",
       "group": "element",
       "slot": 5
     },
     {
-      "index": 64,
+      "index": 66,
       "label": "atom2.element=Mg",
       "section": "atom2",
       "group": "element",
       "slot": 6
     },
     {
-      "index": 65,
+      "index": 67,
       "label": "atom2.element=Al",
       "section": "atom2",
       "group": "element",
       "slot": 7
     },
     {
-      "index": 66,
+      "index": 68,
       "label": "atom2.element=Si",
       "section": "atom2",
       "group": "element",
       "slot": 8
     },
     {
-      "index": 67,
+      "index": 69,
       "label": "atom2.element=P",
       "section": "atom2",
       "group": "element",
       "slot": 9
     },
     {
-      "index": 68,
+      "index": 70,
       "label": "atom2.element=S",
       "section": "atom2",
       "group": "element",
       "slot": 10
     },
     {
-      "index": 69,
+      "index": 71,
       "label": "atom2.element=Cl",
       "section": "atom2",
       "group": "element",
       "slot": 11
     },
     {
-      "index": 70,
+      "index": 72,
       "label": "atom2.element=Br",
       "section": "atom2",
       "group": "element",
       "slot": 12
     },
     {
-      "index": 71,
+      "index": 73,
       "label": "atom2.element=I",
       "section": "atom2",
       "group": "element",
       "slot": 13
     },
     {
-      "index": 72,
+      "index": 74,
       "label": "atom2.element=transition_metal",
       "section": "atom2",
       "group": "element",
       "slot": 14
     },
     {
-      "index": 73,
+      "index": 75,
       "label": "atom2.aromatic",
       "section": "atom2",
       "group": "aromaticity",
       "slot": 0
     },
     {
-      "index": 74,
-      "label": "atom2.adj=C+",
+      "index": 76,
+      "label": "atom2.adj=C",
       "section": "atom2",
       "group": "adjacency",
       "slot": 0
     },
     {
-      "index": 75,
-      "label": "atom2.adj=C-",
+      "index": 77,
+      "label": "atom2.adj=CH",
       "section": "atom2",
       "group": "adjacency",
       "slot": 1
     },
     {
-      "index": 76,
-      "label": "atom2.adj=CH",
+      "index": 78,
+      "label": "atom2.adj=C(sp/sp2)",
       "section": "atom2",
       "group": "adjacency",
       "slot": 2
     },
     {
-      "index": 77,
-      "label": "atom2.adj=C-EN",
+      "index": 79,
+      "label": "atom2.adj=C(aromatic)",
       "section": "atom2",
       "group": "adjacency",
       "slot": 3
     },
     {
-      "index": 78,
-      "label": "atom2.adj=C=EN",
+      "index": 80,
+      "label": "atom2.adj=C-EN",
       "section": "atom2",
       "group": "adjacency",
       "slot": 4
     },
     {
-      "index": 79,
-      "label": "atom2.adj=EN",
+      "index": 81,
+      "label": "atom2.adj=C=EN",
       "section": "atom2",
       "group": "adjacency",
       "slot": 5
     },
     {
-      "index": 80,
-      "label": "atom2.adj=EP",
+      "index": 82,
+      "label": "atom2.adj=EN",
       "section": "atom2",
       "group": "adjacency",
       "slot": 6
     },
     {
-      "index": 81,
-      "label": "atom2.adj=C(sp/sp2)",
+      "index": 83,
+      "label": "atom2.adj=EP",
       "section": "atom2",
       "group": "adjacency",
       "slot": 7
     },
     {
-      "index": 82,
+      "index": 84,
+      "label": "atom2.adj=positive",
+      "section": "atom2",
+      "group": "adjacency",
+      "slot": 8
+    },
+    {
+      "index": 85,
+      "label": "atom2.adj=negative",
+      "section": "atom2",
+      "group": "adjacency",
+      "slot": 9
+    },
+    {
+      "index": 86,
       "label": "atom2.atom1",
       "section": "atom2",
       "group": "relative_adjacency",
       "slot": 0
     },
     {
-      "index": 83,
+      "index": 87,
       "label": "atom2.atom2",
       "section": "atom2",
       "group": "relative_adjacency",
       "slot": 1
     },
     {
-      "index": 84,
+      "index": 88,
       "label": "atom2.atom3",
       "section": "atom2",
       "group": "relative_adjacency",
       "slot": 2
     },
     {
-      "index": 85,
+      "index": 89,
       "label": "atom2.atom4",
       "section": "atom2",
       "group": "relative_adjacency",
       "slot": 3
     },
     {
-      "index": 86,
+      "index": 90,
       "label": "atom2.ring=3",
       "section": "atom2",
       "group": "ring_membership",
       "slot": 0
     },
     {
-      "index": 87,
+      "index": 91,
       "label": "atom3.charge=neg",
       "section": "atom3",
       "group": "charge",
       "slot": 0
     },
     {
-      "index": 88,
+      "index": 92,
       "label": "atom3.charge=pos",
       "section": "atom3",
       "group": "charge",
       "slot": 1
     },
     {
-      "index": 89,
+      "index": 93,
       "label": "atom3.H=0",
       "section": "atom3",
       "group": "hydrogen_count",
       "slot": 0
     },
     {
-      "index": 90,
+      "index": 94,
       "label": "atom3.H=1",
       "section": "atom3",
       "group": "hydrogen_count",
       "slot": 1
     },
     {
-      "index": 91,
+      "index": 95,
       "label": "atom3.H=2",
       "section": "atom3",
       "group": "hydrogen_count",
       "slot": 2
     },
     {
-      "index": 92,
+      "index": 96,
       "label": "atom3.H>2",
       "section": "atom3",
       "group": "hydrogen_count",
       "slot": 3
     },
     {
-      "index": 93,
+      "index": 97,
       "label": "atom3.hybrid=sp",
       "section": "atom3",
       "group": "hybridization",
       "slot": 0
     },
     {
-      "index": 94,
+      "index": 98,
       "label": "atom3.hybrid=sp2",
       "section": "atom3",
       "group": "hybridization",
       "slot": 1
     },
     {
-      "index": 95,
+      "index": 99,
       "label": "atom3.hybrid=sp3",
       "section": "atom3",
       "group": "hybridization",
       "slot": 2
     },
     {
-      "index": 96,
+      "index": 100,
       "label": "atom3.element=alkali",
       "section": "atom3",
       "group": "element",
       "slot": 0
     },
     {
-      "index": 97,
+      "index": 101,
       "label": "atom3.element=B",
       "section": "atom3",
       "group": "element",
       "slot": 1
     },
     {
-      "index": 98,
+      "index": 102,
       "label": "atom3.element=C",
       "section": "atom3",
       "group": "element",
       "slot": 2
     },
     {
-      "index": 99,
+      "index": 103,
       "label": "atom3.element=N",
       "section": "atom3",
       "group": "element",
       "slot": 3
     },
     {
-      "index": 100,
+      "index": 104,
       "label": "atom3.element=O",
       "section": "atom3",
       "group": "element",
       "slot": 4
     },
     {
-      "index": 101,
+      "index": 105,
       "label": "atom3.element=F",
       "section": "atom3",
       "group": "element",
       "slot": 5
     },
     {
-      "index": 102,
+      "index": 106,
       "label": "atom3.element=Mg",
       "section": "atom3",
       "group": "element",
       "slot": 6
     },
     {
-      "index": 103,
+      "index": 107,
       "label": "atom3.element=Al",
       "section": "atom3",
       "group": "element",
       "slot": 7
     },
     {
-      "index": 104,
+      "index": 108,
       "label": "atom3.element=Si",
       "section": "atom3",
       "group": "element",
       "slot": 8
     },
     {
-      "index": 105,
+      "index": 109,
       "label": "atom3.element=P",
       "section": "atom3",
       "group": "element",
       "slot": 9
     },
     {
-      "index": 106,
+      "index": 110,
       "label": "atom3.element=S",
       "section": "atom3",
       "group": "element",
       "slot": 10
     },
     {
-      "index": 107,
+      "index": 111,
       "label": "atom3.element=Cl",
       "section": "atom3",
       "group": "element",
       "slot": 11
     },
     {
-      "index": 108,
+      "index": 112,
       "label": "atom3.element=Br",
       "section": "atom3",
       "group": "element",
       "slot": 12
     },
     {
-      "index": 109,
+      "index": 113,
       "label": "atom3.element=I",
       "section": "atom3",
       "group": "element",
       "slot": 13
     },
     {
-      "index": 110,
+      "index": 114,
       "label": "atom3.element=transition_metal",
       "section": "atom3",
       "group": "element",
       "slot": 14
     },
     {
-      "index": 111,
+      "index": 115,
       "label": "atom3.aromatic",
       "section": "atom3",
       "group": "aromaticity",
       "slot": 0
     },
     {
-      "index": 112,
-      "label": "atom3.adj=C+",
+      "index": 116,
+      "label": "atom3.adj=C",
       "section": "atom3",
       "group": "adjacency",
       "slot": 0
     },
     {
-      "index": 113,
-      "label": "atom3.adj=C-",
+      "index": 117,
+      "label": "atom3.adj=CH",
       "section": "atom3",
       "group": "adjacency",
       "slot": 1
     },
     {
-      "index": 114,
-      "label": "atom3.adj=CH",
+      "index": 118,
+      "label": "atom3.adj=C(sp/sp2)",
       "section": "atom3",
       "group": "adjacency",
       "slot": 2
     },
     {
-      "index": 115,
-      "label": "atom3.adj=C-EN",
+      "index": 119,
+      "label": "atom3.adj=C(aromatic)",
       "section": "atom3",
       "group": "adjacency",
       "slot": 3
     },
     {
-      "index": 116,
-      "label": "atom3.adj=C=EN",
+      "index": 120,
+      "label": "atom3.adj=C-EN",
       "section": "atom3",
       "group": "adjacency",
       "slot": 4
     },
     {
-      "index": 117,
-      "label": "atom3.adj=EN",
+      "index": 121,
+      "label": "atom3.adj=C=EN",
       "section": "atom3",
       "group": "adjacency",
       "slot": 5
     },
     {
-      "index": 118,
-      "label": "atom3.adj=EP",
+      "index": 122,
+      "label": "atom3.adj=EN",
       "section": "atom3",
       "group": "adjacency",
       "slot": 6
     },
     {
-      "index": 119,
-      "label": "atom3.adj=C(sp/sp2)",
+      "index": 123,
+      "label": "atom3.adj=EP",
       "section": "atom3",
       "group": "adjacency",
       "slot": 7
     },
     {
-      "index": 120,
+      "index": 124,
+      "label": "atom3.adj=positive",
+      "section": "atom3",
+      "group": "adjacency",
+      "slot": 8
+    },
+    {
+      "index": 125,
+      "label": "atom3.adj=negative",
+      "section": "atom3",
+      "group": "adjacency",
+      "slot": 9
+    },
+    {
+      "index": 126,
       "label": "atom3.atom1",
       "section": "atom3",
       "group": "relative_adjacency",
       "slot": 0
     },
     {
-      "index": 121,
+      "index": 127,
       "label": "atom3.atom2",
       "section": "atom3",
       "group": "relative_adjacency",
       "slot": 1
     },
     {
-      "index": 122,
+      "index": 128,
       "label": "atom3.atom3",
       "section": "atom3",
       "group": "relative_adjacency",
       "slot": 2
     },
     {
-      "index": 123,
+      "index": 129,
       "label": "atom3.atom4",
       "section": "atom3",
       "group": "relative_adjacency",
       "slot": 3
     },
     {
-      "index": 124,
+      "index": 130,
       "label": "atom3.ring=3",
       "section": "atom3",
       "group": "ring_membership",
       "slot": 0
     },
     {
-      "index": 125,
+      "index": 131,
       "label": "atom4.charge=neg",
       "section": "atom4",
       "group": "charge",
       "slot": 0
     },
     {
-      "index": 126,
+      "index": 132,
       "label": "atom4.charge=pos",
       "section": "atom4",
       "group": "charge",
       "slot": 1
     },
     {
-      "index": 127,
+      "index": 133,
       "label": "atom4.H=0",
       "section": "atom4",
       "group": "hydrogen_count",
       "slot": 0
     },
     {
-      "index": 128,
+      "index": 134,
       "label": "atom4.H=1",
       "section": "atom4",
       "group": "hydrogen_count",
       "slot": 1
     },
     {
-      "index": 129,
+      "index": 135,
       "label": "atom4.H=2",
       "section": "atom4",
       "group": "hydrogen_count",
       "slot": 2
     },
     {
-      "index": 130,
+      "index": 136,
       "label": "atom4.H>2",
       "section": "atom4",
       "group": "hydrogen_count",
       "slot": 3
     },
     {
-      "index": 131,
+      "index": 137,
       "label": "atom4.hybrid=sp",
       "section": "atom4",
       "group": "hybridization",
       "slot": 0
     },
     {
-      "index": 132,
+      "index": 138,
       "label": "atom4.hybrid=sp2",
       "section": "atom4",
       "group": "hybridization",
       "slot": 1
     },
     {
-      "index": 133,
+      "index": 139,
       "label": "atom4.hybrid=sp3",
       "section": "atom4",
       "group": "hybridization",
       "slot": 2
     },
     {
-      "index": 134,
+      "index": 140,
       "label": "atom4.element=alkali",
       "section": "atom4",
       "group": "element",
       "slot": 0
     },
     {
-      "index": 135,
+      "index": 141,
       "label": "atom4.element=B",
       "section": "atom4",
       "group": "element",
       "slot": 1
     },
     {
-      "index": 136,
+      "index": 142,
       "label": "atom4.element=C",
       "section": "atom4",
       "group": "element",
       "slot": 2
     },
     {
-      "index": 137,
+      "index": 143,
       "label": "atom4.element=N",
       "section": "atom4",
       "group": "element",
       "slot": 3
     },
     {
-      "index": 138,
+      "index": 144,
       "label": "atom4.element=O",
       "section": "atom4",
       "group": "element",
       "slot": 4
     },
     {
-      "index": 139,
+      "index": 145,
       "label": "atom4.element=F",
       "section": "atom4",
       "group": "element",
       "slot": 5
     },
     {
-      "index": 140,
+      "index": 146,
       "label": "atom4.element=Mg",
       "section": "atom4",
       "group": "element",
       "slot": 6
     },
     {
-      "index": 141,
+      "index": 147,
       "label": "atom4.element=Al",
       "section": "atom4",
       "group": "element",
       "slot": 7
     },
     {
-      "index": 142,
+      "index": 148,
       "label": "atom4.element=Si",
       "section": "atom4",
       "group": "element",
       "slot": 8
     },
     {
-      "index": 143,
+      "index": 149,
       "label": "atom4.element=P",
       "section": "atom4",
       "group": "element",
       "slot": 9
     },
     {
-      "index": 144,
+      "index": 150,
       "label": "atom4.element=S",
       "section": "atom4",
       "group": "element",
       "slot": 10
     },
     {
-      "index": 145,
+      "index": 151,
       "label": "atom4.element=Cl",
       "section": "atom4",
       "group": "element",
       "slot": 11
     },
     {
-      "index": 146,
+      "index": 152,
       "label": "atom4.element=Br",
       "section": "atom4",
       "group": "element",
       "slot": 12
     },
     {
-      "index": 147,
+      "index": 153,
       "label": "atom4.element=I",
       "section": "atom4",
       "group": "element",
       "slot": 13
     },
     {
-      "index": 148,
+      "index": 154,
       "label": "atom4.element=transition_metal",
       "section": "atom4",
       "group": "element",
       "slot": 14
     },
     {
-      "index": 149,
+      "index": 155,
       "label": "atom4.aromatic",
       "section": "atom4",
       "group": "aromaticity",
       "slot": 0
     },
     {
-      "index": 150,
-      "label": "atom4.adj=C+",
+      "index": 156,
+      "label": "atom4.adj=C",
       "section": "atom4",
       "group": "adjacency",
       "slot": 0
     },
     {
-      "index": 151,
-      "label": "atom4.adj=C-",
+      "index": 157,
+      "label": "atom4.adj=CH",
       "section": "atom4",
       "group": "adjacency",
       "slot": 1
     },
     {
-      "index": 152,
-      "label": "atom4.adj=CH",
+      "index": 158,
+      "label": "atom4.adj=C(sp/sp2)",
       "section": "atom4",
       "group": "adjacency",
       "slot": 2
     },
     {
-      "index": 153,
-      "label": "atom4.adj=C-EN",
+      "index": 159,
+      "label": "atom4.adj=C(aromatic)",
       "section": "atom4",
       "group": "adjacency",
       "slot": 3
     },
     {
-      "index": 154,
-      "label": "atom4.adj=C=EN",
+      "index": 160,
+      "label": "atom4.adj=C-EN",
       "section": "atom4",
       "group": "adjacency",
       "slot": 4
     },
     {
-      "index": 155,
-      "label": "atom4.adj=EN",
+      "index": 161,
+      "label": "atom4.adj=C=EN",
       "section": "atom4",
       "group": "adjacency",
       "slot": 5
     },
     {
-      "index": 156,
-      "label": "atom4.adj=EP",
+      "index": 162,
+      "label": "atom4.adj=EN",
       "section": "atom4",
       "group": "adjacency",
       "slot": 6
     },
     {
-      "index": 157,
-      "label": "atom4.adj=C(sp/sp2)",
+      "index": 163,
+      "label": "atom4.adj=EP",
       "section": "atom4",
       "group": "adjacency",
       "slot": 7
     },
     {
-      "index": 158,
+      "index": 164,
+      "label": "atom4.adj=positive",
+      "section": "atom4",
+      "group": "adjacency",
+      "slot": 8
+    },
+    {
+      "index": 165,
+      "label": "atom4.adj=negative",
+      "section": "atom4",
+      "group": "adjacency",
+      "slot": 9
+    },
+    {
+      "index": 166,
       "label": "atom4.atom1",
       "section": "atom4",
       "group": "relative_adjacency",
       "slot": 0
     },
     {
-      "index": 159,
+      "index": 167,
       "label": "atom4.atom2",
       "section": "atom4",
       "group": "relative_adjacency",
       "slot": 1
     },
     {
-      "index": 160,
+      "index": 168,
       "label": "atom4.atom3",
       "section": "atom4",
       "group": "relative_adjacency",
       "slot": 2
     },
     {
-      "index": 161,
+      "index": 169,
       "label": "atom4.atom4",
       "section": "atom4",
       "group": "relative_adjacency",
       "slot": 3
     },
     {
-      "index": 162,
+      "index": 170,
       "label": "atom4.ring=3",
       "section": "atom4",
       "group": "ring_membership",
       "slot": 0
     },
     {
-      "index": 163,
+      "index": 171,
       "label": "bond1=single",
       "section": "bond1",
       "group": "bond_type",
       "slot": 0
     },
     {
-      "index": 164,
+      "index": 172,
       "label": "bond1=double",
       "section": "bond1",
       "group": "bond_type",
       "slot": 1
     },
     {
-      "index": 165,
+      "index": 173,
       "label": "bond1=triple",
       "section": "bond1",
       "group": "bond_type",
       "slot": 2
     },
     {
-      "index": 166,
+      "index": 174,
       "label": "bond2=single",
       "section": "bond2",
       "group": "bond_type",
       "slot": 0
     },
     {
-      "index": 167,
+      "index": 175,
       "label": "bond2=double",
       "section": "bond2",
       "group": "bond_type",
       "slot": 1
     },
     {
-      "index": 168,
+      "index": 176,
       "label": "bond2=triple",
       "section": "bond2",
       "group": "bond_type",
       "slot": 2
     },
     {
-      "index": 169,
+      "index": 177,
       "label": "ring=3",
       "section": "new_bond_ring_size",
       "group": "ring_size",
       "slot": 0
     },
     {
-      "index": 170,
+      "index": 178,
       "label": "ring=4",
       "section": "new_bond_ring_size",
       "group": "ring_size",
       "slot": 1
     },
     {
-      "index": 171,
+      "index": 179,
       "label": "ring=5",
       "section": "new_bond_ring_size",
       "group": "ring_size",
       "slot": 2
     },
     {
-      "index": 172,
+      "index": 180,
       "label": "ring=6",
       "section": "new_bond_ring_size",
       "group": "ring_size",
       "slot": 3
     },
     {
-      "index": 173,
+      "index": 181,
       "label": "ring>=7",
       "section": "new_bond_ring_size",
       "group": "ring_size",
