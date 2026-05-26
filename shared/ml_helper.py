@@ -12,16 +12,7 @@ Use that module to:
 - validate that schema labels still match the implementation here
 - export `shared/fingerprint_schema.json`
 
-Current implemented widths:
 
-- mechanism type: 11 bits
-- per-atom fingerprint: 34 bits
-- four atom blocks: 136 bits total
-- bond1 fingerprint: 4 bits
-- bond2 fingerprint: 4 bits
-- new-bond ring fingerprint: 5 bits
-
-Total implemented fingerprint width: 160 bits
 """
 
 electronegativity_dict = {1: 2.2,
@@ -77,7 +68,7 @@ electronegativity_dict = {1: 2.2,
 
 def make_atom_fingerprint(atom, other_atom_idx=None, other_atoms=[]):
     if atom is None:
-        return [np.nan] * 38
+        return [np.nan] * 40
 
     # Charge bitstring
     charge_bitstring = [0] * 2
@@ -143,7 +134,7 @@ def make_atom_fingerprint(atom, other_atom_idx=None, other_atoms=[]):
     # TODO: add C(EN)3 for good leaving group
     # [C+, C-, CH0, CH, C-EN, C=EN, EN, EP]
 
-    adjacency_bitstring = [0] * 8
+    adjacency_bitstring = [0] * 10
     relative_adjacency = [0] * 4
     for a in atom.GetNeighbors():
         if other_atom_idx != None and a.GetIdx() == other_atom_idx:
@@ -151,26 +142,31 @@ def make_atom_fingerprint(atom, other_atom_idx=None, other_atoms=[]):
         if a.GetIdx() in other_atoms:
             relative_adjacency[other_atoms.index(a.GetIdx())] = 1
         if a.GetAtomicNum() == 6:
-            if a.GetFormalCharge() > 0:
-                adjacency_bitstring[0] = 1
-            if a.GetHybridization() == Chem.rdchem.HybridizationType.SP2 or a.GetHybridization() == Chem.rdchem.HybridizationType.SP:
-                adjacency_bitstring[7] = 1
-            elif a.GetFormalCharge() < 0:
-                adjacency_bitstring[1] = 1
+            adjacency_bitstring[0] = 1
             if a.GetTotalNumHs() > 0:
+                adjacency_bitstring[1] = 1
+            if a.GetHybridization() == Chem.rdchem.HybridizationType.SP2 or a.GetHybridization() == Chem.rdchem.HybridizationType.SP:
                 adjacency_bitstring[2] = 1
+            if a.GetIsAromatic():
+                adjacency_bitstring[3] = 1
             for a2 in a.GetNeighbors():
                 if electronegativity_dict[a2.GetAtomicNum()] > 2.55:
                     for b in a.GetBonds():
                         if b.GetOtherAtom(a).GetIdx() == a2.GetIdx():
                             if b.GetBondTypeAsDouble() == 1:
-                                adjacency_bitstring[3] = 1
-                            elif b.GetBondTypeAsDouble() >= 2:
                                 adjacency_bitstring[4] = 1
+                            elif b.GetBondTypeAsDouble() >= 2:
+                                adjacency_bitstring[5] = 1    
         elif electronegativity_dict[a.GetAtomicNum()] > 2.55:
-            adjacency_bitstring[5] = 1
-        elif electronegativity_dict[a.GetAtomicNum()] < 2.05:
             adjacency_bitstring[6] = 1
+        elif electronegativity_dict[a.GetAtomicNum()] < 2.05:
+            adjacency_bitstring[7] = 1
+        if a.GetFormalCharge() > 0:
+            adjacency_bitstring[8] = 1
+        elif a.GetFormalCharge() < 0:
+            adjacency_bitstring[9] = 1
+           
+        
 
     three_membered_ring_bitstring = [0] * 1
     if atom.IsInRingSize(3):
