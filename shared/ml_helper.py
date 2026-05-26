@@ -2,85 +2,26 @@ from rdkit import Chem
 import numpy as np
 
 """
-Bitstring Representation:
+Fingerprint layout notes
+------------------------
 
-1. Charge Bitstring (2 bits):
-   - [0]: Atom has a negative formal charge.
-   - [1]: Atom has a positive formal charge.
+The canonical feature layout lives in `shared.fingerprint_schema`.
+Use that module to:
 
-2. Hydrogen Count Bitstring (4 bits):
-   - [0]: Atom has 0 hydrogens.
-   - [1]: Atom has 1 hydrogen.
-   - [2]: Atom has 2 hydrogens.
-   - [3]: Atom has more than 2 hydrogens.
+- build the feature index map used by `explain_mech.ipynb`
+- validate that schema labels still match the implementation here
+- export `shared/fingerprint_schema.json`
 
-3. Hybridization Bitstring (3 bits):
-   - [0]: Atom is SP hybridized.
-   - [1]: Atom is SP2 hybridized.
-   - [2]: Atom is SP3 hybridized.
+Current implemented widths:
 
-4. Element Bitstring (15 bits):
-   - [0]: Alkali metals (e.g., Li, Na, K).
-   - [1]: Boron (B).
-   - [2]: Carbon (C).
-   - [3]: Nitrogen (N).
-   - [4]: Oxygen (O).
-   - [5]: Fluorine (F).
-   - [6]: Magnesium (Mg).
-   - [7]: Aluminium (Al).
-   - [8]: Silicon (Si).
-   - [9]: Phosphorus (P).
-   - [10]: Sulfur (S).
-   - [11]: Chlorine (Cl).
-   - [12]: Bromine (Br).
-   - [13]: Iodine (I).
-   - [14]: Transition metals (atomic numbers 20–30).
+- mechanism type: 11 bits
+- per-atom fingerprint: 34 bits
+- four atom blocks: 136 bits total
+- bond1 fingerprint: 4 bits
+- bond2 fingerprint: 4 bits
+- new-bond ring fingerprint: 5 bits
 
-5. Aromaticity Bitstring (2 bit):
-   - [0]: Atom is not aromatic.
-   - [1]: Atom is aromatic.
-
-6. Adjacency Bitstring (9 bits):
-   - [0]: Neighboring carbon has a positive formal charge (C+).
-   - [1]: Neighboring carbon has a negative formal charge (C-).
-   - [2]: Neighboring carbon has at least one hydrogen (CH).
-   - [3]: Neighboring carbon is bonded to an electronegative atom via a single bond (C-EN).
-   - [4]: Neighboring carbon is bonded to an electronegative atom via a double bond (C=EN).
-   - [5]: Neighboring atom is electronegative (EN).
-   - [6]: Neighboring atom is electropositive (EP).
-   - [7]: Neighboring carbon has no hydrogens (CH0).
-   - [8]: Neighbouring carbon is sp2 or sp hybridized
-
-7. Bond Type Bitstring (3 bits):
-   - [0]: Single bond.
-   - [1]: Double bond.
-   - [2]: Triple bond.
-
-8. Ring Size Bitstring (5 bits):
-   - [0]: Atom pair is part of a 3-membered ring.
-   - [1]: Atom pair is part of a 4-membered ring.
-   - [2]: Atom pair is part of a 5-membered ring.
-   - [3]: Atom pair is part of a 6-membered ring.
-   - [4]: Atom pair is part of a 7+ membered ring.
-
-Total Bitstring Length:
-- Mechanism Type Bitstring: 11 bits
-___________________________________
-- Charge Bitstring: 3 bits
-- Hydrogen Count Bitstring: 4 bits
-- Hybridization Bitstring: 3 bits
-- Element Bitstring: 15 bits
-- Aromaticity Bitstring: 2 bits
-- Adjacency Bitstring: 9 bits
-_________________________________
-Atom Fingerprint Total: 35 bits
-_________________________________
-35*4 = 140 bits for atoms
-- Bond Type Bitstring: 3 bits
-- Bond Fingerprint Total: 6 bits
-__________________________________
-- Ring Size Bitstring: 5 bits
-
+Total implemented fingerprint width: 160 bits
 """
 
 electronegativity_dict = {1: 2.2,
@@ -134,9 +75,9 @@ electronegativity_dict = {1: 2.2,
  52: 2.1,
  53: 2.66}
 
-def make_atom_fingerprint(atom, other_atom_idx=None):
+def make_atom_fingerprint(atom, other_atom_idx=None, other_atoms=[]):
     if atom is None:
-        return [np.nan] * 34
+        return [np.nan] * 38
 
     # Charge bitstring
     charge_bitstring = [0] * 2
@@ -203,9 +144,12 @@ def make_atom_fingerprint(atom, other_atom_idx=None):
     # [C+, C-, CH0, CH, C-EN, C=EN, EN, EP]
 
     adjacency_bitstring = [0] * 8
+    relative_adjacency = [0] * 4
     for a in atom.GetNeighbors():
         if other_atom_idx != None and a.GetIdx() == other_atom_idx:
             continue
+        if a.GetIdx() in other_atoms:
+            relative_adjacency[other_atoms.index(a.GetIdx())] = 1
         if a.GetAtomicNum() == 6:
             if a.GetFormalCharge() > 0:
                 adjacency_bitstring[0] = 1
@@ -234,13 +178,13 @@ def make_atom_fingerprint(atom, other_atom_idx=None):
 
  
 
-    total_bit_string = charge_bitstring + h_number_bitstring + hybridization_bitstring + element_bitstring + aromatic_bit + adjacency_bitstring + three_membered_ring_bitstring
+    total_bit_string = charge_bitstring + h_number_bitstring + hybridization_bitstring + element_bitstring + aromatic_bit + adjacency_bitstring + relative_adjacency + three_membered_ring_bitstring
     return total_bit_string
 
 def make_bond_fingerprint(bond):
     # bond type bitstring
     # [single, double, triple]
-    bond_type_bitstring = [0] * 4
+    bond_type_bitstring = [0] * 3
     if not bond:
         return bond_type_bitstring
     if bond.GetBondTypeAsDouble() == 1:
@@ -289,22 +233,22 @@ def make_fingerprint(sm, mech):
     atom_fps = []
     for i in range(1, 5):
         if mech[i] is None:
-            atom_fps.append(make_atom_fingerprint(None))
+            atom_fps.append(make_atom_fingerprint(None, other_atoms=mech[1:]))
         else:
             if i in [1, 2]:
-                atom_fps.append(make_atom_fingerprint(sm.GetAtomWithIdx(mech[i]), mech[i + 2]))
+                atom_fps.append(make_atom_fingerprint(sm.GetAtomWithIdx(mech[i]), mech[i + 2], mech[1:]))
             elif i in [3, 4]:
-                atom_fps.append(make_atom_fingerprint(sm.GetAtomWithIdx(mech[i]), mech[i - 2]))
+                atom_fps.append(make_atom_fingerprint(sm.GetAtomWithIdx(mech[i]), mech[i - 2], mech[1:]))
             else:
-                atom_fps.append(make_atom_fingerprint(sm.GetAtomWithIdx(mech[i])))
+                atom_fps.append(make_atom_fingerprint(sm.GetAtomWithIdx(mech[i]), other_atoms=mech[1:]))
     if mech[3] and mech[1]:
         b1 = make_bond_fingerprint(sm.GetBondBetweenAtoms(mech[1], mech[3]))
     else:
-        b1 = [np.nan] * 4
+        b1 = [np.nan] * 3
     if mech[4] and mech[2]:
         b2 = make_bond_fingerprint(sm.GetBondBetweenAtoms(mech[2], mech[4]))
     else:
-        b2 = [np.nan] * 4
+        b2 = [np.nan] * 3
     r = new_bond_fingerprint(sm, mech[1], mech[2])
     sum_finger_print = mech_type + atom_fps[0] + atom_fps[1] + atom_fps[2] + atom_fps[3] + b1 + b2 + r
     return sum_finger_print
