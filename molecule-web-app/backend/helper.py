@@ -64,14 +64,6 @@ def clear_pickles(tmp_dir):
         os.makedirs(source_folder)
     return None
 
-# TODO: Reimplement this function later
-
-# def clear_chain(tmp_dir):
-#     source_folder = os.path.join(tmp_dir, 'chain')
-#     if os.path.exists(source_folder):
-#         shutil.rmtree(source_folder)
-#         os.makedirs(source_folder)
-#     return None
 
 def save_pickle(mol, tmp_dir):
     source_folder = os.path.join(tmp_dir, 'pickles')

@@ -71,7 +71,6 @@ def serve_static(path):
 def process_molecule():
     data = request.json
     smiles = data.get('smiles')
-    cleanup = data.get('cleanup')
     kekulise = data.get('kekulise')
     id = data.get('id')
     screen_charges_enabled = data.get('screen_charges_enabled', True)
@@ -91,9 +90,9 @@ def process_molecule():
     if id != -1:
         with open('chain/mol_' + str(id) + '.pkl', 'rb') as f:
             chain_mol = pickle.load(f)
-        mols, mechs, inp_mol = run_next_step(smiles, kekulise, cleanup, chain_mol, screen_charges_enabled, hypervalent_enabled)
+        mols, mechs, inp_mol = run_next_step(smiles, kekulise, chain_mol, screen_charges_enabled, hypervalent_enabled)
     else:
-        mols, mechs, inp_mol = run_next_step(smiles, kekulise, cleanup, None, screen_charges_enabled, hypervalent_enabled)
+        mols, mechs, inp_mol = run_next_step(smiles, kekulise, None, screen_charges_enabled, hypervalent_enabled)
     
     predictions = []
     follow_on_mols = []
@@ -108,23 +107,17 @@ def process_molecule():
             f_mols, f_smiles = follow_on(mol, mechs[i], clf, screen_charges_enabled, hypervalent_enabled)
             follow_on_mols = follow_on_mols + f_mols
             follow_on_smiles = follow_on_smiles + f_smiles
-    
 
-    #TODO: reimplement that carrying forward of molecules
-    #clear_chain()
     clear_results(tmp_dir)
     clear_pickles(tmp_dir)
     save_files_for_display(mols, inp_mol, tmp_dir)
     if follow_on_mols:
         save_files_for_display(follow_on_mols, inp_mol, tmp_dir, prefix="followon_")
 
-    # Load the resulting molecules (assuming they are saved as images)
+
     molecules = {}
     follow_ons ={}
-    # Load decision tree model
-    #clf = joblib.load("../../models/v12/xg_model.pkl")
-    # Load the model
-   
+
     for filename in os.listdir(os.path.join(tmp_dir, 'results')):
         if filename.endswith('.png') and filename.startswith('mol_'):
             idx = int(filename.split('_')[1].split('.')[0])
@@ -156,44 +149,7 @@ def clear_history():
         os.makedirs(history_folder)
     return jsonify({'message': 'History cleared'})
 
-# TODO: Reimplement this function later
 
-# @app.route('/save_history', methods=['POST'])
-# def save_history():
-#     backend_dir = os.path.dirname(os.path.abspath(__file__))
-#     pickles_folder = os.path.join(backend_dir, 'pickles')
-#     reactions_folder = os.path.abspath(os.path.join(root_folder, 'reactions'))
-    
-#     data = request.get_json()
-#     mechanism = data.get('mechanism')
-#     #print(mechanism)
-#     with open('pickles/mechanism.txt','a') as f:
-#         for step in mechanism:
-#             for num in step:
-#                 f.write(str(num) + " ")
-#             f.write("\n")
-
-#     # Find the highest numbered folder in the reactions directory
-#     existing_folders = [int(folder) for folder in os.listdir(reactions_folder) if folder.isdigit()]
-#     next_folder_number = max(existing_folders, default=0) + 1
-#     new_folder = os.path.join(reactions_folder, str(next_folder_number))
-
-#     # Create the new folder
-#     os.makedirs(new_folder)
-
-#     # Copy the contents of the pickles folder to the new folder
-#     if os.path.exists(pickles_folder):
-#         for filename in os.listdir(pickles_folder):
-#             source_file = os.path.join(pickles_folder, filename)
-#             if os.path.isfile(source_file):
-#                 shutil.copy(source_file, new_folder)
-
-#     # Clear the pickles folder
-#     if os.path.exists(pickles_folder):
-#         shutil.rmtree(pickles_folder)
-#         os.makedirs(pickles_folder)
-        
-#     return jsonify({'message': 'History saved'})
 
 @app.route('/save_training_data', methods=['POST'])
 def save_training_data():
@@ -265,39 +221,6 @@ def session_file(filepath):
 def get_version():
     return jsonify({'model_version': MODEL_VERSION})
 
-@app.route("/whatnext")
-def whatnext():
-    # Load some existing arrows
-    training_folder = os.path.abspath(os.path.join(root_folder, 'training'))
-    num_dirs = len([name for name in os.listdir(training_folder) if os.path.isdir(os.path.join(training_folder, name))])
-    random_dir = random.randint(1, num_dirs + 1)
-    with open(os.path.join(training_folder,f'{random_dir}/sm.pkl'), 'rb') as f:
-        sm = pickle.load(f)
-    num_arrows = len([fname for fname in os.listdir(os.path.join(training_folder,f'{random_dir}')) if fname.startswith('mol_')])
-    random_mol = random.randint(0, num_arrows)
-    with open(os.path.join(training_folder, f'{random_dir}/mol_{random_mol}.pkl'), 'rb') as f:
-        next_mol = pickle.load(f)
-    with open(os.path.join(training_folder, f'{random_dir}/data.json'), 'r') as f:
-        j_data = json.load(f)
-
-    img = Chem.Draw.MolToImage(sm, size=(300,300))
-
-    # Convert PIL Image → base64
-    buf = BytesIO()
-    img.save(buf, format="PNG")
-    c_list = []
-    for a in next_mol.GetAtoms():
-        if a.GetAtomicNum() == 6:
-            c_list.append(a.GetIdx())
-    drawer = Chem.Draw.rdMolDraw2D.MolDraw2DSVG(300, 300)
-    opts = drawer.drawOptions()
-    drawer.DrawMolecule(next_mol, highlightAtoms = c_list)
-    drawer.FinishDrawing()
-    svg_code = drawer.GetDrawingText()
-    png_bindata = base64.b64encode(buf.getvalue()).decode("utf-8")
-
-    mech = j_data['choices'][str(random_mol)]['mechanism']
-    return render_template("whatnext.html", svg=svg_code, png_bin = png_bindata)
 
 if __name__ == '__main__':
     app.run(debug=True)
