@@ -32,6 +32,10 @@
 <body>
     <div id="root"></div>
     <script>
+  if (typeof global === 'undefined') {
+    var global = window;
+  }
+
         window.process = window.process || { env: { NODE_ENV: 'production' } };
     </script>
     <script src="scripts/ketcher-bundle.js"></script>
