@@ -112,6 +112,78 @@ input[type="checkbox"] {
     margin-right: 10px;
 }
 
+.ketcher-panel {
+    margin: 0 0 18px;
+    border: 1px solid #d7dde3;
+    border-radius: 8px;
+    background: #ffffff;
+    overflow: hidden;
+}
+
+.ketcher-panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 12px;
+    background: #eef2f6;
+    border-bottom: 1px solid #d7dde3;
+}
+
+.ketcher-panel-header h2 {
+    margin: 0;
+    font-size: 1rem;
+    line-height: 1.3;
+}
+
+.ketcher-panel-header button {
+    padding: 7px 12px;
+    font-size: 0.9rem;
+}
+
+.ketcher-panel.collapsed .ketcher-panel-header {
+    border-bottom: none;
+}
+
+.ketcher-panel-body {
+    padding: 12px;
+}
+
+.ketcher-frame {
+    display: block;
+    width: 100%;
+    height: 520px;
+    border: 1px solid #cfd7df;
+    border-radius: 6px;
+    background: #ffffff;
+}
+
+.ketcher-actions {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+#clear-drawn-molecule-button {
+    background: #6b7280;
+}
+
+#clear-drawn-molecule-button:hover {
+    background: #4b5563;
+}
+
+#ketcher-status {
+    color: #4b5563;
+    font-size: 0.9rem;
+}
+
+#ketcher-status.error {
+    color: #c0392b;
+    font-weight: bold;
+}
+
 button {
     background: #2c3e50;
     color: #ffffff;
@@ -349,5 +421,15 @@ footer {
     #results-container {
         flex-direction: column; /* Stack results vertically */
         gap: 10px;
+    }
+
+    .ketcher-frame {
+        height: 430px;
+    }
+
+    .ketcher-panel-header,
+    .ketcher-actions {
+        align-items: stretch;
+        flex-direction: column;
     }
 }
