@@ -5,10 +5,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const resultsContainer = document.getElementById('results-container');
     const historyList = document.getElementById('history-list');
     const clearHistoryButton = document.getElementById('clear-history-button');
-    // const saveHistoryButton = document.getElementById('save-history-button');
     const randomSuggestionButton = document.getElementById('random-suggestion-button');
-    // const greenDatasetButton = document.getElementById('green-dataset-button');
-    //const toggleHistoryButton = document.getElementById('toggle-history-button');
     const historyContainer = document.getElementById('history-container');
     const infoModal = document.getElementById('info-modal');
     const closeModal = document.getElementById('close-modal');
@@ -47,7 +44,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({ smiles: smiles,
-                    cleanup: cleanup,
                     kekulise: kekulise,
                     screen_charges_enabled: screenChargesEnabled,
                     hypervalent_enabled: hypervalentEnabled,
@@ -76,25 +72,23 @@ document.addEventListener('DOMContentLoaded', function() {
     convertButton.addEventListener('click', function() {
         id = -1;
         const smiles = smilesInput.value;
-        const cleanup = document.getElementById('cleanup-checkbox').checked;
         const kekulise = document.getElementById('kekulise-checkbox').checked;
         const screenChargesEnabled = document.getElementById('screen-charges-checkbox').checked;
         const hypervalentEnabled = document.getElementById('hypervalent-checkbox').checked;
         if (smiles) {
-            callProcessMolecule(smiles, cleanup, kekulise, screenChargesEnabled, hypervalentEnabled);
+            callProcessMolecule(smiles, kekulise, screenChargesEnabled, hypervalentEnabled);
     }
     });
 
     chainButton.addEventListener('click', function() {
         const smiles = smilesInput.value;
-        const cleanup = document.getElementById('cleanup-checkbox').checked;
         const kekulise = document.getElementById('kekulise-checkbox').checked;
         const screenChargesEnabled = document.getElementById('screen-charges-checkbox').checked;
         const hypervalentEnabled = document.getElementById('hypervalent-checkbox').checked;
         if (id != -1) {
             /* debug statement */
             console.log("id: " + id);
-           callProcessMolecule(smiles, cleanup, kekulise, screenChargesEnabled, hypervalentEnabled);
+           callProcessMolecule(smiles, kekulise, screenChargesEnabled, hypervalentEnabled);
         }
     });
 
@@ -251,23 +245,6 @@ document.addEventListener('DOMContentLoaded', function() {
         historyImg.classList.add('history-image');
         historyList.insertBefore(historyImg, historyList.firstChild);
     }
-
-    // TODO: add a button to save the history    
-    // saveHistoryButton.addEventListener('click', () => {
-    //     console.log(mechStep);
-    //     fetch('/save_history', { 
-    //         method: 'POST',  
-    //         headers: {
-    //         'Content-Type': 'application/json'
-    //       },
-    //       body: JSON.stringify({
-    //         mechanism: mechStep
-    //       })
-    //     });
-    //     mechStep = [];
-    // });
-    /* TODO: add a then statement to catch errors */
-
 
     randomSuggestionButton.addEventListener('click', () => {
         fetch('/get_random_suggestion')
