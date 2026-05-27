@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ketcher Molecule Drawer</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ketcher-react@3.12.0/dist/index.css">
+    <style>
+        html,
+        body,
+        #root {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #ffffff;
+        }
+
+        .ketcher-load-error {
+            box-sizing: border-box;
+            height: 100%;
+            padding: 24px;
+            color: #7f1d1d;
+            background: #fee2e2;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+    <script type="module">
+        import React from 'https://esm.sh/react@18.2.0';
+        import { createRoot } from 'https://esm.sh/react-dom@18.2.0/client';
+        import { Editor } from 'https://esm.sh/ketcher-react@3.12.0?deps=react@18.2.0,react-dom@18.2.0';
+        import { StandaloneStructServiceProvider } from 'https://esm.sh/ketcher-standalone@3.12.0?deps=react@18.2.0,react-dom@18.2.0';
+
+        const root = createRoot(document.getElementById('root'));
+        const structServiceProvider = new StandaloneStructServiceProvider();
+
+        function notifyReady(ketcher) {
+            window.ketcher = ketcher;
+            window.parent.postMessage({ type: 'ketcher-ready' }, window.location.origin);
+        }
+
+        function notifyError(message) {
+            window.parent.postMessage({ type: 'ketcher-error', message }, window.location.origin);
+        }
+
+        try {
+            root.render(
+                React.createElement(Editor, {
+                    staticResourcesUrl: 'https://cdn.jsdelivr.net/npm/ketcher-react@3.12.0/dist',
+                    structServiceProvider,
+                    onInit: notifyReady,
+                    errorHandler: notifyError,
+                })
+            );
+        } catch (error) {
+            const message = error instanceof Error ? error.message : 'Unable to load Ketcher.';
+            document.getElementById('root').innerHTML =
+                `<div class="ketcher-load-error">${message}</div>`;
+            notifyError(message);
+        }
+    </script>
+</body>
+</html>

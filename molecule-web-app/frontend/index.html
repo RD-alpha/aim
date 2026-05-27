@@ -17,6 +17,25 @@
 
             <label for="smiles-input">Enter SMILES:</label>
             <input type="text" id="smiles-input" placeholder="Enter SMILES string here">
+            <section id="ketcher-panel" class="ketcher-panel">
+                <div class="ketcher-panel-header">
+                    <h2>Molecule drawer</h2>
+                    <button id="toggle-ketcher-button" type="button">Hide drawer</button>
+                </div>
+                <div id="ketcher-panel-body" class="ketcher-panel-body">
+                    <iframe
+                        id="ketcher-frame"
+                        class="ketcher-frame"
+                        src="ketcher.html"
+                        title="Ketcher molecule drawer"
+                    ></iframe>
+                    <div class="ketcher-actions">
+                        <button id="use-drawn-molecule-button" type="button">Use drawn molecule</button>
+                        <button id="clear-drawn-molecule-button" type="button">Clear drawing</button>
+                        <span id="ketcher-status" aria-live="polite">Loading drawer...</span>
+                    </div>
+                </div>
+            </section>
             <label for="contributor-input">Contributor:</label>
             <input type="text" id="contributor-input" placeholder="Enter your name">
             <div>
@@ -32,7 +51,7 @@
             <button id="random-suggestion-button">Random suggestion</button>
             <div id="results-container"></div>
         </div>
-        <div id="history-container"">
+        <div id="history-container">
             <!-- <button id="toggle-history-button" class="arrow-button">→</button> -->
             <h2>History</h2>
             <div id="history-list"></div>

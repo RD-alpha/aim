@@ -11,6 +11,13 @@ document.addEventListener('DOMContentLoaded', function() {
     const closeModal = document.getElementById('close-modal');
     const confirmationPopup = document.getElementById('confirmation-popup');
     const errorPopup = document.getElementById('error-popup');
+    const ketcherPanel = document.getElementById('ketcher-panel');
+    const ketcherPanelBody = document.getElementById('ketcher-panel-body');
+    const ketcherFrame = document.getElementById('ketcher-frame');
+    const toggleKetcherButton = document.getElementById('toggle-ketcher-button');
+    const useDrawnMoleculeButton = document.getElementById('use-drawn-molecule-button');
+    const clearDrawnMoleculeButton = document.getElementById('clear-drawn-molecule-button');
+    const ketcherStatus = document.getElementById('ketcher-status');
 
      // Show the modal on first load
      infoModal.style.display = 'block';
@@ -24,6 +31,99 @@ document.addEventListener('DOMContentLoaded', function() {
     var nextStep = [];
     var saveMech = false;
     var id = -1;
+    var ketcherReady = false;
+
+    function showErrorPopup() {
+        errorPopup.classList.add('show');
+        setTimeout(() => {
+            errorPopup.classList.remove('show');
+        }, 2000);
+    }
+
+    function getKetcher() {
+        if (!ketcherFrame.contentWindow || !ketcherFrame.contentWindow.ketcher) {
+            return null;
+        }
+
+        return ketcherFrame.contentWindow.ketcher;
+    }
+
+    function setKetcherStatus(message, isError) {
+        ketcherStatus.textContent = message;
+        ketcherStatus.classList.toggle('error', Boolean(isError));
+    }
+
+    window.addEventListener('message', (event) => {
+        if (event.origin !== window.location.origin || !event.data) {
+            return;
+        }
+
+        if (event.data.type === 'ketcher-ready') {
+            ketcherReady = true;
+            setKetcherStatus('Drawer ready', false);
+        }
+
+        if (event.data.type === 'ketcher-error') {
+            ketcherReady = false;
+            setKetcherStatus(event.data.message || 'Drawer error', true);
+        }
+    });
+
+    ketcherFrame.addEventListener('load', () => {
+        if (!ketcherReady) {
+            setKetcherStatus('Loading drawer...', false);
+        }
+    });
+
+    toggleKetcherButton.addEventListener('click', () => {
+        const isHidden = ketcherPanel.classList.toggle('collapsed');
+        ketcherPanelBody.hidden = isHidden;
+        toggleKetcherButton.textContent = isHidden ? 'Show drawer' : 'Hide drawer';
+    });
+
+    useDrawnMoleculeButton.addEventListener('click', async () => {
+        const ketcher = getKetcher();
+
+        if (!ketcher) {
+            setKetcherStatus('Drawer is not ready', true);
+            showErrorPopup();
+            return;
+        }
+
+        try {
+            const smiles = await ketcher.getSmiles();
+            if (!smiles) {
+                setKetcherStatus('No molecule drawn', true);
+                return;
+            }
+
+            smilesInput.value = smiles;
+            smilesInput.dispatchEvent(new Event('input', { bubbles: true }));
+            setKetcherStatus('SMILES copied to input', false);
+            id = -1;
+        } catch (error) {
+            console.error('Ketcher getSmiles error:', error);
+            setKetcherStatus('Could not read drawing', true);
+            showErrorPopup();
+        }
+    });
+
+    clearDrawnMoleculeButton.addEventListener('click', async () => {
+        const ketcher = getKetcher();
+
+        if (!ketcher) {
+            setKetcherStatus('Drawer is not ready', true);
+            return;
+        }
+
+        try {
+            await ketcher.setMolecule('');
+            setKetcherStatus('Drawing cleared', false);
+        } catch (error) {
+            console.error('Ketcher clear error:', error);
+            setKetcherStatus('Could not clear drawing', true);
+        }
+    });
 
      // Toggle the visibility of the history container
    // toggleHistoryButton.addEventListener('click', () => {
@@ -37,7 +137,7 @@ document.addEventListener('DOMContentLoaded', function() {
    // });
 
 
-    function callProcessMolecule(smiles, cleanup, kekulise, screenChargesEnabled, hypervalentEnabled) {
+    function callProcessMolecule(smiles, kekulise, screenChargesEnabled, hypervalentEnabled) {
             fetch('/process_molecule', {
                 method: 'POST',
                 headers: {
@@ -61,10 +161,7 @@ document.addEventListener('DOMContentLoaded', function() {
             })
             .catch(error => {
                 console.error('Error:', error);
-                errorPopup.classList.add('show');
-                setTimeout(() => {
-                        errorPopup.classList.remove('show');
-                    }, 2000); // Hide after 2 seconds
+                showErrorPopup();
             
     });
         }
