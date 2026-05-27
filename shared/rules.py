@@ -57,7 +57,7 @@ def screen_charges(list_mol, mechanisms, charge = 0):
         return (list_mol, mechanisms)
 
 
-def identify_source(mol, rules = "all"):
+def identify_source(mol, p_block = False):
     for atom in mol.GetAtoms():
         # Look for hydrides - M-H bond
         if electronegativity_dict[atom.GetAtomicNum()] < 2.05 and atom.GetFormalCharge() < 0 and atom.GetTotalNumHs() > 0:
@@ -72,26 +72,29 @@ def identify_source(mol, rules = "all"):
             
     for bond in mol.GetBonds():
         atoms = [bond.GetBeginAtom(), bond.GetEndAtom()]
-        # Conditional on rules being on
-        if rules == 'all':
-            if bond.GetBondTypeAsDouble() == 1:
-                # This is an experimental feature - unlikely to be a very common reaction mode
-                if electronegativity_dict[atoms[0].GetAtomicNum()] < 2.05 and electronegativity_dict[atoms[1].GetAtomicNum()] < 2.05:
+
+        if bond.GetBondTypeAsDouble() == 1:
+            # This is an experimental feature - unlikely to be a very common reaction mode
+            if electronegativity_dict[atoms[0].GetAtomicNum()] < 2.05 and electronegativity_dict[atoms[1].GetAtomicNum()] < 2.05:
+                bond.SetProp('source', 'sigma bond')
+                bond.SetProp('source_bond_atom', 'both')
+                bond.SetProp('source_other_atom', 'both')
+            # For any element less electronegative than boron (inclusive) - add sigma bond as source - going from more electronegative atom
+            for a in atoms:
+                if electronegativity_dict[a.GetAtomicNum()] < 2.05:
+                    other = a.GetIdx()
+                    source = bond.GetOtherAtomIdx(other)
+                    # avoid breaking a sigma bond if the source atom instead has a lone pair
+                    if mol.GetAtomWithIdx(source).HasProp('source') and mol.GetAtomWithIdx(source).GetProp('source') == 'lone pair':
+                        continue
                     bond.SetProp('source', 'sigma bond')
-                    bond.SetProp('source_bond_atom', 'both')
-                    bond.SetProp('source_other_atom', 'both')
-                # For any element less electronegative than boron (inclusive) - add sigma bond as source - going from more electronegative atom
-                for a in atoms:
-                    if electronegativity_dict[a.GetAtomicNum()] < 2.05:
+                    bond.SetIntProp('source_bond_atom', source)
+                    bond.SetIntProp('source_other_atom', other)
+                
+                if p_block:
+                    if a.GetAtomicNum() == 15 and a.GetFormalCharge() < 0:
                         other = a.GetIdx()
                         source = bond.GetOtherAtomIdx(other)
-                        # avoid breaking a sigma bond if the source atom instead has a lone pair
-                        if mol.GetAtomWithIdx(source).HasProp('source') and mol.GetAtomWithIdx(source).GetProp('source') == 'lone pair':
-                            continue
-                        bond.SetProp('source', 'sigma bond')
-                        bond.SetIntProp('source_bond_atom', source)
-                        bond.SetIntProp('source_other_atom', other)
-
         # Looking for double and triple bonds - ignoring aromatic systems
         if bond.GetBondTypeAsDouble() > 1.5:
             
@@ -118,7 +121,7 @@ def identify_source(mol, rules = "all"):
                     bond.SetIntProp('source_bond_atom', atoms[0].GetIdx())
                     bond.SetIntProp('source_other_atom',atoms[1].GetIdx())
 
-def identify_sink(mol, rules = "all", hypervalent_enabled = True):
+def identify_sink(mol, p_block=False):
    
     # Look for vacant orbitals
     for atom in mol.GetAtoms():
@@ -135,7 +138,7 @@ def identify_sink(mol, rules = "all", hypervalent_enabled = True):
             atom.SetProp('sink', 'empty AO')
 
         # The second row p block expansion pack
-        if hypervalent_enabled:
+        if p_block:
             if atom.GetAtomicNum() < 17 and atom.GetAtomicNum() > 13 and atom.GetFormalCharge() >= 0 and atom.GetTotalValence() < 6:
                 if atom.HasProp('sink') and atom.GetProp('sink') == 'proton':
                     continue
@@ -144,27 +147,34 @@ def identify_sink(mol, rules = "all", hypervalent_enabled = True):
     for bond in mol.GetBonds():
         # Conditional on all rules being swtiched on
         atoms = [bond.GetBeginAtom(), bond.GetEndAtom()]
-        if rules == "all":
-            # Identify possible sigma stars by considering leaving groups being any element that has a higher electronegativity than carbon
-            if bond.GetBondTypeAsDouble() == 1:
-                # TBD if to keep this rule or not - not particularly profound either way
-                if electronegativity_dict[atoms[0].GetAtomicNum()] > 2.55 and electronegativity_dict[atoms[1].GetAtomicNum()] > 2.55:
+        # Identify possible sigma stars by considering leaving groups being any element that has a higher electronegativity than carbon
+        if bond.GetBondTypeAsDouble() == 1:
+            if electronegativity_dict[atoms[0].GetAtomicNum()] > 2.55 and electronegativity_dict[atoms[1].GetAtomicNum()] > 2.55:
+                bond.SetProp('sink', 'sigma star')
+                bond.SetProp('sink_bond_atom', 'both')
+                bond.SetProp('sink_other_atom', 'both')
+            else:
+                for a in atoms:
+                    # bond is considered a sink if there is an element more electronegative than carbon attached to it
+                    if electronegativity_dict[a.GetAtomicNum()] > 2.55:
+                        other = a.GetIdx()
+                        sink = bond.GetOtherAtomIdx(other)
+                        # do not add as a sink if there is a empty AO on the sink atom (unlikely case)
+                        if mol.GetAtomWithIdx(sink).HasProp('sink') and mol.GetAtomWithIdx(sink).GetProp('sink') == 'empty AO':
+                            continue
+                        bond.SetProp('sink', 'sigma star')
+                        bond.SetIntProp('sink_bond_atom', sink)
+                        bond.SetIntProp('sink_other_atom', other)
+            if p_block:
+                if a.GetAtomicNum() == 15 and a.GetFormalCharge() > 0:
+                    other = a.GetIdx()
+                    sink = bond.GetOtherAtomIdx(other)
+                    # do not add as a sink if there is a empty AO on the sink atom (unlikely case)
+                    if mol.GetAtomWithIdx(sink).HasProp('sink') and mol.GetAtomWithIdx(sink).GetProp('sink') == 'empty AO':
+                        continue
                     bond.SetProp('sink', 'sigma star')
-                    bond.SetProp('sink_bond_atom', 'both')
-                    bond.SetProp('sink_other_atom', 'both')
-                else:
-                    for a in atoms:
-                        # bond is considered a sink if there is an element more electronegative than carbon attached to it
-                        if electronegativity_dict[a.GetAtomicNum()] > 2.55:
-                            other = a.GetIdx()
-                            sink = bond.GetOtherAtomIdx(other)
-                            # do not add as a sink if there is a empty AO on the sink atom (unlikely case)
-                            if mol.GetAtomWithIdx(sink).HasProp('sink') and mol.GetAtomWithIdx(sink).GetProp('sink') == 'empty AO':
-                                continue
-                            bond.SetProp('sink', 'sigma star')
-                            bond.SetIntProp('sink_bond_atom', sink)
-                            bond.SetIntProp('sink_other_atom', other)
-
+                    bond.SetIntProp('sink_bond_atom', sink)
+                    bond.SetIntProp('sink_other_atom', other)
          # Find multiple bonds ignoring aromatic systems      
         if bond.GetBondTypeAsDouble() > 1.5:
             atoms = [bond.GetBeginAtom(), bond.GetEndAtom()]
@@ -209,10 +219,10 @@ def identify_acidic_CH(mol):
                         atom.SetProp('sink', 'CH')
                         break
 
-def prepare_molecule(mol, hypervalent_enabled = True):
+def prepare_molecule(mol, p_block = True):
     identify_acidic_CH(mol)
-    identify_sink(mol, hypervalent_enabled=hypervalent_enabled)
-    identify_source(mol)
+    identify_sink(mol, p_block=p_block)
+    identify_source(mol, p_block=p_block)
     return None
 
 def b_to_a(mol, i, j):
@@ -257,16 +267,19 @@ def lose_hydride(mol, i):
 
 def transfer_proton(mol, j, i):
     p_mol = Chem.Mol(mol)
-    a = p_mol.GetAtomWithIdx(j)
-    a.SetFormalCharge(a.GetFormalCharge() - 1)
-    if a.GetNumExplicitHs() > 0:
-        a.SetNumExplicitHs(a.GetNumExplicitHs() - 1)
-    elif a.GetTotalNumHs() == 1:
-            a.SetNoImplicit(True)
+    if j != None:
+        a = p_mol.GetAtomWithIdx(j)
+        a.SetFormalCharge(a.GetFormalCharge() - 1)
+        if a.GetNumExplicitHs() > 0:
+            a.SetNumExplicitHs(a.GetNumExplicitHs() - 1)
+        elif a.GetTotalNumHs() == 1:
+                a.SetNoImplicit(True)
     a2 = p_mol.GetAtomWithIdx(i)
     a2.SetFormalCharge(a2.GetFormalCharge() + 1)
     if a2.GetNumExplicitHs() > 0 or a2.GetFormalCharge() == 0:
         a2.SetNumExplicitHs(a2.GetNumExplicitHs() + 1)
+    if j == None:
+        p_mol = Chem.CombineMols(p_mol, Chem.MolFromSmiles("[H][H]"))
     return p_mol
     #return (mechanisms, connected_mols)
 
@@ -375,7 +388,7 @@ def carbocat(mol, sink_idx, connected_mols, mechanisms):
     mechanisms.append([10, None, j, None, l])
     return (mechanisms, connected_mols)
 
-def run_next_step(smiles, kekulise = False, cleanup = True, chain_mol = None, screen_charges_enabled = True, hypervalent_enabled = True):
+def run_next_step(smiles, kekulise = False,  chain_mol = None, screen_charges_enabled = True, p_block = True):
     if chain_mol is not None:
         mol_inp = chain_mol
         for a in mol_inp.GetAtoms():
@@ -398,11 +411,11 @@ def run_next_step(smiles, kekulise = False, cleanup = True, chain_mol = None, sc
         if kekulise:
             Chem.Kekulize(mol_inp, clearAromaticFlags=True)
         
-    prepare_molecule(mol_inp, hypervalent_enabled=hypervalent_enabled)
-    connected_mols, mechanisms, mol_inp = execute_step(mol_inp, kekulise, cleanup, screen_charges_enabled)
+    prepare_molecule(mol_inp, p_block=p_block)
+    connected_mols, mechanisms, mol_inp = execute_step(mol_inp, kekulise, screen_charges_enabled)
     return (connected_mols, mechanisms, mol_inp)
 
-def execute_step(mol_inp, kekulise = False, cleanup = False, screen_charges_enabled = True):
+def execute_step(mol_inp, kekulise = False, screen_charges_enabled = True):
 
 
     connected_mols = []
@@ -446,17 +459,19 @@ def execute_step(mol_inp, kekulise = False, cleanup = False, screen_charges_enab
 
             if sink_type == 'proton':
                 if hydride_flag:
-                    print('There will be hydrogen but we will skip for now')
-                    continue
-
-                p_mol = transfer_proton(mol_inp, j, i)
-                connected_mols.append(p_mol)
-                mechanisms.append([4, i, j, None, None])   
+                    # p_mol = transfer_proton(h_mol, None, i)
+                    # connected_mols.append(p_mol)
+                    # This is not an ideal fix - introducing yet another arrow type
+                    mechanisms.append([11, i, j, None, None])   
+                else:
+                    p_mol = transfer_proton(mol_inp, j, i)
+                    connected_mols.append(p_mol)
+                    mechanisms.append([4, i, j, None, None])   
                 continue
 
             if sink_type == 'CH':
                 if source_type == 'hydride':
-                    # probably unlikely that we will use a metal hydride as base for enolisation
+                    # use [H-] in these cases
                     continue
                 # Same proton transfer behaviour as above
                 mechanisms, connected_mols = c_h_elimination(mol_inp, i, j, mechanisms, connected_mols)
@@ -593,22 +608,8 @@ def execute_step(mol_inp, kekulise = False, cleanup = False, screen_charges_enab
     for sink_idx, sink_type in sinks_bonds.items():
         mechanisms, connected_mols = carbocat(mol_inp, sink_idx, connected_mols, mechanisms)
 
-    if cleanup:
-        connected_mols, mechanisms = clean_mol(connected_mols, mechanisms, mol_inp)
-#   inchi = Chem.MolToInchi(mol_inp)
-#   charge = 0
-#   q = 0
-#   p = 0
-#    print(inchi)
-#    if '/q' in inchi:
-#        q_layer = inchi.split('/q')[1].split('/')[0].split(';')
-#        q = sum([int(q) if q!='' else 0 for q in q_layer])
-#        print(q_layer)
-#    if '/p' in inchi:
-#        p_layer = inchi.split('/p')[1].split('/')[0]
-#        p = int(p)
-#        print(p_layer)
-#    charge = q + p
+    connected_mols, mechanisms = clean_mol(connected_mols, mechanisms, mol_inp)
+
     if screen_charges_enabled:
         charge = 0
         for atom in mol_inp.GetAtoms():
