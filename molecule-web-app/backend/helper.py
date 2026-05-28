@@ -44,10 +44,13 @@ def save_files_for_display(mols, inp_mol, tmp_dir, prefix = "mol_"):
                 print('There was an invalid molecule')
     else:
         for mol in mols:
-            file_name = prefix + str(file_num)
-            Chem.SanitizeMol(mol)
-            Chem.Draw.MolToFile(mol, os.path.join(source_folder, file_name + ".png"))
-            file_num += 1
+            try:
+                file_name = prefix + str(file_num)
+                Chem.SanitizeMol(mol)
+                Chem.Draw.MolToFile(mol, os.path.join(source_folder, file_name + ".png"))
+                file_num += 1
+            except:
+                print("Error with SMILES:", Chem.MolToSmiles(mol))
     return None
 
 def clear_results(tmp_dir):

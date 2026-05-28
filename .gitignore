@@ -15,3 +15,4 @@ molecule-web-app/backend/chain/
 /2824.pkl
 /logs
 /training_current
+/shared/__pycache__/
