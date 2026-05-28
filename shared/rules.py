@@ -95,6 +95,9 @@ def identify_source(mol, p_block = False):
                     if a.GetAtomicNum() == 15 and a.GetFormalCharge() < 0:
                         other = a.GetIdx()
                         source = bond.GetOtherAtomIdx(other)
+                        bond.SetProp('source', 'sigma bond')
+                        bond.SetIntProp('source_bond_atom', source)
+                        bond.SetIntProp('source_other_atom', other)
         # Looking for double and triple bonds - ignoring aromatic systems
         if bond.GetBondTypeAsDouble() > 1.5:
             
@@ -548,7 +551,6 @@ def execute_step(mol_inp, kekulise = False, screen_charges_enabled = True):
         a_list = [b.GetBeginAtom(), b.GetEndAtom()]
 
         new_mol, order = break_bond_source(mol_inp, b, a_list)
-
         if new_mol == []:
             continue
        
