@@ -50,6 +50,13 @@
             <button id="chain-button" hidden>Next step</button>
             <button id="random-suggestion-button">Random suggestion</button>
             <div id="results-container"></div>
+            <section id="shap-panel" class="shap-panel" aria-live="polite">
+                <div class="shap-panel-header">
+                    <h2>SHAP explanation</h2>
+                    <span id="shap-status">Select a molecule to explain</span>
+                </div>
+                <pre id="shap-output">No molecule selected.</pre>
+            </section>
         </div>
         <div id="history-container">
             <!-- <button id="toggle-history-button" class="arrow-button">→</button> -->

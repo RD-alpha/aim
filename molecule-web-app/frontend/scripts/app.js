@@ -18,6 +18,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const useDrawnMoleculeButton = document.getElementById('use-drawn-molecule-button');
     const clearDrawnMoleculeButton = document.getElementById('clear-drawn-molecule-button');
     const ketcherStatus = document.getElementById('ketcher-status');
+    const shapStatus = document.getElementById('shap-status');
+    const shapOutput = document.getElementById('shap-output');
 
      // Show the modal on first load
      infoModal.style.display = 'block';
@@ -166,6 +168,40 @@ document.addEventListener('DOMContentLoaded', function() {
     });
         }
 
+    function setShapPanel(status, output, isError) {
+        shapStatus.textContent = status;
+        shapStatus.classList.toggle('error', Boolean(isError));
+        shapOutput.textContent = output;
+    }
+
+    function explainSelectedMolecule(molecule) {
+        setShapPanel('Loading explanation...', 'Running explain_mechanism_shap.py...', false);
+
+        fetch('/api/explain_mechanism_shap', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                smiles: molecule.smiles,
+                mechanism: molecule.mechanism
+            })
+        })
+        .then(response => response.json().then(data => ({ ok: response.ok, data })))
+        .then(({ ok, data }) => {
+            if (!ok) {
+                setShapPanel('Explanation failed', data.error || 'Unknown SHAP error', true);
+                return;
+            }
+
+            setShapPanel('Explanation ready', data.output || '(no output)', false);
+        })
+        .catch(error => {
+            console.error('SHAP explanation error:', error);
+            setShapPanel('Explanation failed', 'Could not run explain_mechanism_shap.py', true);
+        });
+    }
+
     convertButton.addEventListener('click', function() {
         id = -1;
         const smiles = smilesInput.value;
@@ -196,6 +232,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function displayResults(molecules, follow_ons) {
         resultsContainer.innerHTML = '';
+        setShapPanel('Select a molecule to explain', 'No molecule selected.', false);
         saveMech = false;
         const imageChoices = {}; // Object to store user choices for each image
         const imageElements = {}; // Track image elements by molId for bulk actions
@@ -226,6 +263,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 nextStep = molecule.mechanism;
                 saveMech = true;
                 id = molId;
+                explainSelectedMolecule(molecule);
             });
 
             
