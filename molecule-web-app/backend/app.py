@@ -98,12 +98,14 @@ def process_molecule():
     follow_on_mols = []
     follow_on_smiles = []
     for i, mol in enumerate(mols):
+        if mechs[i][0] == 11 or mechs[i][0] == "11":
+            predictions.append(1)
+            # print("Hydride to proton")
+            continue
         fp = make_fingerprint(inp_mol, mechs[i])
         y_pred = clf.predict(np.array(fp).reshape(1, -1))
         predictions.append(int(y_pred[0]))
         if y_pred[0]:
-           # print(mechs[i])
-           # print(fp)
             f_mols, f_smiles = follow_on(mol, mechs[i], clf, screen_charges_enabled, hypervalent_enabled)
             follow_on_mols = follow_on_mols + f_mols
             follow_on_smiles = follow_on_smiles + f_smiles
@@ -112,6 +114,7 @@ def process_molecule():
     clear_pickles(tmp_dir)
     save_files_for_display(mols, inp_mol, tmp_dir)
     if follow_on_mols:
+
         save_files_for_display(follow_on_mols, inp_mol, tmp_dir, prefix="followon_")
 
 
@@ -127,7 +130,6 @@ def process_molecule():
                     if line_num == idx:
                         result_smiles = line.rstrip()
                     line_num += 1
-            fp = make_fingerprint(inp_mol, mechs[idx])
             molecules[idx] = {'image':filename, 'smiles': result_smiles, 'mechanism': mechs[idx], 'predicted': predictions[idx]}
         if filename.endswith('.png') and filename.startswith('followon_'):
             idx = int(filename.split('_')[1].split('.')[0])

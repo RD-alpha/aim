@@ -270,18 +270,18 @@ def lose_hydride(mol, i):
 
 def transfer_proton(mol, j, i):
     p_mol = Chem.Mol(mol)
-    if j != None:
-        a = p_mol.GetAtomWithIdx(j)
-        a.SetFormalCharge(a.GetFormalCharge() - 1)
-        if a.GetNumExplicitHs() > 0:
-            a.SetNumExplicitHs(a.GetNumExplicitHs() - 1)
-        elif a.GetTotalNumHs() == 1:
-                a.SetNoImplicit(True)
-    a2 = p_mol.GetAtomWithIdx(i)
-    a2.SetFormalCharge(a2.GetFormalCharge() + 1)
-    if a2.GetNumExplicitHs() > 0 or a2.GetFormalCharge() == 0:
-        a2.SetNumExplicitHs(a2.GetNumExplicitHs() + 1)
-    if j == None:
+    a = p_mol.GetAtomWithIdx(j)
+    a.SetFormalCharge(a.GetFormalCharge() - 1)
+    if a.GetNumExplicitHs() > 0:
+        a.SetNumExplicitHs(a.GetNumExplicitHs() - 1)
+    elif a.GetTotalNumHs() == 1:
+            a.SetNoImplicit(True)
+    if i != None:
+        a2 = p_mol.GetAtomWithIdx(i)
+        a2.SetFormalCharge(a2.GetFormalCharge() + 1)
+        if a2.GetNumExplicitHs() > 0 or a2.GetFormalCharge() == 0:
+            a2.SetNumExplicitHs(a2.GetNumExplicitHs() + 1)
+    else:
         p_mol = Chem.CombineMols(p_mol, Chem.MolFromSmiles("[H][H]"))
     return p_mol
     #return (mechanisms, connected_mols)
@@ -462,8 +462,8 @@ def execute_step(mol_inp, kekulise = False, screen_charges_enabled = True):
 
             if sink_type == 'proton':
                 if hydride_flag:
-                    # p_mol = transfer_proton(h_mol, None, i)
-                    # connected_mols.append(p_mol)
+                    p_mol = transfer_proton(h_mol, j, None)
+                    connected_mols.append(p_mol)
                     # This is not an ideal fix - introducing yet another arrow type
                     mechanisms.append([11, i, j, None, None])   
                 else:
