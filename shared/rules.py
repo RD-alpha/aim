@@ -469,7 +469,7 @@ def execute_step(mol_inp, kekulise = False, screen_charges_enabled = True):
                 else:
                     p_mol = transfer_proton(mol_inp, j, i)
                     connected_mols.append(p_mol)
-                    mechanisms.append([4, i, j, None, None])   
+                    mechanisms.append([4, i, None, None, j])   
                 continue
 
             if sink_type == 'CH':
@@ -570,7 +570,7 @@ def execute_step(mol_inp, kekulise = False, screen_charges_enabled = True):
                 if sink_type == 'proton':
                     p_mol = transfer_proton(n_mol, j, i)
                     connected_mols.append(p_mol)
-                    mechanisms.append([5, i, j, k, None])
+                    mechanisms.append([5, i, None, k, j])
 
                     continue
                 if sink_type == 'CH':
