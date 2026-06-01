@@ -88,6 +88,9 @@ def follow_on(next_mol, mech, model, screen_charges_enabled = True, hypervalent_
     except Exception as e:
         print(e)
     for i, product in enumerate(connected_mols):
+        if mechanism[i][0] == 11:
+            # Do not consider H- H+ as part of the follow on steps
+            continue
         fp = np.array(make_fingerprint(mol_inp, mechanism[i]))
         pred = clf.predict(fp.reshape(1,-1))[0]
         if pred:
