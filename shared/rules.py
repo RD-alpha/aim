@@ -23,10 +23,10 @@ def clean_mol(list_mol, mechanisms, original_mol = None):
                 updated_mech.append(mechanisms[idx])
     return (clean_list, updated_mech)
 
-def screen_charges(list_mol, mechanisms, charge = 0):
-    if charge == -1: # base mediated reaction will not have cationic intermediates
+def screen_charges(list_mol, charge = 0):
+    if charge < 0: # base mediated reaction will not have cationic intermediates
         clean_list = []
-        updated_mech = []
+
         for idx in range(len(list_mol)):
             mol = list_mol[idx]
             keep = True
@@ -35,12 +35,11 @@ def screen_charges(list_mol, mechanisms, charge = 0):
                     keep = False
                     break
             if keep:
-                clean_list.append(mol)
-                updated_mech.append(mechanisms[idx])
-        return (clean_list, updated_mech)
-    elif charge == 1: # acid mediated reaction will not have anionic intermediates
+                clean_list.append(idx)
+        return clean_list
+    elif charge > 0: # acid mediated reaction will not have anionic intermediates
         clean_list = []
-        updated_mech = []
+
         for idx in range(len(list_mol)):
             mol = list_mol[idx]
             keep = True
@@ -49,12 +48,11 @@ def screen_charges(list_mol, mechanisms, charge = 0):
                     keep = False
                     break
             if keep:
-                clean_list.append(mol)
-                updated_mech.append(mechanisms[idx])
-        return (clean_list, updated_mech)
+                clean_list.append(idx)
+        return clean_list
     else:
-        print('No screening')
-        return (list_mol, mechanisms)
+        # print('No screening')
+        return list(range(len(list_mol)))
 
 
 def identify_source(mol, p_block = False):
@@ -222,7 +220,10 @@ def identify_acidic_CH(mol):
                         atom.SetProp('sink', 'CH')
                         break
 
-def prepare_molecule(mol, p_block = True):
+def prepare_molecule(mol, p_block = True, setNoImplicitFalse = True):
+    if setNoImplicitFalse:
+        for a in mol.GetAtoms():
+            a.SetNoImplicit(False)
     identify_acidic_CH(mol)
     identify_sink(mol, p_block=p_block)
     identify_source(mol, p_block=p_block)
@@ -391,7 +392,7 @@ def carbocat(mol, sink_idx, connected_mols, mechanisms):
     mechanisms.append([10, None, j, None, l])
     return (mechanisms, connected_mols)
 
-def run_next_step(smiles, kekulise = False,  chain_mol = None, screen_charges_enabled = True, p_block = True):
+def run_next_step(smiles, kekulise = False, chain_mol = None, screen_charges_enabled = True, p_block = True):
     if chain_mol is not None:
         mol_inp = chain_mol
         for a in mol_inp.GetAtoms():
@@ -415,8 +416,8 @@ def run_next_step(smiles, kekulise = False,  chain_mol = None, screen_charges_en
             Chem.Kekulize(mol_inp, clearAromaticFlags=True)
         
     prepare_molecule(mol_inp, p_block=p_block)
-    connected_mols, mechanisms, mol_inp = execute_step(mol_inp, kekulise, screen_charges_enabled)
-    return (connected_mols, mechanisms, mol_inp)
+    connected_mols, mechanisms, mol_inp, clean_list = execute_step(mol_inp, kekulise, screen_charges_enabled)
+    return (connected_mols, mechanisms, mol_inp, clean_list)
 
 def execute_step(mol_inp, kekulise = False, screen_charges_enabled = True):
 
@@ -616,7 +617,10 @@ def execute_step(mol_inp, kekulise = False, screen_charges_enabled = True):
         charge = 0
         for atom in mol_inp.GetAtoms():
             charge += atom.GetFormalCharge()
-        connected_mols, mechanisms = screen_charges(connected_mols, mechanisms, charge)
+        clean_list = screen_charges(connected_mols, charge)
+    else:
+        clean_list = list(range(len(connected_mols)))
+    
     idx = 0
     for mol in connected_mols:
         try:
@@ -634,4 +638,4 @@ def execute_step(mol_inp, kekulise = False, screen_charges_enabled = True):
             Chem.Kekulize(mol, clearAromaticFlags=True)
         idx += 1
     
-    return (connected_mols, mechanisms, mol_inp)
+    return (connected_mols, mechanisms, mol_inp, clean_list)

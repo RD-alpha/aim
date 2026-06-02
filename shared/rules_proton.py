@@ -236,7 +236,7 @@ def break_bond_sink(new_mol, order, a, b1, b2, mechanisms, connected_mols):
 
 
 
-def execute_step(mol_inp, kekulise = False, cleanup = False, screen_charges_enabled = True):
+def execute_step(mol_inp, kekulise = False,  screen_charges_enabled = True):
 
 
     connected_mols = []
@@ -261,10 +261,6 @@ def execute_step(mol_inp, kekulise = False, cleanup = False, screen_charges_enab
         i = source_idx
         if mol_inp.GetAtomWithIdx(i).GetFormalCharge() > 0:
             continue
-        hydride_flag = False
-        if source_type == 'hydride':
-                hydride_flag = True
-                h_mol = lose_hydride(mol_inp, i)
         for sink_idx, sink_type in sinks_atoms.items():
             j = sink_idx
 
@@ -274,40 +270,17 @@ def execute_step(mol_inp, kekulise = False, cleanup = False, screen_charges_enab
                 continue
 
             if sink_type == 'proton':
-                if hydride_flag:
-
-                    continue
-
                 p_mol = transfer_proton(mol_inp, j, i)
                 connected_mols.append(p_mol)
                 mechanisms.append([4, i, None, None, j])   
                 continue
 
             if sink_type == 'CH':
-                if source_type == 'hydride':
-                    # probably unlikely that we will use a metal hydride as base for enolisation
-                    continue
                 # Same proton transfer behaviour as above
                 mechanisms, connected_mols = c_h_elimination(mol_inp, i, j, mechanisms, connected_mols)
                 continue
 
-            if hydride_flag:
-                m_mol = Chem.Mol(h_mol)
-                if m_mol.GetAtomWithIdx(j).GetNumExplicitHs()>0:
-                    m_mol.GetAtomWithIdx(j).SetNumExplicitHs(m_mol.GetAtomWithIdx(j).GetNumExplicitHs() + 1)
-                m_mol.GetAtomWithIdx(j).SetFormalCharge(m_mol.GetAtomWithIdx(j).GetFormalCharge() - 1)
-                connected_mols.append(m_mol)
-                mechanisms.append([6, None, j, i, None])
-                continue
-
-            new_mol = Chem.Mol(mol_inp)
-            connected_mols.append(a_to_b(new_mol, i, j))
-            mechanisms.append([0, i, j, None, None])
-
-
-   
-    if cleanup:
-        connected_mols, mechanisms = clean_mol(connected_mols, mechanisms, mol_inp)
+    connected_mols, mechanisms = clean_mol(connected_mols, mechanisms, mol_inp)
 
     if screen_charges_enabled:
         charge = 0
@@ -335,7 +308,7 @@ def execute_step(mol_inp, kekulise = False, cleanup = False, screen_charges_enab
     return (connected_mols, mechanisms, mol_inp)
 
 
-def run_next_step(smiles, kekulise = False, cleanup = True, chain_mol = None, screen_charges_enabled = True, hypervalent_enabled = True):
+def run_next_step(smiles, kekulise = False ,chain_mol = None, screen_charges_enabled = True, hypervalent_enabled = True):
     if chain_mol is not None:
         mol_inp = chain_mol
         for a in mol_inp.GetAtoms():
@@ -359,5 +332,5 @@ def run_next_step(smiles, kekulise = False, cleanup = True, chain_mol = None, sc
             Chem.Kekulize(mol_inp, clearAromaticFlags=True)
         
     prepare_molecule(mol_inp, hypervalent_enabled=hypervalent_enabled)
-    connected_mols, mechanisms, mol_inp = execute_step(mol_inp, kekulise, cleanup, screen_charges_enabled)
+    connected_mols, mechanisms, mol_inp = execute_step(mol_inp, kekulise, screen_charges_enabled)
     return (connected_mols, mechanisms, mol_inp)

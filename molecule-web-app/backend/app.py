@@ -90,13 +90,16 @@ def process_molecule():
     if id != -1:
         with open('chain/mol_' + str(id) + '.pkl', 'rb') as f:
             chain_mol = pickle.load(f)
-        mols, mechs, inp_mol = run_next_step(smiles, kekulise, chain_mol, screen_charges_enabled, hypervalent_enabled)
+        mols, mechs, inp_mo, clean_list = run_next_step(smiles, kekulise, chain_mol, screen_charges_enabled, hypervalent_enabled)
     else:
-        mols, mechs, inp_mol = run_next_step(smiles, kekulise, None, screen_charges_enabled, hypervalent_enabled)
+        mols, mechs, inp_mol, clean_list = run_next_step(smiles, kekulise, None, screen_charges_enabled, hypervalent_enabled)
     
     predictions = []
     follow_on_mols = []
     follow_on_smiles = []
+    screened_mols = []
+    screened_mechs = []
+    screened_predictions = []
     for i, mol in enumerate(mols):
         if mechs[i][0] == 11 or mechs[i][0] == "11":
             predictions.append(1)
@@ -105,16 +108,27 @@ def process_molecule():
         fp = make_fingerprint(inp_mol, mechs[i])
         y_pred = clf.predict(np.array(fp).reshape(1, -1))
         predictions.append(int(y_pred[0]))
+        if screen_charges_enabled:
+            clean_parent = i in clean_list
+            if clean_parent:
+                screened_mols.append(mol)
+                screened_mechs.append(mechs[i])
+                screened_predictions.append(int(y_pred[0]))
         if y_pred[0]:
-            f_mols, f_smiles = follow_on(mol, mechs[i], clf, screen_charges_enabled, hypervalent_enabled)
+            f_mols, f_smiles = follow_on(mol, mechs[i], clf, screen_charges_enabled, hypervalent_enabled, clean_parent)
             follow_on_mols = follow_on_mols + f_mols
             follow_on_smiles = follow_on_smiles + f_smiles
 
+
+    if screen_charges_enabled:
+        mols = screened_mols
+        mechs = screened_mechs
+        predictions = screened_predictions
+        
     clear_results(tmp_dir)
     clear_pickles(tmp_dir)
     save_files_for_display(mols, inp_mol, tmp_dir)
     if follow_on_mols:
-
         save_files_for_display(follow_on_mols, inp_mol, tmp_dir, prefix="followon_")
 
 
