@@ -188,7 +188,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                smiles: molecule.smiles,
+                smiles: smilesInput.value,
                 mechanism: molecule.mechanism
             })
         })
