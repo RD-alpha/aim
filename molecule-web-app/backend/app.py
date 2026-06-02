@@ -118,10 +118,11 @@ def process_molecule():
                 screened_mols.append(mol)
                 screened_mechs.append(mechs[i])
                 screened_predictions.append(int(y_pred[0]))
+        else:
+            clean_parent = True
         if y_pred[0]:
-            f_mols, f_smiles = follow_on(mol, mechs[i], clf, screen_charges_enabled, hypervalent_enabled, clean_parent)
+            f_mols, _, _ = follow_on(mol, mechs[i], clf, screen_charges_enabled, hypervalent_enabled, clean_parent)
             follow_on_mols = follow_on_mols + f_mols
-            follow_on_smiles = follow_on_smiles + f_smiles
 
 
     if screen_charges_enabled:
@@ -151,10 +152,9 @@ def process_molecule():
             molecules[idx] = {'image':filename, 'smiles': result_smiles, 'mechanism': mechs[idx], 'predicted': predictions[idx]}
         if filename.endswith('.png') and filename.startswith('followon_'):
             idx = int(filename.split('_')[1].split('.')[0])
-            follow_ons[idx] = {'image':filename, 'smiles':follow_on_smiles[idx]}
+            follow_ons[idx] = {'image':filename, 'smiles':Chem.MolToSmiles(follow_on_mols[idx])}
 
 
-    #print(molecules)
     return jsonify({'molecules': molecules, 'history_idx': history_count, 'follow_ons': follow_ons})
 
 
