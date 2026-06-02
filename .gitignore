@@ -24,3 +24,6 @@ molecule-web-app/backend/chain/
 /training_current
 /shared/__pycache__/
 /old_slurm
+/logs
+/training_current
+/shared/__pycache__/
