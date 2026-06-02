@@ -3,6 +3,7 @@ from .rules import execute_step
 from .ml_helper import make_fingerprint
 from .rules_proton import run_next_step
 import numpy as np
+import os
 ptable = Chem.GetPeriodicTable()
 from .electronegativity import electronegativity
 
@@ -89,11 +90,12 @@ def prepare_atoms(atom_i, hypervalent_enabled = True):
         if valence_electrons < 3 and num_bond_electrons/2 < valence_electrons and atom.GetFormalCharge() >= 0:
             atom.SetProp('sink', 'empty AO')
 
-        # The second row p block expansion pack
-        if hypervalent_enabled:
-            if atom.GetAtomicNum() < 17 and atom.GetAtomicNum() > 13 and atom.GetFormalCharge() >= 0 and atom.GetTotalValence() < 6:
-                if atom.HasProp('sink') and atom.GetProp('sink') == 'proton':
-                    continue
+    # The second row p block expansion pack
+    if hypervalent_enabled:
+        if atom.GetAtomicNum() < 17 and atom.GetAtomicNum() > 13 and atom.GetFormalCharge() >= 0 and atom.GetTotalValence() < 6:
+            if atom.HasProp('sink') and atom.GetProp('sink') == 'proton':
+                pass
+            else:
                 atom.SetProp('sink', 'hypervalent')
 
     for bond in b:
@@ -173,8 +175,10 @@ def follow_on(next_mol, mech, model, screen_charges_enabled = True, hypervalent_
         connected_mols, mechanism, mol_inp, clean_list = execute_step(next_mol, screen_charges_enabled=screen_charges_enabled)
     except Exception as e:
         print(e)
-
     for i, product in enumerate(connected_mols):
+        if mechanism[i][0] == 11:
+            # Do not consider H- H+ as part of the follow on steps
+            continue
         fp = np.array(make_fingerprint(mol_inp, mechanism[i]))
         pred = clf.predict(fp.reshape(1,-1))[0]
         if pred and i in clean_list:

@@ -1,4 +1,9 @@
-/old
+old
 .vscode/
 __py_chache__/
 images/
+slurm*
+job_scripts/
+logs/
+vscode-unmap-smiles
+shared/__pycache__/
