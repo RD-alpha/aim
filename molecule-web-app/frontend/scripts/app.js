@@ -163,7 +163,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (saveMech == true) {
                 mechStep.push(nextStep);
                 }
-                displayResults(data.molecules, data.follow_ons);
+                displayResults(data.molecules, data.follow_ons, data.mol_inp_smiles);
                 addHistory(data.history_idx);
             })
             .catch(error => {
@@ -179,7 +179,7 @@ document.addEventListener('DOMContentLoaded', function() {
         shapOutput.textContent = output;
     }
 
-    function explainSelectedMolecule(molecule) {
+    function explainSelectedMolecule(molecule, smiles) {
         setShapPanel('Loading explanation...', 'Running explain_mechanism_shap.py...', false);
 
         fetch('/api/explain_mechanism_shap', {
@@ -188,7 +188,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                smiles: smilesInput.value,
+                smiles: smiles,
                 mechanism: molecule.mechanism
             })
         })
@@ -235,7 +235,7 @@ document.addEventListener('DOMContentLoaded', function() {
         fetch('/clear_history', { method: 'POST' });
     });
 
-    function displayResults(molecules, follow_ons) {
+    function displayResults(molecules, follow_ons, input_smiles) {
         resultsContainer.innerHTML = '';
         setShapPanel('Select a molecule to explain', 'No molecule selected.', false);
         saveMech = false;
@@ -264,11 +264,10 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             img.addEventListener('click', function() {
-                smilesInput.value = molecule.smiles;
                 nextStep = molecule.mechanism;
                 saveMech = true;
                 id = molId;
-                explainSelectedMolecule(molecule);
+                explainSelectedMolecule(molecule, input_smiles);
             });
 
             

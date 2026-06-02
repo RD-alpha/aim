@@ -95,7 +95,7 @@ def process_molecule():
     if id != -1:
         with open('chain/mol_' + str(id) + '.pkl', 'rb') as f:
             chain_mol = pickle.load(f)
-        mols, mechs, inp_mo, clean_list = run_next_step(smiles, kekulise, chain_mol, screen_charges_enabled, hypervalent_enabled)
+        mols, mechs, inp_mol, clean_list = run_next_step(smiles, kekulise, chain_mol, screen_charges_enabled, hypervalent_enabled)
     else:
         mols, mechs, inp_mol, clean_list = run_next_step(smiles, kekulise, None, screen_charges_enabled, hypervalent_enabled)
     
@@ -139,7 +139,7 @@ def process_molecule():
 
 
     molecules = {}
-    follow_ons ={}
+    follow_ons = {}
 
     for filename in os.listdir(os.path.join(tmp_dir, 'results')):
         if filename.endswith('.png') and filename.startswith('mol_'):
@@ -156,7 +156,7 @@ def process_molecule():
             follow_ons[idx] = {'image':filename, 'smiles':Chem.MolToSmiles(follow_on_mols[idx])}
 
 
-    return jsonify({'molecules': molecules, 'history_idx': history_count, 'follow_ons': follow_ons})
+    return jsonify({'molecules': molecules, 'history_idx': history_count, 'follow_ons': follow_ons, "mol_inp_smiles": Chem.MolToSmiles(inp_mol)})
 
 
 
