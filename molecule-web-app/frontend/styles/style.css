@@ -207,6 +207,53 @@ button:hover {
     margin-top: 20px;
 }
 
+.shap-panel {
+    margin-top: 18px;
+    border: 1px solid #d7dde3;
+    border-radius: 8px;
+    background: #ffffff;
+    overflow: hidden;
+}
+
+.shap-panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 12px;
+    background: #eef2f6;
+    border-bottom: 1px solid #d7dde3;
+}
+
+.shap-panel-header h2 {
+    margin: 0;
+    font-size: 1rem;
+    line-height: 1.3;
+}
+
+#shap-status {
+    color: #4b5563;
+    font-size: 0.9rem;
+}
+
+#shap-status.error {
+    color: #c0392b;
+    font-weight: bold;
+}
+
+#shap-output {
+    box-sizing: border-box;
+    width: 100%;
+    max-height: 520px;
+    margin: 0;
+    padding: 12px;
+    overflow: auto;
+    background: #111827;
+    color: #f9fafb;
+    font: 0.85rem/1.45 Consolas, Monaco, 'Courier New', monospace;
+    white-space: pre;
+}
+
 .result-image {
     max-width: 150px;
     border-radius: 5px;

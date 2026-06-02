@@ -5,6 +5,7 @@ import sys
 import shutil
 import uuid
 import tempfile
+import subprocess
 root_folder = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../'))
 if root_folder not in sys.path:
     sys.path.insert(0, root_folder)
@@ -240,6 +241,50 @@ def session_file(filepath):
 @app.route('/api/version')
 def get_version():
     return jsonify({'model_version': MODEL_VERSION})
+
+@app.route('/api/explain_mechanism_shap', methods=['POST'])
+def explain_mechanism_shap():
+    data = request.get_json() or {}
+    smiles = data.get('smiles')
+    mechanism = data.get('mechanism')
+
+    if not smiles:
+        return jsonify({'error': 'No SMILES string provided'}), 400
+    if not isinstance(mechanism, list) or len(mechanism) != 5:
+        return jsonify({'error': 'Mechanism must be a 5-item list'}), 400
+
+    script_path = os.path.join(root_folder, 'scripts', 'explain_mechanism_shap.py')
+    model_path = os.path.join(root_folder, 'models', MODEL_VERSION, 'xg_model.json')
+
+    try:
+        result = subprocess.run(
+            [
+                sys.executable,
+                script_path,
+                smiles,
+                repr(mechanism),
+                '--model',
+                model_path,
+            ],
+            cwd=root_folder,
+            capture_output=True,
+            text=True,
+            timeout=30,
+            check=False,
+        )
+    except subprocess.TimeoutExpired:
+        return jsonify({'error': 'SHAP explanation timed out'}), 504
+    except Exception as exc:
+        return jsonify({'error': str(exc)}), 500
+
+    output = result.stdout
+    if result.stderr:
+        output = f"{output}\n{result.stderr}".strip()
+
+    if result.returncode != 0:
+        return jsonify({'error': output or 'SHAP explanation failed'}), 500
+
+    return jsonify({'output': output})
 
 
 if __name__ == '__main__':
