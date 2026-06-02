@@ -261,10 +261,6 @@ def execute_step(mol_inp, kekulise = False,  screen_charges_enabled = True):
         i = source_idx
         if mol_inp.GetAtomWithIdx(i).GetFormalCharge() > 0:
             continue
-        hydride_flag = False
-        if source_type == 'hydride':
-                hydride_flag = True
-                h_mol = lose_hydride(mol_inp, i)
         for sink_idx, sink_type in sinks_atoms.items():
             j = sink_idx
 
@@ -274,38 +270,16 @@ def execute_step(mol_inp, kekulise = False,  screen_charges_enabled = True):
                 continue
 
             if sink_type == 'proton':
-                if hydride_flag:
-
-                    continue
-
                 p_mol = transfer_proton(mol_inp, j, i)
                 connected_mols.append(p_mol)
                 mechanisms.append([4, i, None, None, j])   
                 continue
 
             if sink_type == 'CH':
-                if source_type == 'hydride':
-                    # probably unlikely that we will use a metal hydride as base for enolisation
-                    continue
                 # Same proton transfer behaviour as above
                 mechanisms, connected_mols = c_h_elimination(mol_inp, i, j, mechanisms, connected_mols)
                 continue
 
-            if hydride_flag:
-                m_mol = Chem.Mol(h_mol)
-                if m_mol.GetAtomWithIdx(j).GetNumExplicitHs()>0:
-                    m_mol.GetAtomWithIdx(j).SetNumExplicitHs(m_mol.GetAtomWithIdx(j).GetNumExplicitHs() + 1)
-                m_mol.GetAtomWithIdx(j).SetFormalCharge(m_mol.GetAtomWithIdx(j).GetFormalCharge() - 1)
-                connected_mols.append(m_mol)
-                mechanisms.append([6, None, j, i, None])
-                continue
-
-            new_mol = Chem.Mol(mol_inp)
-            connected_mols.append(a_to_b(new_mol, i, j))
-            mechanisms.append([0, i, j, None, None])
-
-
-   
     connected_mols, mechanisms = clean_mol(connected_mols, mechanisms, mol_inp)
 
     if screen_charges_enabled:

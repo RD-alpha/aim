@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Molecule Web App</title>
+    <link rel="stylesheet" href="styles/style.css">
+    <script src="scripts/app.js" defer></script>
+</head>
+<body>
+    <div id="app">
+        <div id="main-container">
+            <div class="header-container">
+                <h1>AIM: Axiom-Informed Mechanism</h1>
+                <span id="model-version" class="version-tag"></span>
+                <span id="site-mode" class="version-tag"></span>
+            </div>
+
+            <label for="smiles-input">Enter SMILES:</label>
+            <input type="text" id="smiles-input" placeholder="Enter SMILES string here">
+            <section id="ketcher-panel" class="ketcher-panel">
+                <div class="ketcher-panel-header">
+                    <h2>Molecule drawer</h2>
+                    <button id="toggle-ketcher-button" type="button">Hide drawer</button>
+                </div>
+                <div id="ketcher-panel-body" class="ketcher-panel-body">
+                    <iframe
+                        id="ketcher-frame"
+                        class="ketcher-frame"
+                        src="ketcher.html"
+                        title="Ketcher molecule drawer"
+                    ></iframe>
+                    <div class="ketcher-actions">
+                        <button id="use-drawn-molecule-button" type="button">Use drawn molecule</button>
+                        <button id="clear-drawn-molecule-button" type="button">Clear drawing</button>
+                        <span id="ketcher-status" aria-live="polite">Loading drawer...</span>
+                    </div>
+                </div>
+            </section>
+            <div class="training-only">
+                <label for="contributor-input">Contributor:</label>
+                <input type="text" id="contributor-input" placeholder="Enter your name">
+            </div>
+            <div>
+                <input type="checkbox" id="kekulise-checkbox">
+                <label for="kekulise-checkbox">Aromatic reactivity?</label>
+                <input type="checkbox" id="screen-charges-checkbox" checked>
+                <label for="screen-charges-checkbox">Screen charged species</label>
+                <input type="checkbox" id="hypervalent-checkbox" checked>
+                <label for="hypervalent-checkbox">p-block reactivity</label>
+            </div>
+            <button id="convert-button">Apply rules</button>
+            <button id="chain-button" hidden>Next step</button>
+            <button id="random-suggestion-button" class="training-only">Random suggestion</button>
+            <div id="results-container"></div>
+        </div>
+        <div id="history-container">
+            <!-- <button id="toggle-history-button" class="arrow-button">→</button> -->
+            <h2>History</h2>
+            <div id="history-list"></div>
+            <button id="clear-history-button">Clear History</button>
+            <button id="save-history-button" hidden>Save History</button>
+        </div>
+    </div>
+
+    <!-- Popup Modal -->
+    <div id="info-modal" class="modal">
+        <div class="modal-content">
+            <span id="close-modal" class="close-button">&times;</span>
+            <h2>Thank you for volunteering your chemistry expertise!</h2>
+            <p>Guidance for consistent training</p>
+            <a href="help.html">Help</a>
+            <p>Random suggestion will give you a SMILES with a nucleophile-electrophile pair</p>
+            <p>The Apply Rules button is the one you should start to use</p>
+            <p>The default selections come from the pretrained model - after making modifications press "Save Training Data"</p>
+            <p>Save training data before carrying forward a structure or inputting a new one</p>
+            <p>If you click on a structure its SMILES will be added to input bar - "Next Step" will carry through this structure to the next step preserving atom numbering</p>
+
+        </div>
+    </div>
+    <!-- Confirmation pop-up-->
+     <div id="confirmation-popup">
+        <p>Training data submitted successfully</p>
+     </div>
+
+      <!-- Error pop-up-->
+     <div id="error-popup">
+        <p>There was an error, please check the SMILES</p>
+     </div>
+</body>
+</html>

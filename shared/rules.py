@@ -220,9 +220,10 @@ def identify_acidic_CH(mol):
                         atom.SetProp('sink', 'CH')
                         break
 
-def prepare_molecule(mol, p_block = True):
-    for a in mol.GetAtoms():
-        a.SetNoImplicit(False)
+def prepare_molecule(mol, p_block = True, setNoImplicitFalse = True):
+    if setNoImplicitFalse:
+        for a in mol.GetAtoms():
+            a.SetNoImplicit(False)
     identify_acidic_CH(mol)
     identify_sink(mol, p_block=p_block)
     identify_source(mol, p_block=p_block)
@@ -391,7 +392,7 @@ def carbocat(mol, sink_idx, connected_mols, mechanisms):
     mechanisms.append([10, None, j, None, l])
     return (mechanisms, connected_mols)
 
-def run_next_step(smiles, kekulise = False,  chain_mol = None, screen_charges_enabled = True, p_block = True):
+def run_next_step(smiles, kekulise = False, chain_mol = None, screen_charges_enabled = True, p_block = True):
     if chain_mol is not None:
         mol_inp = chain_mol
         for a in mol_inp.GetAtoms():
@@ -619,8 +620,8 @@ def execute_step(mol_inp, kekulise = False, screen_charges_enabled = True):
         clean_list = screen_charges(connected_mols, charge)
     else:
         clean_list = list(range(len(connected_mols)))
-
-    idx = 0    
+    
+    idx = 0
     for mol in connected_mols:
         try:
             Chem.SanitizeMol(mol)

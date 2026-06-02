@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ketcher Molecule Drawer</title>
+    <link rel="stylesheet" href="scripts/ketcher-bundle.css">
+    <style>
+        html,
+        body,
+        #root {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #ffffff;
+        }
+
+        .ketcher-load-error {
+            box-sizing: border-box;
+            height: 100%;
+            padding: 24px;
+            color: #7f1d1d;
+            background: #fee2e2;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+    <script>
+  if (typeof global === 'undefined') {
+    var global = window;
+  }
+
+        window.process = window.process || { env: { NODE_ENV: 'production' } };
+    </script>
+    <script src="scripts/ketcher-bundle.js"></script>
+</body>
+</html>
