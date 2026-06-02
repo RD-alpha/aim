@@ -264,6 +264,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             img.addEventListener('click', function() {
+                smilesInput.value = molecule.smiles;
                 nextStep = molecule.mechanism;
                 saveMech = true;
                 id = molId;
