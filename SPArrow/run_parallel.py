@@ -5,9 +5,6 @@ import numpy as np
 import time
 from anytree import Node, RenderTree
 from anytree.search import find
-from shared.rules import run_next_step
-from shared.next_step import follow_on
-from shared.ml_helper import make_fingerprint
 import xgboost
 import os
 import pickle
@@ -20,6 +17,18 @@ jobid = os.environ.get("SLURM_JOB_ID", "backup")
 scratch = os.environ.get("SCRATCH", os.getcwd())   # <<< NEW
 os.makedirs(scratch, exist_ok=True)                # <<< NEW
 filename = os.path.join(scratch, f"{jobid}")   # <<< CHANGED
+
+import sys
+from pathlib import Path
+
+root_dir = Path(__file__).resolve().parents[1]
+if str(root_dir) not in sys.path:
+    sys.path.insert(0, str(root_dir))
+
+# Now you can import it normally
+from shared.rules import run_next_step
+from shared.next_step import follow_on
+from shared.ml_helper import make_fingerprint
 
 
 
@@ -95,7 +104,7 @@ def next_nodes(packed):
         found_frag = False
         try:
             inchi1 = Chem.MolToInchi(product, options='/FixedH')
-            if no_duplicates and inchi1 in inchis_set:
+            if no_duplicates and inchi1 in inchis_set: 
                 continue
         except Exception as e:
             print(f'Error processing product {i}: {e}')
@@ -111,14 +120,26 @@ def next_nodes(packed):
                     found_frag = True
                     print(f"fragment inchi: {inchi_frag}")
 
-            
          # Atom-map + SMILES for storage
         for j, atom in enumerate(product.GetAtoms()):  # <<< NEW
-            atom.SetAtomMapNum(idx_to_mapnum[j])
-        prod_smiles = Chem.MolToSmiles(product, canonical=False)  # <<< NEW
-       
+            try:
+                atom.SetAtomMapNum(idx_to_mapnum[j])
+            except KeyError:
+                max_map_num = max(idx_to_mapnum.values())
+                if mechs[i][0] == 11 and atom.GetAtomicNum() == 1:  
+                    atom.SetAtomMapNum(max_map_num + 1)
+                    idx_to_mapnum[j] = max_map_num + 1
+                    continue
+                print(f"Atom index {j} not found in idx_to_mapnum, skipping atom mapping for this product.")
+                for atom in product.GetAtoms():
+                    atom.SetAtomMapNum(0)
+                break
 
-        if inchi1 == inchi2 or found_frag:
+        prod_smiles = Chem.MolToSmiles(product, canonical=False)  # <<< NEW
+        
+        
+
+        if inchi1 == inchi2 or found_frag:   
             print('Found the target molecule!')
             # print(f'Product SMILES: {prod_smiles}')   # <<< CHANGED
             # print(f'Inchi: {inchi1}')
@@ -136,8 +157,8 @@ def next_nodes(packed):
                     "product":True
                     })
             
-            
         elif pred == 1:
+
             if no_duplicates:
                 inchi_set_local.add(inchi1)
             
@@ -153,7 +174,7 @@ def next_nodes(packed):
                 "pass_charge_screen": clean
             })
 
-            if follow_on_enabled:
+            if follow_on_enabled and mechs[i][0] != 11:   # Don't do follow on for simple proton transfers
                 #print(prod_smiles, mechs[i])
                 try:
                     f_mols, f_mechs, f_fps = follow_on(product, mechs[i], clf, screen_charges_enabled=screen_charges_enabled, clean_parent=clean)
