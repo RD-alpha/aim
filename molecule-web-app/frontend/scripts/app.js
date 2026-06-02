@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
+    const isTrainingMode = window.location.pathname.replace(/\/$/, '') === '/training';
     const convertButton = document.getElementById('convert-button');
     const chainButton = document.getElementById('chain-button');
     const smilesInput = document.getElementById('smiles-input');
@@ -19,8 +20,12 @@ document.addEventListener('DOMContentLoaded', function() {
     const clearDrawnMoleculeButton = document.getElementById('clear-drawn-molecule-button');
     const ketcherStatus = document.getElementById('ketcher-status');
 
-     // Show the modal on first load
-     infoModal.style.display = 'block';
+    document.querySelectorAll('.training-only').forEach(element => {
+        element.hidden = !isTrainingMode;
+    });
+
+     // Show the modal on first load for the training site only.
+     infoModal.style.display = isTrainingMode ? 'block' : 'none';
 
      // Close the modal when the close button is clicked
      closeModal.addEventListener('click', () => {
@@ -212,7 +217,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const molId = molecule.image.match(/mol_(\d+)\.png/)[1];
             img.dataset.molID = molId;
             imageElements[molId] = img;
-            // Preselect based on prediction
+            // Show the model prediction in both sites; training mode can override it.
             if (molecule.predicted === 1) {
                 img.style.border = '3px solid green';
                 imageChoices[molId] = { mechanism: molecule.mechanism, probable: 1 };
@@ -229,47 +234,53 @@ document.addEventListener('DOMContentLoaded', function() {
             });
 
             
-            // Create button container
-            const buttonContainer = document.createElement('div');
-            buttonContainer.classList.add('button-container');
-            buttonContainer.dataset.molID = molId;
-
-            const text = document.createElement('p');
-            text.textContent = molecule.predicted;
-
-
-            // Add red button
-            const redButton = document.createElement('button');
-            redButton.classList.add('red-button');
-            redButton.addEventListener('click', () => {
-                img.style.border = '3px solid red';
-                imageChoices[molId] = {mechanism: molecule.mechanism, probable: 0};
-            });
-
-            // Add green button
-            const greenButton = document.createElement('button');
-            greenButton.classList.add('green-button');
-            greenButton.addEventListener('click', () => {
-                img.style.border = '3px solid green';
-                imageChoices[molId] = {mechanism: molecule.mechanism, probable: 1};
-            });
-            // Add grey button
-            const greyButton = document.createElement('button');
-            greyButton.classList.add('grey-button');
-            greyButton.addEventListener('click', () => {
-                img.style.border = 'none';
-                imageChoices[molId] = {mechanism: molecule.mechanism, probable: null};
-            });
-
-            // Append buttons to the button container
-            buttonContainer.appendChild(redButton);
-            buttonContainer.appendChild(greenButton);
-            buttonContainer.appendChild(greyButton);
-            buttonContainer.appendChild(text);
-
             // Append elements to the container
             imgContainer.appendChild(img);
-            imgContainer.appendChild(buttonContainer);
+
+            if (isTrainingMode) {
+                // Create button container
+                const buttonContainer = document.createElement('div');
+                buttonContainer.classList.add('button-container');
+                buttonContainer.dataset.molID = molId;
+
+                const text = document.createElement('p');
+                text.textContent = molecule.predicted;
+
+
+                // Add red button
+                const redButton = document.createElement('button');
+                redButton.classList.add('red-button');
+                redButton.title = 'Mark improbable';
+                redButton.addEventListener('click', () => {
+                    img.style.border = '3px solid red';
+                    imageChoices[molId] = {mechanism: molecule.mechanism, probable: 0};
+                });
+
+                // Add green button
+                const greenButton = document.createElement('button');
+                greenButton.classList.add('green-button');
+                greenButton.title = 'Mark probable';
+                greenButton.addEventListener('click', () => {
+                    img.style.border = '3px solid green';
+                    imageChoices[molId] = {mechanism: molecule.mechanism, probable: 1};
+                });
+                // Add grey button
+                const greyButton = document.createElement('button');
+                greyButton.classList.add('grey-button');
+                greyButton.title = 'Exclude from training save';
+                greyButton.addEventListener('click', () => {
+                    img.style.border = 'none';
+                    imageChoices[molId] = {mechanism: molecule.mechanism, probable: null};
+                });
+
+                // Append buttons to the button container
+                buttonContainer.appendChild(redButton);
+                buttonContainer.appendChild(greenButton);
+                buttonContainer.appendChild(greyButton);
+                buttonContainer.appendChild(text);
+                imgContainer.appendChild(buttonContainer);
+            }
+
             resultsContainer.appendChild(imgContainer);
         });
 
@@ -290,6 +301,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 id = molId;
         });
         });
+
+        if (!isTrainingMode) {
+            return;
+        }
 
         const deselectAllButton = document.createElement('button');
         deselectAllButton.textContent = 'Mark all as not save';
@@ -343,18 +358,20 @@ document.addEventListener('DOMContentLoaded', function() {
         historyList.insertBefore(historyImg, historyList.firstChild);
     }
 
-    randomSuggestionButton.addEventListener('click', () => {
-        fetch('/get_random_suggestion')
-            .then(response => response.json())
-            .then(data => {
-                if (data.suggestion) {
-                    smilesInput.value = data.suggestion;
-                } else {
-                    console.error('No suggestions available');
-                }
-            })
-            .catch(error => console.error('Error:', error));
-    });
+    if (isTrainingMode) {
+        randomSuggestionButton.addEventListener('click', () => {
+            fetch('/get_random_suggestion')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.suggestion) {
+                        smilesInput.value = data.suggestion;
+                    } else {
+                        console.error('No suggestions available');
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        });
+    }
 
 
     // Fetch the version from the backend
@@ -363,6 +380,7 @@ fetch('/api/version')
   .then(data => {
 
     document.getElementById('model-version').textContent = `Model version: ${data.model_version}`;
+    document.getElementById('site-mode').textContent = isTrainingMode ? 'Training site' : 'Model results';
   })
   .catch(error => {
     console.error('Error fetching version:', error);

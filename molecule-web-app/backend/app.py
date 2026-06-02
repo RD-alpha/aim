@@ -61,6 +61,10 @@ def cleanup_session_temp_dir():
 def serve_index():
     return send_from_directory(app.template_folder, 'index.html')  # Serve the HTML
 
+@app.route('/training')
+def serve_training():
+    return send_from_directory(app.template_folder, 'index.html')
+
 # Optional: Serve static files like JS/CSS
 @app.route('/<path:path>')
 def serve_static(path):
