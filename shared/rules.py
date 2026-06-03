@@ -166,16 +166,16 @@ def identify_sink(mol, p_block=False):
                         bond.SetProp('sink', 'sigma star')
                         bond.SetIntProp('sink_bond_atom', sink)
                         bond.SetIntProp('sink_other_atom', other)
-            if p_block:
-                if a.GetAtomicNum() == 15 and a.GetFormalCharge() > 0:
-                    other = a.GetIdx()
-                    sink = bond.GetOtherAtomIdx(other)
-                    # do not add as a sink if there is a empty AO on the sink atom (unlikely case)
-                    if mol.GetAtomWithIdx(sink).HasProp('sink') and mol.GetAtomWithIdx(sink).GetProp('sink') == 'empty AO':
-                        continue
-                    bond.SetProp('sink', 'sigma star')
-                    bond.SetIntProp('sink_bond_atom', sink)
-                    bond.SetIntProp('sink_other_atom', other)
+                if p_block:
+                    if a.GetAtomicNum() == 15 and a.GetFormalCharge() > 0:
+                        other = a.GetIdx()
+                        sink = bond.GetOtherAtomIdx(other)
+                        # do not add as a sink if there is a empty AO on the sink atom (unlikely case)
+                        if mol.GetAtomWithIdx(sink).HasProp('sink') and mol.GetAtomWithIdx(sink).GetProp('sink') == 'empty AO':
+                            continue
+                        bond.SetProp('sink', 'sigma star')
+                        bond.SetIntProp('sink_bond_atom', sink)
+                        bond.SetIntProp('sink_other_atom', other)
          # Find multiple bonds ignoring aromatic systems      
         if bond.GetBondTypeAsDouble() > 1.5:
             atoms = [bond.GetBeginAtom(), bond.GetEndAtom()]

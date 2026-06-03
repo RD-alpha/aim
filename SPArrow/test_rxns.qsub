@@ -57,7 +57,7 @@ mkdir -p "$SLURM_SUBMIT_DIR"/slurm_out 2>/dev/null || true
 application="python"
 
 #! Run options for the application:
-options="-u test_rxns.py"
+options="-u SPArrow/test_rxns.py"
 
 #! Work directory (i.e. where the job will run):
 workdir="$SLURM_SUBMIT_DIR"  # The value of SLURM_SUBMIT_DIR sets workdir to the directory
