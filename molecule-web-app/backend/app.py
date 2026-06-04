@@ -21,6 +21,7 @@ import random
 from xgboost import XGBClassifier # pyright: ignore[reportMissingImports]
 from io import BytesIO
 import base64
+from shared.explain_mechanism_shap import explain
 
 app = Flask(
     __name__,
@@ -246,7 +247,7 @@ def get_version():
 def explain_mechanism_shap():
     data = request.get_json() or {}
     mechanism = data.get('mechanism')
-    tmp_dir = get_session_tmp_dir()
+    tmp_dir = get_session_temp_dir()
     if not isinstance(mechanism, list) or len(mechanism) != 5:
         return jsonify({'error': 'Mechanism must be a 5-item list'}), 400
 
@@ -255,34 +256,23 @@ def explain_mechanism_shap():
     mol_path = os.path.join(tmp_dir, 'pickles', 'sm.pkl')
     with open(mol_path, 'rb') as f:
         mol = pickle.load(f)
+   
+    import io
+    from contextlib import redirect_stdout, redirect_stderr
+
+    buf_out = io.StringIO()
+    buf_err = io.StringIO()
+
     try:
-        result = subprocess.run(
-            [
-                sys.executable,
-                script_path,
-                mol,
-                repr(mechanism),
-                '--model',
-                model_path,
-            ],
-            cwd=root_folder,
-            capture_output=True,
-            text=True,
-            timeout=30,
-            check=False,
-        )
-    except subprocess.TimeoutExpired:
-        return jsonify({'error': 'SHAP explanation timed out'}), 504
+        with redirect_stdout(buf_out), redirect_stderr(buf_err):
+            # call with (mol, mechanism, model_path) if it accepts 3 args, else try (mol, mechanism)
+            explain(mol, mechanism, model_path)
+
     except Exception as exc:
+
         return jsonify({'error': str(exc)}), 500
 
-    output = result.stdout
-    if result.stderr:
-        output = f"{output}\n{result.stderr}".strip()
-
-    if result.returncode != 0:
-        return jsonify({'error': output or 'SHAP explanation failed'}), 500
-
+    output = (buf_out.getvalue() + "\n" + buf_err.getvalue()).strip()
     return jsonify({'output': output})
 
 
