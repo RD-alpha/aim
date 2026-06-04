@@ -26,7 +26,12 @@ def save_files_for_display(mols, inp_mol, tmp_dir, prefix = "mol_"):
     if prefix == 'mol_':
         for mol in mols:
             mol_smiles = Chem.MolToSmiles(mol)
-            Chem.SanitizeMol(mol)
+            try:
+                Chem.SanitizeMol(mol)
+            except:
+                print("Sanitisation error")
+                print(mol_smiles)
+                continue
             file_name = prefix + str(file_num)
             try:
                 Chem.Draw.MolToFile(mol, os.path.join(source_folder, file_name + ".png"))

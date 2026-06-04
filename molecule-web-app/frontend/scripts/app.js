@@ -199,7 +199,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
 
-            setShapPanel('Explanation ready', data.output || '(no output)', false);
+            setShapPanel('Explanation ready for ' + smiles, data.output || '(no output)', false);
         })
         .catch(error => {
             console.error('SHAP explanation error:', error);
@@ -336,7 +336,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 resultsContainer.appendChild(imgContainer);
             followOnImg.addEventListener('click', function() {
                 smilesInput.value = followOn.smiles;
-                id = molId;
         });
         });
 

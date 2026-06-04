@@ -156,7 +156,7 @@ def process_molecule():
             follow_ons[idx] = {'image':filename, 'smiles':Chem.MolToSmiles(follow_on_mols[idx])}
 
 
-    return jsonify({'molecules': molecules, 'history_idx': history_count, 'follow_ons': follow_ons, "mol_inp_smiles": Chem.MolToSmiles(inp_mol)})
+    return jsonify({'molecules': molecules, 'history_idx': history_count, 'follow_ons': follow_ons, "session_id": session["session_id"]})
 
 
 
@@ -245,23 +245,22 @@ def get_version():
 @app.route('/api/explain_mechanism_shap', methods=['POST'])
 def explain_mechanism_shap():
     data = request.get_json() or {}
-    smiles = data.get('smiles')
     mechanism = data.get('mechanism')
-
-    if not smiles:
-        return jsonify({'error': 'No SMILES string provided'}), 400
+    tmp_dir = get_session_tmp_dir()
     if not isinstance(mechanism, list) or len(mechanism) != 5:
         return jsonify({'error': 'Mechanism must be a 5-item list'}), 400
 
     script_path = os.path.join(root_folder, 'scripts', 'explain_mechanism_shap.py')
     model_path = os.path.join(root_folder, 'models', MODEL_VERSION, 'xg_model.json')
-
+    mol_path = os.path.join(tmp_dir, 'pickles', 'sm.pkl')
+    with open(mol_path, 'rb') as f:
+        mol = pickle.load(f)
     try:
         result = subprocess.run(
             [
                 sys.executable,
                 script_path,
-                smiles,
+                mol,
                 repr(mechanism),
                 '--model',
                 model_path,
