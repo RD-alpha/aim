@@ -32,10 +32,6 @@ app.secret_key = 'T0rz5wNS1nS1p2mDU7Zg6DmFxnyQM5Gg'
 
 # --- Utilities ---
 
-config_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../config.json'))
-with open(config_path) as f:
-    config = json.load(f)
-MODEL_VERSION = config['model_version']
 
 
 def get_or_create_session_id():
@@ -90,7 +86,8 @@ def process_molecule():
     #save file for history
     history_count = make_image(smiles, tmp_dir)
     clf = XGBClassifier()
-    model_path = f'../../models/{MODEL_VERSION}/xg_model.json'
+    model_version = session['selected_model']
+    model_path = f'../../models/{model_version}/xg_model.json'
     clf.load_model(model_path)
     
     if id != -1:
@@ -252,7 +249,8 @@ def explain_mechanism_shap():
         return jsonify({'error': 'Mechanism must be a 5-item list'}), 400
 
     script_path = os.path.join(root_folder, 'scripts', 'explain_mechanism_shap.py')
-    model_path = os.path.join(root_folder, 'models', MODEL_VERSION, 'xg_model.json')
+    model_version = session['selected_model']
+    model_path = os.path.join(root_folder, 'models', model_version, 'xg_model.json')
     mol_path = os.path.join(tmp_dir, 'pickles', 'sm.pkl')
     with open(mol_path, 'rb') as f:
         mol = pickle.load(f)
@@ -274,6 +272,39 @@ def explain_mechanism_shap():
 
     output = (buf_out.getvalue() + "\n" + buf_err.getvalue()).strip()
     return jsonify({'output': output})
+
+@app.route('/update-model', methods=['POST'])
+def update_model():
+    data = request.get_json()
+    new_model = data.get('model')
+    
+    if not new_model:
+        return jsonify({'status': 'error', 'message': 'No model provided'}), 400
+
+    # Save the model choice directly to this specific user's session
+    session['selected_model'] = new_model
+
+    return jsonify({'status': 'success', 'current_model': new_model})
+
+@app.route('/get-models', methods=['GET'])
+def list_models():
+    try:
+        # Ensure the directory actually exists
+        models_dir = os.path.abspath(os.path.join(root_folder, 'models'))
+        if not os.path.exists(models_dir):
+            return jsonify({'models': []})
+        # List everything in the directory, but filter so ONLY folders are kept
+        available_models = [
+            directory for directory in os.listdir(models_dir)
+            if os.path.isdir(os.path.join(models_dir, directory))
+        ]
+        
+        # Optional: Sort alphabetically
+        available_models.sort()
+
+        return jsonify({'models': available_models})
+    except Exception as e:
+        return jsonify({'status': 'error', 'message': str(e)}), 500
 
 
 if __name__ == '__main__':

@@ -8,8 +8,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const clearHistoryButton = document.getElementById('clear-history-button');
     const randomSuggestionButton = document.getElementById('random-suggestion-button');
     const historyContainer = document.getElementById('history-container');
-    const infoModal = document.getElementById('info-modal');
-    const closeModal = document.getElementById('close-modal');
     const confirmationPopup = document.getElementById('confirmation-popup');
     const errorPopup = document.getElementById('error-popup');
     const ketcherPanel = document.getElementById('ketcher-panel');
@@ -21,18 +19,12 @@ document.addEventListener('DOMContentLoaded', function() {
     const ketcherStatus = document.getElementById('ketcher-status');
     const shapStatus = document.getElementById('shap-status');
     const shapOutput = document.getElementById('shap-output');
+    const dropdown = document.getElementById('model-select');
 
     document.querySelectorAll('.training-only').forEach(element => {
         element.hidden = !isTrainingMode;
     });
 
-     // Show the modal on first load for the training site only.
-     infoModal.style.display = isTrainingMode ? 'block' : 'none';
-
-     // Close the modal when the close button is clicked
-     closeModal.addEventListener('click', () => {
-         infoModal.style.display = 'none';
-     });
 
     var mechStep = [];
     var nextStep = [];
@@ -410,18 +402,43 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    // Fetch the directory list from Flask
+    fetch('/get-models')
+        .then(response => response.json())
+        .then(data => {
+            // Clear out the "Loading models..." placeholder
+            dropdown.innerHTML = '';
 
-    // Fetch the version from the backend
-fetch('/api/version')
-  .then(response => response.json())
-  .then(data => {
+            if (data.models && data.models.length > 0) {
+                // Loop through each directory name returned from the backend
+                data.models.forEach(modelName => {
+                    // Create a new <option> element dynamically
+                    const option = document.createElement('option');
+                    option.value = modelName;        // What gets sent to the server on change
+                    option.textContent = modelName;  // What the user actually sees
 
-    document.getElementById('model-version').textContent = `Model version: ${data.model_version}`;
-    document.getElementById('site-mode').textContent = isTrainingMode ? 'Training site' : 'Model results';
-  })
-  .catch(error => {
-    console.error('Error fetching version:', error);
-  });
+                    // Append the option into our dropdown menu
+                    dropdown.appendChild(option);
+                });
+            } else {
+                dropdown.innerHTML = '<option disabled>No models found in /models</option>';
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching model list:', error);
+            dropdown.innerHTML = '<option disabled>Error loading models</option>';
+        });
+
+
+// Your existing POST request logic remains the same
+function updateModel() {
+    const selectedModel = document.getElementById('model-select').value;
+    fetch('/update-model', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ model: selectedModel })
+    });
+}
 
 });
 
