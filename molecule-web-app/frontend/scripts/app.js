@@ -19,6 +19,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const ketcherStatus = document.getElementById('ketcher-status');
     const shapStatus = document.getElementById('shap-status');
     const shapOutput = document.getElementById('shap-output');
+    const shapOutputNatural = document.getElementById('shap-output-natural');
     const dropdown = document.getElementById('model-select');
 
     document.querySelectorAll('.training-only').forEach(element => {
@@ -170,6 +171,9 @@ document.addEventListener('DOMContentLoaded', function() {
         shapStatus.classList.toggle('error', Boolean(isError));
         shapOutput.textContent = output;
     }
+    function setShapPanelNatural(status, output, isError) {
+        shapOutputNatural.textContent = output;
+    }
 
     function explainSelectedMolecule(molecule, smiles) {
         setShapPanel('Loading explanation...', 'Running explain_mechanism_shap.py...', false);
@@ -196,6 +200,31 @@ document.addEventListener('DOMContentLoaded', function() {
         .catch(error => {
             console.error('SHAP explanation error:', error);
             setShapPanel('Explanation failed', 'Could not run explain_mechanism_shap.py', true);
+        });
+    
+    setShapPanelNatural('Loading explanation...', 'Running explain_mechanism_shap.py...', false);
+
+        fetch('/api/explain_mechanism_shap_llm', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                mechanism: molecule.mechanism
+            })
+        })
+        .then(response => response.json().then(data => ({ ok: response.ok, data })))
+        .then(({ ok, data }) => {
+            if (!ok) {
+                setShapPanelNatural('Explanation failed', data.error || 'Unknown SHAP error', true);
+                return;
+            }
+
+            setShapPanelNatural('Explanation ready for ' + smiles, data.output || '(no output)', false);
+        })
+        .catch(error => {
+            console.error('SHAP explanation error:', error);
+            setShapPanelNatural('Explanation failed', 'Could not run explain_mechanism_shap.py', true);
         });
     }
 

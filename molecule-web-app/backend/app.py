@@ -21,7 +21,13 @@ import random
 from xgboost import XGBClassifier # pyright: ignore[reportMissingImports]
 from io import BytesIO
 import base64
-from shared.explain_mechanism_shap import explain
+from shared.explain_mechanism_shap import explain, natural_language_explain
+from google import genai
+
+if "GEMINI_API_KEY" in os.environ:
+    client = genai.Client()
+else:
+    client = genai.Client(api_key = "AIzaSyCc-tyrUKTjDiUvr-0GCZKtZpROnZL5xX4")
 
 app = Flask(
     __name__,
@@ -235,7 +241,7 @@ def session_file(filepath):
 
     return send_file(abs_file_path)
 
-# Add to app.py
+# Add to app.py - NOTE delete in another commit
 @app.route('/api/version')
 def get_version():
     return jsonify({'model_version': MODEL_VERSION})
@@ -248,7 +254,6 @@ def explain_mechanism_shap():
     if not isinstance(mechanism, list) or len(mechanism) != 5:
         return jsonify({'error': 'Mechanism must be a 5-item list'}), 400
 
-    script_path = os.path.join(root_folder, 'scripts', 'explain_mechanism_shap.py')
     model_version = session['selected_model']
     model_path = os.path.join(root_folder, 'models', model_version, 'xg_model.json')
     mol_path = os.path.join(tmp_dir, 'pickles', 'sm.pkl')
@@ -272,6 +277,30 @@ def explain_mechanism_shap():
 
     output = (buf_out.getvalue() + "\n" + buf_err.getvalue()).strip()
     return jsonify({'output': output})
+
+@app.route('/api/explain_mechanism_shap_llm', methods=['POST'])
+def explain_mechanism_shap_llm():
+    data = request.get_json() or {}
+    mechanism = data.get('mechanism')
+    tmp_dir = get_session_temp_dir()
+    if not isinstance(mechanism, list) or len(mechanism) != 5:
+        return jsonify({'error': 'Mechanism must be a 5-item list'}), 400
+
+    model_version = session['selected_model']
+    model_path = os.path.join(root_folder, 'models', model_version, 'xg_model.json')
+    mol_path = os.path.join(tmp_dir, 'pickles', 'sm.pkl')
+    with open(mol_path, 'rb') as f:
+        mol = pickle.load(f)
+  
+    try:
+        response = client.models.generate_content(model = "gemini-3-flash-preview", contents = natural_language_explain(mol, mechanism, model_path))
+        output = response.text.strip()
+    except Exception as exc:
+        return jsonify({'error': str(exc)}), 500
+
+    return jsonify({'output': output})
+
+
 
 @app.route('/update-model', methods=['POST'])
 def update_model():

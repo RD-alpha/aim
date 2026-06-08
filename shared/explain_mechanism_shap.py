@@ -15,6 +15,7 @@ from rdkit import Chem
 
 from .fingerprint_schema import build_feature_map
 from .ml_helper import make_fingerprint
+import os
 
 
 DEFAULT_MODEL = "models/v110/xg_model.json"
@@ -155,4 +156,97 @@ def explain(mol, mechanism, model_path, top=10) -> None:
     print_table("Positive evidence for class 1", positive, top)
     print_table("Negative evidence against class 1", negative, top)
     print_table("Largest absolute contributions", absolute, top)
+
+def natural_language_explain(mol, mechanism, model_path, top=5) -> None:
+    def source_text(atom1, atom2):
+        if mechanism[0] in [0, 1, 4]:
+            return f"The lone pair on {atom1} attacks "
+        elif mechanism[0] in [2, 3, 5]:
+            return f"The electrons in the bond between {atom1} and {atom2}, going through Atom 1, attack "
+        else:
+            return ""
+        
+    def sink_text(atom3, atom4):
+        if mechanism[0] in [0, 2, 6]:
+            return f"the vacant orbital on {atom3}."
+        elif mechanism[0] in [1, 3]:
+            return f"the bond between {atom3} and {atom4}, forming a bond between Atom 1 and Atom 3."
+        elif mechanism[0] == 7:
+            return f"the bond between {atom3} and {atom4}, forming a bond between H and Atom 3."
+        else:
+            return ""  
+    
+    def proton_text(atom):
+        if mechanism[0] in [4, 5]:
+            return f"the proton on {atom}, deprotonating it."
+        else:
+            return ""
+
+    def hydride_text(atom):
+        if mechanism[0] in [6, 7]:
+            return f"The hydridic H on {atom}, attacks "
+        else:
+            return ""
+        
+    def elimination_text(atom1, atom2, atom3, atom4):
+        if mechanism [0] == 8:
+            return f"The lone pair on {atom1} removes a proton from {atom3}, and a bond forms between Atom 3 and {atom2}."
+        elif mechanism[0] == 9:
+            return f"The lone pair on {atom1} removes a proton from {atom3}, and a bond forms between Atom 3 and {atom2}, breaking the bond between Atom 2 and {atom4}."
+        else:
+            return ""
+        
+    def bond_break_text(atom2, atom4):
+        if mechanism[0] == 10:
+            return f"The bond between {atom2} and {atom4} breaks, with the electrons going to {atom4}."
+        else:
+            return ""
+
+    atoms = []
+    for slot, atom_idx in enumerate(mechanism[1:], start=1):
+        if atom_idx is None:
+            continue
+        atom = mol.GetAtomWithIdx(atom_idx)
+        atoms.append(f"Atom{slot} ({atom.GetSymbol()})")
+
+    parts = [
+        source_text(atoms[0], atoms[1]),
+        hydride_text(atoms[1]),
+        proton_text(atoms[2]),
+        sink_text(atoms[2], atoms[3]),
+        elimination_text(
+            atoms[0], atoms[1], atoms[2], atoms[3]
+        ),
+        bond_break_text(atoms[1], atoms[3]),
+    ]
+    text_description = "".join(part for part in parts if part).strip()
+
+    validate_mechanism(mechanism)
+    fingerprint = np.array(make_fingerprint(mol, mechanism), dtype=float)
+    x = fingerprint.reshape(1, -1)
+
+    clf = load_model(model_path)
+
+
+    probability = float(clf.predict_proba(x)[0, 1])
+    prediction = int(clf.predict(x)[0])
+
+    dmatrix = xgb.DMatrix(x)
+    contributions = clf.get_booster().predict(dmatrix, pred_contribs=True)[0]
+
+    rows = contribution_rows(fingerprint, contributions)
+    absolute = sorted(rows, key=lambda row: abs(float(row["contribution"])), reverse=True)
+    prediction_text = f"Prediction: {prediction} (probability_positive: {probability:.6f})\n"
+
+    shown = absolute[:top]
+    shap_table = (f"{'rank':>4}  {'idx':>4}  {'value':>8}  {'contrib':>10}  feature")
+    for rank, row in enumerate(shown, start=1):
+            shap_table += f"{rank:>4}  {row['index']:>4}  {row['value']:>8} {row['contribution']:>+10.6f}  {row['feature']}\n"
+
+    prompt_text = f"You are given the following curly arrow mechanism and the results of a prediction model that predicts whether or not it is feasible. It lists the contributions from the features in order of their importance. Explain using the results of the model why the mechanism is predicted to be feasible or not.\n"
+    return prompt_text + text_description + "\n\n" + prediction_text + "\n" + shap_table
+   
+
+
+    
 
