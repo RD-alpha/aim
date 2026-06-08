@@ -36,16 +36,16 @@ ATOM_FEATURE_GROUPS: list[tuple[str, list[str]]] = [
     (
         "adjacency",
         [
-            "adj=C",
-            "adj=CH",
-            "adj=C(sp/sp2)",
-            "adj=C(aromatic)",
-            "adj=C-EN",
-            "adj=C=EN",
-            "adj=EN",
-            "adj=EP",
-            "adj=positive",
-            "adj=negative"
+            "adjacent=C",
+            "adjacent=CH",
+            "adjacent=C(sp/sp2)",
+            "adjacent=C(aromatic)",
+            "adjacent=C-EN",
+            "adjacent=C=EN",
+            "adjacent=EN",
+            "adjacent=EP",
+            "adjacent=positive",
+            "adjacent=negative"
         ],
     ),
     ("relative_adjacency", ["atom1", "atom2", "atom3", "atom4"]),

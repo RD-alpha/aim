@@ -158,21 +158,25 @@ def explain(mol, mechanism, model_path, top=10) -> None:
     print_table("Largest absolute contributions", absolute, top)
 
 def natural_language_explain(mol, mechanism, model_path, top=5) -> None:
-    def source_text(atom1, atom2):
+    bond_types = {1: 'single', 2: 'double', 3: 'triple'}
+    def source_text(atom1, atom3):
         if mechanism[0] in [0, 1, 4]:
             return f"The lone pair on {atom1} attacks "
         elif mechanism[0] in [2, 3, 5]:
-            return f"The electrons in the bond between {atom1} and {atom2}, going through Atom 1, attack "
+            bond_order = int(mol.GetBondBetweenAtoms(mechanism[1], mechanism[3]).GetBondTypeAsDouble())
+            return f"The electrons in the {bond_types[bond_order]} bond between {atom1} and {atom3} (bond 1), going through atom 1, attack "
         else:
             return ""
         
-    def sink_text(atom3, atom4):
+    def sink_text(atom2, atom4):
         if mechanism[0] in [0, 2, 6]:
-            return f"the vacant orbital on {atom3}."
+            return f"the vacant orbital on {atom2}."
         elif mechanism[0] in [1, 3]:
-            return f"the bond between {atom3} and {atom4}, forming a bond between Atom 1 and Atom 3."
+            bond_order = int(mol.GetBondBetweenAtoms(mechanism[2], mechanism[4]).GetBondTypeAsDouble())
+            return f"the {bond_types[bond_order]} bond between {atom2} and {atom4} (bond 2), forming a bond between atom 1 and atom 3."
         elif mechanism[0] == 7:
-            return f"the bond between {atom3} and {atom4}, forming a bond between H and Atom 3."
+            bond_order = int(mol.GetBondBetweenAtoms(mechanism[2], mechanism[4]).GetBondTypeAsDouble())   
+            return f"the {bond_types[bond_order]} bond between {atom2} and {atom4} (bond 2), forming a bond between H and atom 3."
         else:
             return ""  
     
@@ -190,30 +194,33 @@ def natural_language_explain(mol, mechanism, model_path, top=5) -> None:
         
     def elimination_text(atom1, atom2, atom3, atom4):
         if mechanism [0] == 8:
-            return f"The lone pair on {atom1} removes a proton from {atom3}, and a bond forms between Atom 3 and {atom2}."
+            return f"The lone pair on {atom1} removes a proton from {atom3}, and a bond forms between atom 3 and {atom2}."
         elif mechanism[0] == 9:
-            return f"The lone pair on {atom1} removes a proton from {atom3}, and a bond forms between Atom 3 and {atom2}, breaking the bond between Atom 2 and {atom4}."
+            bond_order = int(mol.GetBondBetweenAtoms(mechanism[2], mechanism[4]).GetBondTypeAsDouble())
+            return f"The lone pair on {atom1} removes a proton from {atom3}, and a bond forms between atom 3 and {atom2}, breaking the {bond_types[bond_order]}bond between atom 2 and {atom4} (bond 2)."
         else:
             return ""
         
     def bond_break_text(atom2, atom4):
         if mechanism[0] == 10:
-            return f"The bond between {atom2} and {atom4} breaks, with the electrons going to {atom4}."
+            bond_order = int(mol.GetBondBetweenAtoms(mechanism[2], mechanism[4]).GetBondTypeAsDouble())
+            return f"The {bond_types[bond_order]} bond between {atom2} and {atom4} (bond 2) breaks, with the electrons going to {atom4}."
         else:
             return ""
 
     atoms = []
     for slot, atom_idx in enumerate(mechanism[1:], start=1):
         if atom_idx is None:
+            atoms.append(None)
             continue
         atom = mol.GetAtomWithIdx(atom_idx)
-        atoms.append(f"Atom{slot} ({atom.GetSymbol()})")
+        atoms.append(f"atom {slot} ({atom.GetSymbol()})")
 
     parts = [
-        source_text(atoms[0], atoms[1]),
-        hydride_text(atoms[1]),
-        proton_text(atoms[2]),
-        sink_text(atoms[2], atoms[3]),
+        source_text(atoms[0], atoms[2]),
+        hydride_text(atoms[2]),
+        proton_text(atoms[3]),
+        sink_text(atoms[1], atoms[3]),
         elimination_text(
             atoms[0], atoms[1], atoms[2], atoms[3]
         ),
@@ -239,14 +246,11 @@ def natural_language_explain(mol, mechanism, model_path, top=5) -> None:
     prediction_text = f"Prediction: {prediction} (probability_positive: {probability:.6f})\n"
 
     shown = absolute[:top]
-    shap_table = (f"{'rank':>4}  {'idx':>4}  {'value':>8}  {'contrib':>10}  feature")
+    shap_table = (f"{'rank':>4}  {'value':>8}  {'contribution':>10}  feature")
     for rank, row in enumerate(shown, start=1):
-            shap_table += f"{rank:>4}  {row['index']:>4}  {row['value']:>8} {row['contribution']:>+10.6f}  {row['feature']}\n"
+            shap_table += f"\n{rank:>4} {row['value']:>8} {row['contribution']:>+10.2f}  {row['feature']}"
 
     prompt_text = f"You are given the following curly arrow mechanism and the results of a prediction model that predicts whether or not it is feasible. It lists the contributions from the features in order of their importance. Explain using the results of the model why the mechanism is predicted to be feasible or not.\n"
     return prompt_text + text_description + "\n\n" + prediction_text + "\n" + shap_table
-   
 
-
-    
 

@@ -459,6 +459,8 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
 
+});
+
 // Your existing POST request logic remains the same
 function updateModel() {
     const selectedModel = document.getElementById('model-select').value;
@@ -467,8 +469,4 @@ function updateModel() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ model: selectedModel })
     });
-}
-
-});
-
-    
+}    

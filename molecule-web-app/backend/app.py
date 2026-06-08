@@ -293,7 +293,9 @@ def explain_mechanism_shap_llm():
         mol = pickle.load(f)
   
     try:
-        response = client.models.generate_content(model = "gemini-3-flash-preview", contents = natural_language_explain(mol, mechanism, model_path))
+        prompt = natural_language_explain(mol, mechanism, model_path)
+        print(prompt)
+        response = client.models.generate_content(model = "gemini-3-flash-preview", contents = prompt)
         output = response.text.strip()
     except Exception as exc:
         return jsonify({'error': str(exc)}), 500
@@ -329,7 +331,7 @@ def list_models():
         ]
         
         # Optional: Sort alphabetically
-        available_models.sort()
+        available_models.sort(reverse=True)
 
         return jsonify({'models': available_models})
     except Exception as e:
