@@ -21,6 +21,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const shapOutput = document.getElementById('shap-output');
     const shapOutputNatural = document.getElementById('shap-output-natural');
     const dropdown = document.getElementById('model-select');
+    const llmSubmitButton = document.getElementById('llm-submit-button');
 
     document.querySelectorAll('.training-only').forEach(element => {
         element.hidden = !isTrainingMode;
@@ -32,7 +33,7 @@ document.addEventListener('DOMContentLoaded', function() {
     var saveMech = false;
     var id = -1;
     var ketcherReady = false;
-
+    var selectedMolecule = null;
     function showErrorPopup() {
         errorPopup.classList.add('show');
         setTimeout(() => {
@@ -125,6 +126,8 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
+    llmSubmitButton.addEventListener('click', explainSelectedMoleculeLLM());
+
      // Toggle the visibility of the history container
    // toggleHistoryButton.addEventListener('click', () => {
     //    if (historyContainer.classList.contains('hidden')) {
@@ -201,7 +204,8 @@ document.addEventListener('DOMContentLoaded', function() {
             console.error('SHAP explanation error:', error);
             setShapPanel('Explanation failed', 'Could not run explain_mechanism_shap.py', true);
         });
-    
+    }
+    function explainSelectedMoleculeLLM(){
     setShapPanelNatural('Loading explanation...', 'Running explain_mechanism_shap.py...', false);
 
         fetch('/api/explain_mechanism_shap_llm', {
@@ -210,7 +214,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                mechanism: molecule.mechanism
+                mechanism: selectedMolecule.mechanism
             })
         })
         .then(response => response.json().then(data => ({ ok: response.ok, data })))
@@ -227,6 +231,7 @@ document.addEventListener('DOMContentLoaded', function() {
             setShapPanelNatural('Explanation failed', 'Could not run explain_mechanism_shap.py', true);
         });
     }
+
 
     convertButton.addEventListener('click', function() {
         id = -1;
@@ -290,6 +295,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 saveMech = true;
                 id = molId;
                 explainSelectedMolecule(molecule, input_smiles);
+                selectedMolecule = molecule
             });
 
             
@@ -459,7 +465,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
 
-});
 
 // Your existing POST request logic remains the same
 function updateModel() {
@@ -469,4 +474,6 @@ function updateModel() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ model: selectedModel })
     });
-}    
+}
+
+});

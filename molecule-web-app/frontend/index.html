@@ -46,9 +46,9 @@
             <div>
                 <input type="checkbox" id="kekulise-checkbox">
                 <label for="kekulise-checkbox">Aromatic reactivity?</label>
-                <input type="checkbox" id="screen-charges-checkbox" checked>
+                <input type="checkbox" id="screen-charges-checkbox">
                 <label for="screen-charges-checkbox">Screen charged species</label>
-                <input type="checkbox" id="hypervalent-checkbox" checked>
+                <input type="checkbox" id="hypervalent-checkbox">
                 <label for="hypervalent-checkbox">p-block reactivity</label>
             </div>
             <button id="convert-button">Apply rules</button>
@@ -66,6 +66,7 @@
                 <div class="shap-panel-header">
                     <h2>SHAP LLM explanation</h2>
                     <span id="shap-status">Select a molecule to explain</span>
+                    <button id="llm-submit-button" type="button">Run</button>
                 </div>
                 <pre id="shap-output-natural" class="shap-output">No molecule selected.</pre>
             </section>
