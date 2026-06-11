@@ -173,10 +173,10 @@ def natural_language_explain(mol, mechanism, model_path, top=5) -> None:
             return f"the vacant orbital on {atom2}."
         elif mechanism[0] in [1, 3]:
             bond_order = int(mol.GetBondBetweenAtoms(mechanism[2], mechanism[4]).GetBondTypeAsDouble())
-            return f"the {bond_types[bond_order]} bond between {atom2} and {atom4} (bond 2), forming a bond between atom 1 and atom 3."
+            return f"the {bond_types[bond_order]} bond between {atom2} and {atom4} (bond 2), forming a bond between atom 1 and atom 2."
         elif mechanism[0] == 7:
             bond_order = int(mol.GetBondBetweenAtoms(mechanism[2], mechanism[4]).GetBondTypeAsDouble())   
-            return f"the {bond_types[bond_order]} bond between {atom2} and {atom4} (bond 2), forming a bond between H and atom 3."
+            return f"the {bond_types[bond_order]} bond between {atom2} and {atom4} (bond 2), forming a bond between H and atom 2."
         else:
             return ""  
     
