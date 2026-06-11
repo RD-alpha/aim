@@ -292,7 +292,7 @@
     },
     {
       "index": 20,
-      "label": "atom1.element=alkali",
+      "label": "atom1.element=H_or_alkali",
       "section": "atom1",
       "group": "element",
       "slot": 0

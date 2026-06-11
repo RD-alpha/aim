@@ -15,7 +15,7 @@ ATOM_FEATURE_GROUPS: list[tuple[str, list[str]]] = [
     (
         "element",
         [
-            "element=alkali",
+            "element=H_or_alkali",
             "element=B",
             "element=C",
             "element=N",
