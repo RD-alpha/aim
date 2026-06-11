@@ -6,7 +6,7 @@ import numpy as np
 import os
 ptable = Chem.GetPeriodicTable()
 from .electronegativity import electronegativity
-
+import traceback
 electronegativity_dict = electronegativity()
 
 
@@ -21,12 +21,17 @@ def prepare_atoms(atom_i, hypervalent_enabled = True):
     for atom in atom_list:
         # Look for hydrides - M-H bond
         if electronegativity_dict[atom.GetAtomicNum()] < 2.05 and atom.GetFormalCharge() < 0 and atom.GetTotalNumHs() > 0:
-            atom.SetNumExplicitHs(atom.GetTotalNumHs())
-            atom.SetProp('source', 'hydride')
+           h_num = atom.GetTotalNumHs()
+           atom.SetNoImplicit(True)
+           atom.SetNumExplicitHs(h_num)
+           atom.SetProp('source', 'hydride')
 
         # Look for lone pairs
         valence_electrons = ptable.GetNOuterElecs(atom.GetAtomicNum())
         lone_electrons = valence_electrons - atom.GetTotalValence() - atom.GetFormalCharge()
+        # Boron behaves badly with the way I've used RDKit
+        if atom.GetAtomicNum() == 5 and atom.GetTotalDegree() == 4:
+            continue
         if lone_electrons > 0:
             atom.SetProp('source', 'lone pair')
             
@@ -76,7 +81,6 @@ def prepare_atoms(atom_i, hypervalent_enabled = True):
                     bond.SetProp('source', 'pi bond')
                     bond.SetIntProp('source_bond_atom', atoms[0].GetIdx())
                     bond.SetIntProp('source_other_atom',atoms[1].GetIdx())
-   
 
     for atom in atom_list:
 
@@ -159,7 +163,7 @@ def follow_on(next_mol, mech, model, screen_charges_enabled = True, hypervalent_
         a.ClearProp('source')
         a.ClearProp('sink')
         if a.GetFormalCharge() == 0:
-            a.SetNoImplicit(False)
+           a.SetNoImplicit(False)
     for b in next_mol.GetBonds():
         b.ClearProp('source')
         b.ClearProp('sink')
@@ -175,6 +179,7 @@ def follow_on(next_mol, mech, model, screen_charges_enabled = True, hypervalent_
         connected_mols, mechanism, mol_inp, clean_list = execute_step(next_mol, screen_charges_enabled=screen_charges_enabled)
     except Exception as e:
         print(e)
+        print(traceback.format_exc())
     for i, product in enumerate(connected_mols):
         if mechanism[i][0] == 11:
             # Do not consider H- H+ as part of the follow on steps
