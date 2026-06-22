@@ -79,6 +79,19 @@ def process_file(path: str, dry_run: bool) -> int:
             mech[1] = None
             changed += 1
 
+        if mech[0] == 10:
+            if mech[3] is not None:
+                raise ValueError(
+                    f"{path}: choice {choice_key} mechanism[3] must be None but is {mech[3]!r}"
+                )
+            mech[3] = mech[2]
+            mech[2] = None
+            changed +=1
+
+        if mech[0] in (8,9):
+            mech[3] = None
+            changed +=1
+
     if changed and not dry_run:
         _dump_json(path, data)
     return changed
