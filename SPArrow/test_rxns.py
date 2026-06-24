@@ -43,7 +43,7 @@ def _run_parallel_worker(reactant, product, row_label, no_duplicates, force_dept
 
 
 if __name__ == "__main__":
-    with open("mech-USPTO-31k.csv", 'r') as f:
+    with open("data/mech-USPTO-31k.csv", 'r') as f:
         reader = csv.reader(f)
         row = 0
         for l in reader:

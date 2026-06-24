@@ -118,7 +118,7 @@ def next_nodes(packed):
                     continue
                 if inchi_frag == inchi2:
                     found_frag = True
-                    print(f"fragment inchi: {inchi_frag}")
+                    # print(f"fragment inchi: {inchi_frag}")
 
          # Atom-map + SMILES for storage
         for j, atom in enumerate(product.GetAtoms()):  # <<< NEW
@@ -140,7 +140,7 @@ def next_nodes(packed):
         
 
         if inchi1 == inchi2 or found_frag:   
-            print('Found the target molecule!')
+            # print('Found the target molecule!')
             # print(f'Product SMILES: {prod_smiles}')   # <<< CHANGED
             # print(f'Inchi: {inchi1}')
             if force_correct_last_step and pred != 1:
@@ -184,7 +184,6 @@ def next_nodes(packed):
 
                 for j, fm in enumerate(f_mols):
                     found_frag = False
-                    # TODO: check within the follow on loop so we can check all fps not just the positive ones filtered by follow_on
                     if tuple(f_fps[j]) in unique_bitvectors:
                         test_set_mech_count_local += 1
                     else:
@@ -223,7 +222,7 @@ def next_nodes(packed):
                         follow_on_id = next(local_id_counter)
                         found_target = True
                         found_event.set()
-                        print('Found the target molecule!')
+                        # print('Found the target molecule!')
                         # print(f'Product SMILES: {prod_smiles}')   # <<< CHANGED
                         # print(f'Inchi: {inchi_f}')
                         results.append({
@@ -269,7 +268,7 @@ def run_parallel(r_smiles, p_smiles, job_name, no_duplicates=False, force_depth=
     test_set_mech_count = 0
     start_time_total = time.time()
 
-    model_name = "v112"
+    model_name = "v116"
     print("Using model ", model_name)
     
     with open("unique_bitvectors.txt", "r") as f:
@@ -410,7 +409,7 @@ def run_parallel(r_smiles, p_smiles, job_name, no_duplicates=False, force_depth=
                 # Terminate early if product is found and force_depth = False
                     if "product" in res and res["product"]:
                         node.product = True
-                        print(node)
+                        # print(node)
                         product_nodes.append(node)
                         if not force_depth:
                             signal_break = True
@@ -442,7 +441,7 @@ def run_parallel(r_smiles, p_smiles, job_name, no_duplicates=False, force_depth=
                             parent=parent_node_master,
                             product=True
                         )
-                        print(duplicate_node)
+                        # print(duplicate_node)
                         product_nodes.append(duplicate_node)
                         if not force_depth:
                             signal_break = True
@@ -460,7 +459,7 @@ def run_parallel(r_smiles, p_smiles, job_name, no_duplicates=False, force_depth=
             break
         
         for int_node in nodes:
-            if not int_node.children and not hasattr(int_node, "product"):
+            if not int_node.children and not (hasattr(int_node, "product") and int_node.product):
                 int_node.parent = None
 
         if not sm_node.leaves:
@@ -501,7 +500,7 @@ def run_parallel(r_smiles, p_smiles, job_name, no_duplicates=False, force_depth=
         print(n)
 
     save_tree(None, None, job_name, product_nodes)
-    # save_tree(None, None, str(job_name) + "total", [sm_node])
+    save_tree(None, None, str(job_name) + "total", [sm_node])
     print(f"Total time taken: {time.time() - start_time_total:.2f} seconds")
     print(f"Unique mechanisms found: {unique_mech_count}")
     print(f"Test set mechanisms found: {test_set_mech_count}")
