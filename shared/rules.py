@@ -315,11 +315,11 @@ def c_h_elimination(mol, i, j, mechanisms, connected_mols):
             if mol.GetAtomWithIdx(l).GetFormalCharge() >= 0:
                 intermediate = a_to_b(Chem.Mol(c_mol), j, k)
                 connected_mols.append(b_to_a(Chem.Mol(intermediate), k, l))
-                mechanisms.append([8, i, j, None, l])
+                mechanisms.append([8, i, k, None, l])
 
         if atom2.GetFormalCharge() > 0 and atom2.HasProp('sink') and atom2.GetProp('sink')== 'empty AO':
             k = atom2.GetIdx()
-            mechanisms.append([9, i, j, None, None])
+            mechanisms.append([9, i, k, None, None])
             connected_mols.append(a_to_b(Chem.Mol(c_mol), j, k))
     return (mechanisms, connected_mols)
     
