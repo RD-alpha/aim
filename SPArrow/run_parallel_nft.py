@@ -5,9 +5,6 @@ import numpy as np
 import time
 from anytree import Node, RenderTree
 from anytree.search import find
-from shared.rules import run_next_step
-from shared.next_step import follow_on
-from shared.ml_helper import make_fingerprint
 import xgboost
 import os
 import pickle
@@ -20,6 +17,18 @@ jobid = os.environ.get("SLURM_JOB_ID", "backup")
 scratch = os.environ.get("SCRATCH", os.getcwd())   # <<< NEW
 os.makedirs(scratch, exist_ok=True)                # <<< NEW
 filename = os.path.join(scratch, f"{jobid}")   # <<< CHANGED
+
+import sys
+from pathlib import Path
+
+root_dir = Path(__file__).resolve().parents[1]
+if str(root_dir) not in sys.path:
+    sys.path.insert(0, str(root_dir))
+
+# Now you can import it normally
+from shared.rules import run_next_step
+from shared.next_step import follow_on
+from shared.ml_helper import make_fingerprint
 
 
 
@@ -74,7 +83,7 @@ def next_nodes(packed):
         idx_to_mapnum[i] = m
     try:
         product_mols, mechs, mol_inp, clean_list = run_next_step(
-            smiles, aromatic, True, None, screen_charges_enabled, True
+            smiles, aromatic, None, screen_charges_enabled, True
         )
         # print(len(product_mols), "products generated")
     except Exception as e:
@@ -82,20 +91,20 @@ def next_nodes(packed):
         print(e)
         return (results, (unique_mech_count_local, test_set_mech_count_local, inchi_set_local))
     for i, product in enumerate(product_mols):
-        fp = np.array(make_fingerprint(mol_inp, mechs[i]))
-        key = tuple(np.where(np.isnan(fp), None, fp))
-        if key in unique_bitvectors:
-            test_set_mech_count_local += 1
+        if mechs[i][0] != 11:
+            fp = np.array(make_fingerprint(mol_inp, mechs[i]))
+            key = tuple(np.where(np.isnan(fp), None, fp))
+            if key in unique_bitvectors:
+                test_set_mech_count_local += 1
+            else:
+                unique_mech_count_local += 1
+            pred = clf.predict(fp.reshape(1, -1))[0]
         else:
-            unique_mech_count_local += 1
-            
-        pred = clf.predict(fp.reshape(1, -1))[0]
+            pred = 1
         found_frag = False
-        if force_correct_last_step and pred == 0:
-            continue
         try:
             inchi1 = Chem.MolToInchi(product, options='/FixedH')
-            if no_duplicates and inchi1 in inchis_set:
+            if no_duplicates and inchi1 in inchis_set: 
                 continue
         except Exception as e:
             print(f'Error processing product {i}: {e}')
@@ -109,17 +118,29 @@ def next_nodes(packed):
                     continue
                 if inchi_frag == inchi2:
                     found_frag = True
-                    print(f"fragment inchi: {inchi_frag}")
+                    # print(f"fragment inchi: {inchi_frag}")
 
-            
          # Atom-map + SMILES for storage
         for j, atom in enumerate(product.GetAtoms()):  # <<< NEW
-            atom.SetAtomMapNum(idx_to_mapnum[j])
-        prod_smiles = Chem.MolToSmiles(product, canonical=False)  # <<< NEW
-       
+            try:
+                atom.SetAtomMapNum(idx_to_mapnum[j])
+            except KeyError:
+                max_map_num = max(idx_to_mapnum.values())
+                if mechs[i][0] == 11 and atom.GetAtomicNum() == 1:  
+                    atom.SetAtomMapNum(max_map_num + 1)
+                    idx_to_mapnum[j] = max_map_num + 1
+                    continue
+                print(f"Atom index {j} not found in idx_to_mapnum, skipping atom mapping for this product.")
+                for atom in product.GetAtoms():
+                    atom.SetAtomMapNum(0)
+                break
 
-        if inchi1 == inchi2 or found_frag:
-            print('Found the target molecule!')
+        prod_smiles = Chem.MolToSmiles(product, canonical=False)  # <<< NEW
+        
+        
+
+        if inchi1 == inchi2 or found_frag:   
+            # print('Found the target molecule!')
             # print(f'Product SMILES: {prod_smiles}')   # <<< CHANGED
             # print(f'Inchi: {inchi1}')
             if force_correct_last_step and pred != 1:
@@ -136,8 +157,8 @@ def next_nodes(packed):
                     "product":True
                     })
             
-            
         elif pred == 1:
+
             if no_duplicates:
                 inchi_set_local.add(inchi1)
             
@@ -153,7 +174,7 @@ def next_nodes(packed):
                 "pass_charge_screen": clean
             })
 
-            if follow_on_enabled:
+            if follow_on_enabled and mechs[i][0] != 11:   # Don't do follow on for simple proton transfers
                 #print(prod_smiles, mechs[i])
                 try:
                     f_mols, f_mechs, f_fps = follow_on(product, mechs[i], clf, screen_charges_enabled=screen_charges_enabled, clean_parent=clean)
@@ -163,14 +184,13 @@ def next_nodes(packed):
 
                 for j, fm in enumerate(f_mols):
                     found_frag = False
-                    # TODO: check within the follow on loop so we can check all fps not just the positive ones filtered by follow_on
                     if tuple(f_fps[j]) in unique_bitvectors:
                         test_set_mech_count_local += 1
                     else:
                         unique_mech_count_local += 1
                     try:
                         inchi_f = Chem.MolToInchi(fm, options='/FixedH')
-                        if no_duplicates and inchi_f in inchis_set:
+                        if no_duplicates and (inchi_f in inchis_set) or (inchi_f in inchi_set_local):
                             continue
                         else:
                             if no_duplicates:
@@ -202,7 +222,7 @@ def next_nodes(packed):
                         follow_on_id = next(local_id_counter)
                         found_target = True
                         found_event.set()
-                        print('Found the target molecule!')
+                        # print('Found the target molecule!')
                         # print(f'Product SMILES: {prod_smiles}')   # <<< CHANGED
                         # print(f'Inchi: {inchi_f}')
                         results.append({
@@ -248,7 +268,10 @@ def run_parallel(r_smiles, p_smiles, job_name, no_duplicates=False, force_depth=
     test_set_mech_count = 0
     start_time_total = time.time()
 
-    with open("unique_bitvectors.txt", "r") as f:
+    model_name = "v121nft"
+    print("Using model ", model_name)
+    
+    with open(f"models/{model_name}/unique_bitvectors.txt", "r") as f:
         for line in f:
             fp_elements = []
             for x in line.strip().split(','):
@@ -321,7 +344,7 @@ def run_parallel(r_smiles, p_smiles, job_name, no_duplicates=False, force_depth=
     def init_worker():
         global clf
         clf = xgboost.XGBClassifier()
-        clf.load_model('models/v105nf/xg_model.json')
+        clf.load_model(f'models/{model_name}/xg_model.json')
         RDLogger.DisableLog("rdApp.*")
 
 
@@ -386,7 +409,7 @@ def run_parallel(r_smiles, p_smiles, job_name, no_duplicates=False, force_depth=
                 # Terminate early if product is found and force_depth = False
                     if "product" in res and res["product"]:
                         node.product = True
-                        print(node)
+                        # print(node)
                         product_nodes.append(node)
                         if not force_depth:
                             signal_break = True
@@ -418,7 +441,7 @@ def run_parallel(r_smiles, p_smiles, job_name, no_duplicates=False, force_depth=
                             parent=parent_node_master,
                             product=True
                         )
-                        print(duplicate_node)
+                        # print(duplicate_node)
                         product_nodes.append(duplicate_node)
                         if not force_depth:
                             signal_break = True
@@ -436,7 +459,7 @@ def run_parallel(r_smiles, p_smiles, job_name, no_duplicates=False, force_depth=
             break
         
         for int_node in nodes:
-            if not int_node.children and not hasattr(int_node, "product"):
+            if not int_node.children and not (hasattr(int_node, "product") and int_node.product):
                 int_node.parent = None
 
         if not sm_node.leaves:
@@ -477,7 +500,7 @@ def run_parallel(r_smiles, p_smiles, job_name, no_duplicates=False, force_depth=
         print(n)
 
     save_tree(None, None, job_name, product_nodes)
-    # save_tree(None, None, str(job_name) + "total", [sm_node])
+    save_tree(None, None, str(job_name) + "total", [sm_node])
     print(f"Total time taken: {time.time() - start_time_total:.2f} seconds")
     print(f"Unique mechanisms found: {unique_mech_count}")
     print(f"Test set mechanisms found: {test_set_mech_count}")

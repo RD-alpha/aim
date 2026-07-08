@@ -268,10 +268,10 @@ def run_parallel(r_smiles, p_smiles, job_name, no_duplicates=False, force_depth=
     test_set_mech_count = 0
     start_time_total = time.time()
 
-    model_name = "v116"
+    model_name = "v121"
     print("Using model ", model_name)
     
-    with open("unique_bitvectors.txt", "r") as f:
+    with open(f"models/{model_name}/unique_bitvectors.txt", "r") as f:
         for line in f:
             fp_elements = []
             for x in line.strip().split(','):

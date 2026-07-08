@@ -3,7 +3,7 @@ from run_parallel import run_parallel
 #Arguments are r_smiles, p_smiles, job_name, no_duplicates=False, force_depth= False, depth_limit=3, follow_on_enabled=True, aromatic=True, screen_charges_enabled=False, hypervalent_enabled=False
 
 no_duplicates = True
-force_depth = False
+force_depth = True
 depth_limit = 5
 follow_on_enabled = True
 aromatic = True

@@ -1,37 +1,24 @@
 import csv
+from rdkit import Chem
 
 from run_parallel import run_parallel
 no_duplicates = True
-force_depth = True
-depth_limit = 4
+force_depth = False
+depth_limit = 3
 follow_on_enabled = True
-aromatic = False
+aromatic = True
 screen_charges_enabled = False
 hypervalent_enabled = False
 
+#[21146, 29081, 28573, 21408, 20651, 30124, 19006, 24648, 25033, 28241, 30560, 15595, 26348, 21102, 26224]
 
-SUCCESS_INDICES_DCC_CONDENSATION = [
-	3678,
-	4511,
-	14251,
-	22081,
-	26881,
-	28598,
-	8007,
-	9410,
-	20961,
-	23511,
-	31152,
-	4370,
-	8451,
-	15866,
-	16675,
-]
+SUCCESS_INDICES_DCC_CONDENSATION = [29081]
+
 
 DCC_BYPRODUCT = ".C1CCCCC1NC(=O)NC1CCCCC1"
 
 
-with open("mech-USPTO-31k.csv", "r") as f:
+with open("data/mech-USPTO-31k.csv", "r") as f:
 	reader = csv.reader(f)
 	row = 0
 	for l in reader:
@@ -46,6 +33,14 @@ with open("mech-USPTO-31k.csv", "r") as f:
 		l_s = line.split(">>")
 		reactant = l_s[0].strip()
 		product = l_s[1].strip()
+		mol = Chem.MolFromSmiles(reactant)
+		Chem.RemoveStereochemistry(mol)
+		reactant = Chem.MolToSmiles(mol)
+		product = l_s[1].strip()
+
+		mol = Chem.MolFromSmiles(product)
+		Chem.RemoveStereochemistry(mol)
+		product = Chem.MolToSmiles(mol)
 		extended_product = product + DCC_BYPRODUCT
 		try:
 			run_parallel(reactant, extended_product, str(row), no_duplicates, force_depth, depth_limit, follow_on_enabled, aromatic, screen_charges_enabled, hypervalent_enabled)
