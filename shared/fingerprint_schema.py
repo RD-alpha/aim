@@ -3,8 +3,6 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from rdkit import Chem
-
 
 MECHANISM_TYPE_LABELS = [f"mechanism_type={i}" for i in range(11)]
 
@@ -175,6 +173,8 @@ def export_schema_json(path: str | Path) -> Path:
 
 
 def validate_schema_against_implementation() -> None:
+    from rdkit import Chem
+
     from shared.ml_helper import (
         make_atom_fingerprint,
         make_bond_fingerprint,

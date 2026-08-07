@@ -227,6 +227,10 @@ def make_fingerprint(sm, mech):
     mech_type = [np.nan] * 11
     mech_type[mech[0]] = 1
     atom_fps = []
+
+    # Current fix for elimination mechanism that preserves the information of C-H bond atom index for future implementations
+    if mech[0] in [8, 9]:
+        mech[3] = None
     for i in range(1, 5):
         if mech[i] is None:
             atom_fps.append(make_atom_fingerprint(None, other_atoms=mech[1:]))

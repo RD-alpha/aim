@@ -4,11 +4,6 @@ Reassign mechanisms where mechanism[0] is 6 or 7:
 - Move mechanism[1] to mechanism[3]
 - Set mechanism[1] to None
 - Error if mechanism[3] is already not None
-
-Reassign mechanisms where mechanism[0] is 4 or 5:
-- Move mechanism[2] to mechanism[4]
-- Set mechanism[2] to None
-- Error if mechanism[4] is already not None
 """
 
 from __future__ import annotations
@@ -39,8 +34,8 @@ def _iter_data_json(root: str):
 def _validate_mechanism(mech: Any, path: str, choice_key: str) -> List[Any]:
     if not isinstance(mech, list):
         raise ValueError(f"{path}: choice {choice_key} mechanism is not a list: {type(mech).__name__}")
-    if len(mech) < 5:
-        raise ValueError(f"{path}: choice {choice_key} mechanism has length {len(mech)} (<5)")
+    if len(mech) < 4:
+        raise ValueError(f"{path}: choice {choice_key} mechanism has length {len(mech)} (<4)")
     return mech
 
 
@@ -61,15 +56,6 @@ def process_file(path: str, dry_run: bool) -> int:
             continue
         mech = _validate_mechanism(mech, path, str(choice_key))
 
-        if mech[0] in (4, 5):
-            if mech[4] is not None:
-                raise ValueError(
-                    f"{path}: choice {choice_key} mechanism[4] must be None but is {mech[4]!r}"
-                )
-            mech[4] = mech[2]
-            mech[2] = None
-            changed += 1
-
         if mech[0] in (6, 7):
             if mech[3] is not None:
                 raise ValueError(
@@ -89,6 +75,7 @@ def process_file(path: str, dry_run: bool) -> int:
             changed +=1
 
         if mech[0] in (8,9):
+            mech[2] = mech[3]
             mech[3] = None
             changed +=1
 

@@ -19,7 +19,6 @@ shared/__pycache__/
 molecule-web-app/backend/pickles/
 molecule-web-app/backend/chain/
 /web.sock
-/training_sets
 /logs
 /training_current
 /shared/__pycache__/
